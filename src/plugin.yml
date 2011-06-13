@@ -1,0 +1,45 @@
+name: Jail
+main: com.matejdro.bukkit.jail.Jail
+version: 1.1.0
+author: matejdro
+commands:
+    jailcreate:
+        description: Creates a new jail zone.
+    jailcreatecells:
+        description: Creates cells in existing jail zone.
+    jaildelete:
+        description: Delete existing jail zone.
+    jail:
+        description: Jail specified player for specified amount of time.
+    unjail:
+        description: Release a player from jail.
+    unjailforce:
+        description: Remove player from the database.
+    jailclear:
+        description: Unjail every player on the server. Use with caution!
+    jailclearforce:
+        description: Delete every player from the jail database.
+    jailtransfer:
+        description: Transfer player from current jail to another
+    jailtransferall:
+        description: Transfer all players in one jail to another jail
+    jailcheck:
+        description: Check the status of the specified player
+    jailtelein:
+        description: Teleport inside jail
+    jailteleout:
+        description: Teleport outside of the jail.
+    jaillist:
+        description: List all created jails
+    jailstatus:
+        description: Check your current jail status
+    jailmute:
+        description: Toggle mute of the specified prisoner
+    jailstop:
+        description: Stop any creation process.
+    jailset:
+        description: modify existing jail or prisoner.
+    jailpay:
+        description: Pay money to be released early.
+    
+        
