@@ -59,6 +59,8 @@ public class Jail extends JavaPlugin {
 	
 	public static Plugin permissions = null;
 	
+	public static Boolean timeUpdateRunning = false;
+	
 	private HashMap<String, BaseCommand> commands = new HashMap<String, BaseCommand>();
 
 	//Test
@@ -173,31 +175,39 @@ public class Jail extends JavaPlugin {
     {
       public void actionPerformed (ActionEvent event)
       {
+    	  if (Jail.timeUpdateRunning) return; 
     	  if (UpdateTime == 0)
     	  {
-    		  synchronized(Jail.prisoners.values())
-        	  {
-        		  Object[] names = Jail.prisoners.keySet().toArray();
-    	    	  for (Object prisonername : names)
-    	    	  {
-    	    		  JailPrisoner prisoner = Jail.prisoners.get(prisonername.toString());
-    	    		  Player player = getServer().getPlayer(prisoner.getName());
-    	    		  if (prisoner.getRemainingTime() > 0 && player != null)
-    	    		  {
-    	    			  prisoner.setRemainingTime(prisoner.getRemainingTime() - 1);
-    	    			  if (prisoner.getRemainingTime() == 0 && prisoner.offlinePending() == false)
-    	        		  {
-    	        					PrisonerManager.UnJail(prisoner, player);
-    	        		  }
-    	    			  else
-    	    			  {
-    	        			  //Jail.prisoners.put(prisoner.name, prisoner);
-    	        			  InputOutput.UpdatePrisoner(prisoner);   				  
-    	    			  }
-    	
-    	    		  }
-    	    	  }
-        	  }
+    		  Jail.timeUpdateRunning = true;
+    		  getServer().getScheduler().scheduleSyncDelayedTask(Jail.instance, new Runnable() {
+
+    			    public void run() {
+    			    	
+    			    	Object[] names = Jail.prisoners.keySet().toArray();
+    	    	    	  for (Object prisonername : names)
+    	    	    	  {
+    	    	    		  JailPrisoner prisoner = Jail.prisoners.get(prisonername.toString());
+    	    	    		  Player player = getServer().getPlayer(prisoner.getName());
+    	    	    		  if (prisoner.getRemainingTime() > 0 && player != null)
+    	    	    		  {
+    	    	    			  prisoner.setRemainingTime(prisoner.getRemainingTime() - 1);
+    	    	    			  if (prisoner.getRemainingTime() == 0 && prisoner.offlinePending() == false)
+    	    	        		  {
+    	    	        					PrisonerManager.UnJail(prisoner, player);
+    	    	        		  }
+    	    	    			  else
+    	    	    			  {
+    	    	        			  //Jail.prisoners.put(prisoner.name, prisoner);
+    	    	        			  InputOutput.UpdatePrisoner(prisoner);   				  
+    	    	    			  }
+    	    	
+    	    	    		  }
+    			    }
+    	    	    	Jail.timeUpdateRunning = false;
+    			    }
+    			    
+    			}, 1L);
+        		  
     		  UpdateTime++;
     		  
     	  
@@ -219,16 +229,6 @@ public class Jail extends JavaPlugin {
     	BaseCommand cmd = commands.get(command.getName().toLowerCase());
     	if (cmd != null) return cmd.execute(sender, args);
     	return false;
-//		else if (command.getName().equalsIgnoreCase("jailset"))
-//		{
-//			if (sender instanceof Player && !Util.permission((Player) sender, "jail.command.jailset", ((Player) sender).isOp())) return false; 
-//			
-//			JailSetManager.JailSet(sender, args);
-//			return true;
-//		}
-//		else if (command.getName().equalsIgnoreCase("jailpay"))
-//		{
-
     }
     
 
