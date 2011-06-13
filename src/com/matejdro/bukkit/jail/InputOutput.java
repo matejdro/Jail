@@ -138,7 +138,6 @@ public class InputOutput {
     	for (String i : Settings.JailStickParameters.split(";"))
     	{
     		jailStickParameters.put(Integer.parseInt(i.substring(0, i.indexOf(","))), i.split(","));
-    		Jail.log.info(i.substring(0, i.indexOf(",")));
     	}
     		
     }
@@ -277,7 +276,6 @@ public class InputOutput {
 
 		} catch (SQLException e) {
 			Jail.log.log(Level.SEVERE, "[Jail] Error while loading prisoners from the database! - " + e.getMessage() );
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     }
@@ -309,9 +307,10 @@ public class InputOutput {
 			ps.setString(15, freePoint.getWorld().getName());
 			ps.executeUpdate();
 			conn.commit();
+			
+			ps.close();
 		} catch (SQLException e) {
 			Jail.log.log(Level.SEVERE,"[Jail] Error while creating Jail Zone! - " + e.getMessage() );
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     }
@@ -343,6 +342,8 @@ public class InputOutput {
 			ps.setString(15, z.name.toLowerCase());
 			ps.executeUpdate();
 			conn.commit();
+			
+			ps.close();
 		} catch (SQLException e) {
 			Jail.log.log(Level.SEVERE,"[Jail] Error while creating Jail Zone! - " + e.getMessage() );
 			// TODO Auto-generated catch block
@@ -359,6 +360,8 @@ public class InputOutput {
 			ps.setString(1, z.getName());
 			ps.executeUpdate();
 			conn.commit();
+			
+			ps.close();
 		} catch (SQLException e) {
 			Jail.log.log(Level.SEVERE,"[Jail] Error while deleting Zone from DB! - " + e.getMessage() );
 			// TODO Auto-generated catch block
@@ -389,7 +392,8 @@ public class InputOutput {
 			ps.setString(9, p.getJailer());
 			ps.executeUpdate();
 			conn.commit();
-
+			
+			ps.close();
 		} catch (SQLException e) {
 			Jail.log.log(Level.SEVERE,"[Jail] Error while inserting Prisoner into DB! - " + e.getMessage() );
 			// TODO Auto-generated catch block
@@ -421,6 +425,8 @@ public class InputOutput {
 			ps.setString(6, c.getPlayerName());
 			ps.executeUpdate();
 			conn.commit();
+			
+			ps.close();
 
 		} catch (SQLException e) {
 			Jail.log.log(Level.SEVERE,"[Jail] Error while inserting Cell into DB! - " + e.getMessage() );
@@ -447,6 +453,8 @@ public class InputOutput {
 			
 			ps.executeUpdate();
 			conn.commit();
+			
+			ps.close();
 
 		} catch (SQLException e) {
 			Jail.log.log(Level.SEVERE,"[Jail] Error while updating Cell into DB!");
@@ -463,6 +471,8 @@ public class InputOutput {
 			ps.setString(1, String.valueOf(c.getTeleportLocation().getX()) + "," + String.valueOf(c.getTeleportLocation().getY()) + "," + String.valueOf(c.getTeleportLocation().getZ()));
 			ps.executeUpdate();
 			conn.commit();
+			
+			ps.close();
 		} catch (SQLException e) {
 			Jail.log.log(Level.SEVERE,"[Jail] Error while deleting Cell from DB! - " + e.getMessage() );
 			// TODO Auto-generated catch block
@@ -495,6 +505,8 @@ public class InputOutput {
 			ps.setString(7, p.getName());
 			ps.executeUpdate();
 			conn.commit();
+			
+			ps.close();
 
 		} catch (SQLException e) {
 			Jail.log.log(Level.SEVERE,"[Jail] Error while updating Prisoner into DB!");
@@ -511,7 +523,8 @@ public class InputOutput {
 			ps.setString(1, p.getName());
 			ps.executeUpdate();
 			conn.commit();
-
+			
+			ps.close();
 		} catch (SQLException e) {
 			Jail.log.log(Level.SEVERE,"[Jail] Error while deleting Prisoner from DB! - " + e.getMessage() );
 			// TODO Auto-generated catch block
@@ -541,6 +554,7 @@ public class InputOutput {
 			ps.executeBatch();
 			conn.commit();
 
+			ps.close();
 		} catch (SQLException e) {
 			Jail.log.log(Level.SEVERE,"[Jail] Error while updating Prisoner into DB! - " + e.getMessage() );
 			// TODO Auto-generated catch block

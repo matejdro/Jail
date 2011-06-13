@@ -29,8 +29,7 @@ public class Settings {
 	
 	public static Boolean EnablePaying = true;
 	public static double PricePerMinute = 10;
-	public static double PriceForInfiniteJail = 0;
-	public static String iConomyMoneyName = "gold coins";
+	public static double PriceForInfiniteJail = 9999;
 	
 	public static int GuardHealth;
 	public static int GuardDamage;

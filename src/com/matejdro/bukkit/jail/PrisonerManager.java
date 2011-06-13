@@ -161,10 +161,7 @@ public class PrisonerManager {
 		prisoner.SetBeingReleased(true);
 		JailZone jail = prisoner.getJail();	
 		Util.Message(Settings.MessageUnjail, player);
-		
 		player.teleport(jail.getReleaseTeleportLocation());
-		prisoner.delete();
-		Jail.prisoners.remove(prisoner.getName());
 		prisoner.SetBeingReleased(false);
 		
 		JailCell cell = prisoner.getCell();
@@ -213,6 +210,7 @@ public class PrisonerManager {
 		}
 		
 		if (Settings.StoreInventory) prisoner.restoreInventory(player);
+		prisoner.delete();
 	}
 	
 	public static void PrepareTransferAll(JailZone jail)
