@@ -1,4 +1,4 @@
-package com.matejdro.bukkit.jail;
+package com.matejdro.bukkit.jail.listeners;
 
 import java.util.List;
 
@@ -14,10 +14,20 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-public class JailPlayer extends PlayerListener {
+import com.matejdro.bukkit.jail.InputOutput;
+import com.matejdro.bukkit.jail.Jail;
+import com.matejdro.bukkit.jail.JailCellCreation;
+import com.matejdro.bukkit.jail.JailPrisoner;
+import com.matejdro.bukkit.jail.JailZoneCreation;
+import com.matejdro.bukkit.jail.PrisonerManager;
+import com.matejdro.bukkit.jail.Settings;
+import com.matejdro.bukkit.jail.Util;
+import com.matejdro.bukkit.jail.commands.JailSetCommand;
+
+public class JailPlayerListener extends PlayerListener {
 	private Jail plugin;
 
-	public JailPlayer(Jail instance)
+	public JailPlayerListener(Jail instance)
 	{
 		plugin = instance;
 	}		
@@ -35,9 +45,9 @@ public class JailPlayer extends PlayerListener {
 				JailCellCreation.select(event.getPlayer(), event.getClickedBlock());
 				event.setCancelled(true);
 			}
-			else if ( JailSetManager.players.containsKey(event.getPlayer().getName()))
+			else if ( JailSetCommand.players.containsKey(event.getPlayer().getName()))
 			{
-				JailSetManager.RightClick(event.getClickedBlock(), event.getPlayer());
+				JailSetCommand.RightClick(event.getClickedBlock(), event.getPlayer());
 				event.setCancelled(true);
 			}
 			
@@ -47,7 +57,7 @@ public class JailPlayer extends PlayerListener {
 	public void onPlayerInteract(PlayerInteractEntityEvent event) {
 			Player player = event.getPlayer();
 			if (!InputOutput.jailStickParameters.containsKey(player.getItemInHand().getTypeId())) return;
-			if (!Jail.permission(player, "jail.usejailstick" + String.valueOf(player.getItemInHand().getTypeId()), player.isOp())) return;
+			if (!Util.permission(player, "jail.usejailstick" + String.valueOf(player.getItemInHand().getTypeId()), player.isOp())) return;
 			
 			String[] param = InputOutput.jailStickParameters.get(player.getItemInHand().getTypeId());
 			
@@ -56,14 +66,14 @@ public class JailPlayer extends PlayerListener {
 			Entity ent = event.getRightClicked();
 			if (ent == null || !(ent instanceof Player)) return;
 			Player target = (Player) ent;
-			if (Jail.permission(target, "jail.canbestickjailed", true))
+			if (Util.permission(target, "jail.canbestickjailed", true))
 			{
 				String args[] = new String[4];
 				args[0] = target.getName();
 				args[1] = param[2];
 				args[2] = param[3];
 				args[3] = param[4];
-				plugin.PrepareJail((CommandSender) event.getPlayer(), args); 
+				PrisonerManager.PrepareJail((CommandSender) event.getPlayer(), args); 
 			}
 	}
 
@@ -78,16 +88,16 @@ public class JailPlayer extends PlayerListener {
 				 {
 					 if (prisoner.getRemainingTime() != 0)
 					 {
-						 plugin.Jail(prisoner, event.getPlayer());
+						 PrisonerManager.Jail(prisoner, event.getPlayer());
 					 }
 					 else
 					 {
-						 plugin.UnJail(prisoner, event.getPlayer());
+						 PrisonerManager.UnJail(prisoner, event.getPlayer());
 					 } 
 				 }
 				 else
 				 {
-					 plugin.Transfer(prisoner, event.getPlayer());
+					 PrisonerManager.Transfer(prisoner, event.getPlayer());
 				 }
 				 
 			 }

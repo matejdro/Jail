@@ -1,6 +1,5 @@
 package com.matejdro.bukkit.jail;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 
 import org.bukkit.Location;
@@ -231,7 +230,7 @@ public class JailZone {
 	 */
 	public void delete()
 	{
-		Jail.instance.PrepareTransferAll(this);
+		PrisonerManager.PrepareTransferAll(this);
 		InputOutput.DeleteZone(this);
 		Jail.zones.remove(this.getName());
 		for (JailCell cell : this.getCellList())

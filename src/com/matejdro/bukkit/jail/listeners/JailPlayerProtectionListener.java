@@ -1,4 +1,4 @@
-package com.matejdro.bukkit.jail;
+package com.matejdro.bukkit.jail.listeners;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -13,10 +13,18 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
-public class JailPlayerPrevent extends PlayerListener {
+import com.matejdro.bukkit.jail.InputOutput;
+import com.matejdro.bukkit.jail.Jail;
+import com.matejdro.bukkit.jail.JailCell;
+import com.matejdro.bukkit.jail.JailPrisoner;
+import com.matejdro.bukkit.jail.JailZone;
+import com.matejdro.bukkit.jail.Settings;
+import com.matejdro.bukkit.jail.Util;
+
+public class JailPlayerProtectionListener extends PlayerListener {
 	private Jail plugin;
 
-	public JailPlayerPrevent(Jail instance)
+	public JailPlayerProtectionListener(Jail instance)
 	{
 		plugin = instance;
 	}
@@ -27,7 +35,7 @@ public class JailPlayerPrevent extends PlayerListener {
 		JailPrisoner prisoner = Jail.prisoners.get(event.getPlayer().getName().toLowerCase());
 		if (prisoner != null && prisoner.isMuted())
 		{
-			Jail.Message(Settings.MessageMute, event.getPlayer());
+			Util.Message(Settings.MessageMute, event.getPlayer());
 			event.setCancelled(true);
 		}
 	}
@@ -44,13 +52,13 @@ public class JailPlayerPrevent extends PlayerListener {
 					if (Settings.CommandPenalty > 0 && prisoner.getRemainingTime() > 0)
 					{
 						
-						Jail.Message(Settings.MessageCommandPenalty, event.getPlayer());
+						Util.Message(Settings.MessageCommandPenalty, event.getPlayer());
 						prisoner.setRemainingTime(prisoner.getRemainingTime() + Settings.CommandPenalty * 6);
 						InputOutput.UpdatePrisoner(prisoner);
 					}
 				else
 					{
-						Jail.Message(Settings.MessageCommandNoPenalty, event.getPlayer());
+						Util.Message(Settings.MessageCommandNoPenalty, event.getPlayer());
 					}
 					event.setCancelled(true);
 					return;
@@ -103,13 +111,13 @@ public class JailPlayerPrevent extends PlayerListener {
 						if (Settings.PlayerMovePenalty > 0  && prisoner.getRemainingTime() > 0)
 						{
 							
-							Jail.Message(Settings.MessageMovePenalty, event.getPlayer());
+							Util.Message(Settings.MessageMovePenalty, event.getPlayer());
 							prisoner.setRemainingTime(prisoner.getRemainingTime() + Settings.PlayerMovePenalty * 6);
 							InputOutput.UpdatePrisoner(prisoner);
 						}
 					else
 						{
-							Jail.Message(Settings.MessageMoveNoPenalty, event.getPlayer());
+							Util.Message(Settings.MessageMoveNoPenalty, event.getPlayer());
 						}	
 					
 					Location teleport;
@@ -149,20 +157,20 @@ public class JailPlayerPrevent extends PlayerListener {
 			 if (Settings.BucketPenalty > 0 && Jail.prisoners.containsKey(event.getPlayer().getName().toLowerCase()) && Jail.prisoners.get(event.getPlayer().getName().toLowerCase()).getRemainingTime() > 0)
 				{
 					JailPrisoner prisoner = Jail.prisoners.get(event.getPlayer().getName().toLowerCase());
-					Jail.Message(Settings.MessageBucketPenalty, event.getPlayer());
+					Util.Message(Settings.MessageBucketPenalty, event.getPlayer());
 					prisoner.setRemainingTime(prisoner.getRemainingTime() + Settings.BucketPenalty * 6);
 					InputOutput.UpdatePrisoner(prisoner);
 				}
 			else
 				{
-					Jail.Message(Settings.MessageBucketNoPenalty, event.getPlayer());
+					Util.Message(Settings.MessageBucketNoPenalty, event.getPlayer());
 				}
 			 event.setCancelled(true);
 		 }
 	 }
 	 
 	 public void onPlayerInteract(PlayerInteractEvent event) {
-			if (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getClickedBlock().getType() == Material.CHEST && (Jail.prisoners.containsKey(event.getPlayer().getName().toLowerCase()) || !Jail.permission(event.getPlayer(), "jail.openchest", event.getPlayer().isOp())))
+			if (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getClickedBlock().getType() == Material.CHEST && (Jail.prisoners.containsKey(event.getPlayer().getName().toLowerCase()) || !Util.permission(event.getPlayer(), "jail.openchest", event.getPlayer().isOp())))
 				{
 				for (JailZone jail : Jail.zones.values())
 					for (JailCell cell : jail.getCellList())
@@ -187,13 +195,13 @@ public class JailPlayerPrevent extends PlayerListener {
 					if (Settings.PlayerMovePenalty > 0  && prisoner.getRemainingTime() > 0)
 						{
 							
-							Jail.Message(Settings.MessageMovePenalty, event.getPlayer());
+							Util.Message(Settings.MessageMovePenalty, event.getPlayer());
 							prisoner.setRemainingTime(prisoner.getRemainingTime() + Settings.PlayerMovePenalty * 6);
 							InputOutput.UpdatePrisoner(prisoner);
 						}
 					else
 						{
-							Jail.Message(Settings.MessageMoveNoPenalty, event.getPlayer());
+							Util.Message(Settings.MessageMoveNoPenalty, event.getPlayer());
 						}
 					event.setRespawnLocation(prisoner.getTeleportLocation());					
 				}

@@ -21,8 +21,8 @@ public static HashMap<String,CreationPlayer> players = new HashMap<String,Creati
 		if (!player.getInventory().contains(Settings.SelectionTool))
 			player.getInventory().addItem(new ItemStack(Settings.SelectionTool,1));
 		
-		Jail.Message("§cJail Cell Creation:", player);
-		Jail.Message("First, you must select teleport point for the cell! Move to the teleport and then click anywhere with wooden sword, to set it", player);
+		Util.Message("§cJail Cell Creation:", player);
+		Util.Message("First, you must select teleport point for the cell! Move to the teleport and then click anywhere with wooden sword, to set it", player);
 		players.put(player.getName(), new CreationPlayer(name));
 	}
 	
@@ -46,7 +46,7 @@ public static HashMap<String,CreationPlayer> players = new HashMap<String,Creati
 	
 	private static void telepoint(Player player, Block block)
 	{
-		Jail.Message("Teleport point selected. Now select sign, associated with this cell. If there is no such sign, click on any non-sign block.", player);
+		Util.Message("Teleport point selected. Now select sign, associated with this cell. If there is no such sign, click on any non-sign block.", player);
 		CreationPlayer cr = players.get(player.getName());
 		cr.cell.setTeleportLocation(player.getLocation());
 		cr.state++;
@@ -55,7 +55,7 @@ public static HashMap<String,CreationPlayer> players = new HashMap<String,Creati
 
 	private static void sign(Player player, Block block)
 	{
-		Jail.Message("Sign selected. Now select chest, associated with this cell. If there is no such chest, click on any non-chest block.", player);
+		Util.Message("Sign selected. Now select chest, associated with this cell. If there is no such chest, click on any non-chest block.", player);
 		CreationPlayer cr = players.get(player.getName());
 		if (block.getType() == Material.SIGN_POST || block.getType() == Material.WALL_SIGN)
 			cr.cell.setSign(block.getLocation());
@@ -82,7 +82,7 @@ public static HashMap<String,CreationPlayer> players = new HashMap<String,Creati
 		InputOutput.InsertCell(cr.cell);
 		players.remove(player.getName());
 		players.put(player.getName(), new CreationPlayer(cr.cell.getJail().getName()));
-		Jail.Message("Chest selected and cell created. Now select teleport point of next cell. To stop creating, type /jailstop", player);
+		Util.Message("Chest selected and cell created. Now select teleport point of next cell. To stop creating, type /jailstop", player);
 
 		
 	}

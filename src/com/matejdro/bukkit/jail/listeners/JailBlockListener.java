@@ -1,4 +1,4 @@
-package com.matejdro.bukkit.jail;
+package com.matejdro.bukkit.jail.listeners;
 
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
@@ -6,10 +6,16 @@ import org.bukkit.event.block.BlockIgniteEvent.IgniteCause;
 import org.bukkit.event.block.BlockListener;
 import org.bukkit.event.block.BlockPlaceEvent;
 
-public class JailBlock extends BlockListener {
+import com.matejdro.bukkit.jail.InputOutput;
+import com.matejdro.bukkit.jail.Jail;
+import com.matejdro.bukkit.jail.JailPrisoner;
+import com.matejdro.bukkit.jail.Settings;
+import com.matejdro.bukkit.jail.Util;
+
+public class JailBlockListener extends BlockListener {
 	private Jail plugin;
 
-	public JailBlock(Jail instance)
+	public JailBlockListener(Jail instance)
 	{
 		plugin = instance;
 	}
@@ -17,19 +23,19 @@ public class JailBlock extends BlockListener {
 	
 	public void onBlockBreak(BlockBreakEvent event) {
 		if (event.isCancelled()) return;
-		if (plugin.isInsideJail(event.getBlock().getLocation()) && (!Jail.permission(event.getPlayer(), "jail.command.jailcreate", event.getPlayer().isOp()) || Jail.prisoners.containsKey(event.getPlayer().getName().toLowerCase())))
+		if (plugin.isInsideJail(event.getBlock().getLocation()) && (!Util.permission(event.getPlayer(), "jail.command.jailcreate", event.getPlayer().isOp()) || Jail.prisoners.containsKey(event.getPlayer().getName().toLowerCase())))
 		{
 			
 			if (Settings.BlockDestroyPenalty > 0 && Jail.prisoners.containsKey(event.getPlayer().getName().toLowerCase()) && Jail.prisoners.get(event.getPlayer().getName().toLowerCase()).getRemainingTime() > 0)
 				{
 					JailPrisoner prisoner = Jail.prisoners.get(event.getPlayer().getName().toLowerCase());
-					Jail.Message(Settings.MessageDestroyPenalty, event.getPlayer());
+					Util.Message(Settings.MessageDestroyPenalty, event.getPlayer());
 					prisoner.setRemainingTime(prisoner.getRemainingTime() + Settings.BlockDestroyPenalty * 6);
 					InputOutput.UpdatePrisoner(prisoner);
 				}
 			else
 				{
-					Jail.Message(Settings.MessageDestroyNoPenalty, event.getPlayer());
+					Util.Message(Settings.MessageDestroyNoPenalty, event.getPlayer());
 				}
 			event.setCancelled(true);
 		}
@@ -38,19 +44,19 @@ public class JailBlock extends BlockListener {
 	
 	public void onBlockPlace(BlockPlaceEvent event) {
 		if (event.isCancelled()) return;
-		if (plugin.isInsideJail(event.getBlockPlaced().getLocation()) && (!Jail.permission(event.getPlayer(), "jail.command.jailcreate", event.getPlayer().isOp()) || Jail.prisoners.containsKey(event.getPlayer().getName())))
+		if (plugin.isInsideJail(event.getBlockPlaced().getLocation()) && (!Util.permission(event.getPlayer(), "jail.command.jailcreate", event.getPlayer().isOp()) || Jail.prisoners.containsKey(event.getPlayer().getName())))
 		{
 			
 			if (Settings.BlockPlacePenalty > 0 && Jail.prisoners.containsKey(event.getPlayer().getName()) && Jail.prisoners.get(event.getPlayer().getName()).getRemainingTime() > 0)
 				{
 					JailPrisoner prisoner = Jail.prisoners.get(event.getPlayer().getName());
-					Jail.Message(Settings.MessagePlacePenalty, event.getPlayer());
+					Util.Message(Settings.MessagePlacePenalty, event.getPlayer());
 					prisoner.setRemainingTime(prisoner.getRemainingTime() + Settings.BlockPlacePenalty * 6);
 					InputOutput.UpdatePrisoner(prisoner);
 				}
 			else
 				{
-					Jail.Message(Settings.MessagePlaceNoPenalty, event.getPlayer());
+					Util.Message(Settings.MessagePlaceNoPenalty, event.getPlayer());
 				}
 			event.setCancelled(true);
 		}
@@ -66,13 +72,13 @@ public class JailBlock extends BlockListener {
 				if (Settings.FirePenalty > 0 && Jail.prisoners.containsKey(event.getPlayer().getName()) && Jail.prisoners.get(event.getPlayer().getName()).getRemainingTime() > 0)
 				{
 					JailPrisoner prisoner = Jail.prisoners.get(event.getPlayer().getName());
-					Jail.Message(Settings.MessageFirePenalty, event.getPlayer());
+					Util.Message(Settings.MessageFirePenalty, event.getPlayer());
 					prisoner.setRemainingTime(prisoner.getRemainingTime() + Settings.FirePenalty * 6);
 					InputOutput.UpdatePrisoner(prisoner);
 				}
 			else
 				{
-					Jail.Message(Settings.MessageFireNoPenalty, event.getPlayer());
+					Util.Message(Settings.MessageFireNoPenalty, event.getPlayer());
 				}
 			}
 			event.setCancelled(true);

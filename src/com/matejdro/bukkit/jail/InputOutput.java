@@ -14,14 +14,12 @@ import java.util.logging.Level;
 import org.bukkit.Location;
 public class InputOutput {
     private static Connection connection;
-    private Jail plugin;
     private PropertiesFile pf;
     
     public static HashMap<Integer, String[]> jailStickParameters = new HashMap<Integer, String[]>();
     
-	public InputOutput(Jail instance)
+	public InputOutput()
 	{
-		plugin = instance;
 		if (!new File("plugins" + File.separator + "Jail").exists()) {
 			try {
 			(new File("plugins" + File.separator + "Jail")).mkdir();

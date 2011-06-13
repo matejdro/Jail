@@ -445,7 +445,7 @@ public class JailPrisoner {
 		}
 		else
 		{
-			Jail.instance.UnJail(this, player);
+			PrisonerManager.UnJail(this, player);
 			
 		}
 
@@ -483,7 +483,7 @@ public class JailPrisoner {
 		}
 		else
 		{
-			Jail.instance.Transfer(this, player);
+			PrisonerManager.Transfer(this, player);
 		}
 
 	}

@@ -29,7 +29,7 @@ private Jail plugin;
 		args[2] = jailName;
 		args[3] = reason;
 	
-		plugin.PrepareJail(null, args);
+		PrisonerManager.PrepareJail(null, args);
 	}
 	
 	/**
@@ -91,7 +91,7 @@ private Jail plugin;
 	 */
 	public JailZone getNearestJailZone(Location loc)
 	{
-		return Jail.instance.findNearestJail(loc);
+		return JailZoneManager.findNearestJail(loc);
 	}
 	
 	/**
