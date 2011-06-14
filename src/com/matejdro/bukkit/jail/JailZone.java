@@ -232,9 +232,13 @@ public class JailZone {
 	{
 		PrisonerManager.PrepareTransferAll(this);
 		InputOutput.DeleteZone(this);
-		Jail.zones.remove(this.getName());
-		for (JailCell cell : this.getCellList())
-			InputOutput.DeleteCell(cell);
+		Jail.zones.remove(getName());
+		for (Object cello : getCellList().toArray())
+		{
+			JailCell cell = (JailCell) cello;
+			cell.delete();
+		}
+			
 	}
 	
 	private Boolean isBetween(double x, double y, double n)

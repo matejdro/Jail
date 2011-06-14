@@ -41,5 +41,7 @@ commands:
         description: modify existing jail or prisoner.
     jailpay:
         description: Pay money to be released early.
+    jaildeletecells:
+        description: Delete all cells from specified jail.
     
         

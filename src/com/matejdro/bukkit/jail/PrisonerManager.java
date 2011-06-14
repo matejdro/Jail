@@ -137,7 +137,7 @@ public class PrisonerManager {
 
 				}
 			}
-			InputOutput.UpdateCell(cell);
+			cell.update();
 		}
 		
 		player.teleport(prisoner.getTeleportLocation());

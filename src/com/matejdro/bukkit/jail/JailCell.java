@@ -181,6 +181,23 @@ public class JailCell {
 	{
 		player = input;
 	}
+	
+	/**
+	 * Update data of this cell into database.
+	 */
+	public void update()
+	{
+		InputOutput.UpdateCell(this);
+	}
+	
+	/**
+	 * Delete this cell from database
+	 */
+	public void delete()
+	{
+		InputOutput.DeleteCell(this);
+		getJail().getCellList().remove(this);
+	}
 
 	
 	
