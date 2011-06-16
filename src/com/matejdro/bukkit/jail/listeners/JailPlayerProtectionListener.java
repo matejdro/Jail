@@ -70,7 +70,7 @@ public class JailPlayerProtectionListener extends PlayerListener {
 		
 		 
 	 public void onPlayerMove(PlayerMoveEvent event) {
-		 //if (event.isCancelled()) return;
+		 if (event.isCancelled()) return;
 		 if (Jail.prisoners.containsKey(event.getPlayer().getName().toLowerCase()))
 			{
 				JailPrisoner prisoner = Jail.prisoners.get(event.getPlayer().getName().toLowerCase());
@@ -148,11 +148,13 @@ public class JailPlayerProtectionListener extends PlayerListener {
 	 
 	 
 	 public void onPlayerTeleport(PlayerTeleportEvent event) {
+		 if (event.isCancelled()) return;
 		 onPlayerMove((PlayerMoveEvent) event);
 		      }
 	 
 	 
 	 public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event) {
+		 if (event.isCancelled()) return;
 		 if (JailZoneManager.isInsideJail(event.getBlockClicked().getLocation()) || JailZoneManager.isInsideJail(event.getBlockClicked().getFace(event.getBlockFace()).getLocation()))
 		 {
 			 if (Settings.BucketPenalty > 0 && Jail.prisoners.containsKey(event.getPlayer().getName().toLowerCase()) && Jail.prisoners.get(event.getPlayer().getName().toLowerCase()).getRemainingTime() > 0)
@@ -183,6 +185,54 @@ public class JailPlayerProtectionListener extends PlayerListener {
 						}
 					}
 				}
+			
+			JailPrisoner prisoner = Jail.prisoners.get(event.getPlayer().getName().toLowerCase());
+			if (prisoner != null)
+			{
+				if (event.getClickedBlock() != null)
+				{
+					int id = event.getClickedBlock().getTypeId();
+					if (Settings.PreventInteractionBlocks.contains(String.valueOf(id)))
+					{
+						if (event.getAction() != Action.PHYSICAL && Settings.InteractionPenalty > 0  && prisoner.getRemainingTime() > 0)
+						{
+							
+							Util.Message(Settings.MessageInteractionPenalty, event.getPlayer());
+							prisoner.setRemainingTime(prisoner.getRemainingTime() + Settings.InteractionPenalty * 6);
+							InputOutput.UpdatePrisoner(prisoner);
+						}
+						else if (event.getAction() != Action.PHYSICAL)
+						{
+							Util.Message(Settings.MessageInteractionNoPenalty, event.getPlayer());
+						}
+						
+						event.setCancelled(true);
+						return;
+					}
+				}
+				if (event.getPlayer().getItemInHand() != null)
+				{
+					int id = event.getPlayer().getItemInHand().getTypeId();
+					if (Settings.PreventInteractionItems.contains(String.valueOf(id)))
+					{
+						if (event.getAction() != Action.PHYSICAL && Settings.InteractionPenalty > 0  && prisoner.getRemainingTime() > 0)
+						{
+							
+							Util.Message(Settings.MessageInteractionPenalty, event.getPlayer());
+							prisoner.setRemainingTime(prisoner.getRemainingTime() + Settings.InteractionPenalty * 6);
+							InputOutput.UpdatePrisoner(prisoner);
+						}
+						else if (event.getAction() != Action.PHYSICAL)
+						{
+							Util.Message(Settings.MessageInteractionNoPenalty, event.getPlayer());
+						}
+						
+						event.setCancelled(true);
+						return;
+					}
+				}
+
+			}
 		}
 	 
 	 public void onPlayerRespawn(PlayerRespawnEvent event) {

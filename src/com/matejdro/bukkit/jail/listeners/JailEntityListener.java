@@ -2,16 +2,19 @@ package com.matejdro.bukkit.jail.listeners;
 
 import java.util.Random;
 
+import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntityListener;
 
 import com.matejdro.bukkit.jail.Jail;
 import com.matejdro.bukkit.jail.JailPrisoner;
+import com.matejdro.bukkit.jail.JailZoneManager;
 import com.matejdro.bukkit.jail.Settings;
 
 public class JailEntityListener extends EntityListener {
@@ -65,18 +68,13 @@ public class JailEntityListener extends EntityListener {
 	}
 	
 	public void onEntityDamage(EntityDamageEvent event) {
+		if (event.isCancelled()) return;
 		Entity victim = event.getEntity();
 		// Apply Wolf Armor or Invincibiliy
-		if (Jail.guards.containsKey(victim))
+		if (Jail.guards.containsKey(victim) && Settings.Guardinvincibility)
 		{
-			if (Settings.Guardinvincibility)
-			{
 				event.setCancelled(true);
 				return;
-			}
-			int damage = (int) Math.round(event.getDamage() * (100 - Settings.GuardArmor) / 100.0);
-			event.setDamage(damage > 0 ? damage : 1); 
-			return;
 		}
 		if (!(event instanceof EntityDamageByEntityEvent)) return;
 		EntityDamageByEntityEvent newevent = (EntityDamageByEntityEvent) event;
@@ -92,9 +90,26 @@ public class JailEntityListener extends EntityListener {
 			}
 			event.setDamage(Settings.GuardDamage);
 		}
-
 		
+		if (Settings.PreventPvPInJail && victim instanceof Player && damager instanceof Player && JailZoneManager.isInsideJail(victim.getLocation()))
+		{
+			event.setCancelled(true);
+			return;
+		}
 			
+	}
+	
+	public void onEntityExplode(EntityExplodeEvent event) {
+		if (event.isCancelled()) return;
+		for (Object o : event.blockList().toArray())
+		{
+			Block b = (Block) o;
+			if (JailZoneManager.isInsideJail(b.getLocation()))
+			{
+				event.setCancelled(true);
+				return;
+			}
+		}
 	}
 	
 	

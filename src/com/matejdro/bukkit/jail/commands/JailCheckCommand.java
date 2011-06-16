@@ -62,7 +62,7 @@ public class JailCheckCommand extends BaseCommand {
 			}
 			else if (prisoner.getRemainingTime() < 0)
 			{
-				message += ("§Player is jailed forever! (or until admin releases him)");
+				message += ("Player is jailed forever! (or until admin releases him)");
 			}
 
 			else if (prisoner.getRemainingTime() != 0)
@@ -74,7 +74,7 @@ public class JailCheckCommand extends BaseCommand {
 				else
 					tim = String.valueOf(Math.round( time * 10.0d ) / 10.0d);
 				
-				message += ("§Player is jailed for " + tim + " minutes");
+				message += ("Player is jailed for " + tim + " minutes");
 			}
 			
 			if (prisoner.getReason() != null && !prisoner.getReason().trim().equals(""))

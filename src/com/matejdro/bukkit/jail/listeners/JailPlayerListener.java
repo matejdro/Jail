@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
 import org.bukkit.event.block.Action;
@@ -51,34 +50,39 @@ public class JailPlayerListener extends PlayerListener {
 				JailSetCommand.RightClick(event.getClickedBlock(), event.getPlayer());
 				event.setCancelled(true);
 			}
-			
 		}
+		Player player = event.getPlayer();
+
+		if (!InputOutput.jailStickParameters.containsKey(player.getItemInHand().getTypeId())) return;
+		if (!Util.permission(player, "jail.usejailstick" + String.valueOf(player.getItemInHand().getTypeId()), player.isOp())) return;
+		String[] param = InputOutput.jailStickParameters.get(player.getItemInHand().getTypeId());
+		
+		List<Block> targets = player.getLineOfSight(null, Integer.parseInt(param[1]));
+		targets.remove(0);
+		for (Block b : targets)
+		{
+			for (Player p : plugin.getServer().getOnlinePlayers())
+			{
+				if ((b == p.getLocation().getBlock() || b == p.getEyeLocation().getBlock()) && Util.permission(player, "jail.canbestickjailed", true))
+				{
+					String args[] = new String[4];
+					args[0] = p.getName();
+					args[1] = param[2];
+					args[2] = param[3];
+					args[3] = param[4];
+					PrisonerManager.PrepareJail((CommandSender) event.getPlayer(), args); 
+				}
+			}
+		}
+
 	}
 	
 	public void onPlayerInteract(PlayerInteractEntityEvent event) {
 			Player player = event.getPlayer();
-			if (!InputOutput.jailStickParameters.containsKey(player.getItemInHand().getTypeId())) return;
-			if (!Util.permission(player, "jail.usejailstick" + String.valueOf(player.getItemInHand().getTypeId()), player.isOp())) return;
-			
-			String[] param = InputOutput.jailStickParameters.get(player.getItemInHand().getTypeId());
-			
-			List<Block> targets = player.getLineOfSight(null, Integer.parseInt(param[1]));
-			targets.remove(0);
-			Entity ent = event.getRightClicked();
-			if (ent == null || !(ent instanceof Player)) return;
-			Player target = (Player) ent;
-			if (Util.permission(target, "jail.canbestickjailed", true))
-			{
-				String args[] = new String[4];
-				args[0] = target.getName();
-				args[1] = param[2];
-				args[2] = param[3];
-				args[3] = param[4];
-				PrisonerManager.PrepareJail((CommandSender) event.getPlayer(), args); 
-			}
 	}
 	
 	public void onPlayerChat(PlayerChatEvent event) {
+		if (event.isCancelled()) return;
 		if ( JailCellCreation.players.containsKey(event.getPlayer().getName()))
 		{
 			if (JailCellCreation.chatmessage(event.getPlayer(), event.getMessage()));

@@ -97,9 +97,8 @@ public class InputOutput {
     	
     	Settings.GuardHealth = pf.getInt("GuardHealth", 20, "Health of a guard wolf in range 1-20. 1 health unit means half hearth (so 10 health units means 5 hearths of health)");
     	Settings.GuardDamage = pf.getInt("GuardDamage", 1, "How much damage will guard deal per attack? 1 health unit means half hearth (so 10 health units means 5 hearths of damage)");
-    	Settings.GuardArmor = pf.getInt("GuardArmor", 0, "20 units of health not enough? Give wolf some armor then. Armor will absorb specified percentage of damage taken. Range: 0-100");
     	Settings.NumberOfGuards = pf.getInt("NumberOfGuards", 3, "How many guards are spawned after player tries to escape?");
-    	Settings.Guardinvincibility = pf.getBoolean("Guardinvincibility", false, "Armor not enough? Turn on invincibility! Invincibility will remove any damage, making wolf invulnerable.");
+    	Settings.Guardinvincibility = pf.getBoolean("Guardinvincibility", false, "Invincibility will remove any damage, making wolf invulnerable.");
     	Settings.GuardAttackSpeedPercent = pf.getInt("GuardAttackSpeedPercent", 50, "1 unit of damage still too much? Lower the attack speed then. This sets percentage of wolf attack speed, so 100 means default wolf attack speed.");
     	Settings.RespawnGuards = pf.getBoolean("RespawnGuards", true, "true - wolves will respawn immediatelly after being killed, thus making prisoners impossible to kill all wolfs. false - when all wolves that are protecting specified prisoner are killed, prisoner is free");
     	Settings.GuardTeleportDistance = pf.getInt("GuardTeleportDistance", 10, "How many blocks away must prisoner be from the guard to make guard teleport to prisoner. Enter 0 to disable this.");
@@ -463,17 +462,13 @@ public class InputOutput {
 				ps.setString(5, String.valueOf(c.getSecondChest().getX()) + "," + String.valueOf(c.getSecondChest().getY()) + "," + String.valueOf(c.getSecondChest().getZ()));
 			else
 				ps.setString(5, "");
+			ps.setString(6, c.getPlayerName());
 			if (c.getName() != null)
 				ps.setString(7, c.getName());
 			else
 				ps.setString(7, "");
 
-			
-
-			ps.setString(6, c.getPlayerName());
-			
-			ps.setString(8, String.valueOf(c.oldteleport.getX()) + "," + String.valueOf(c.oldteleport.getX()) + "," + String.valueOf(c.oldteleport.getZ()));
-			
+			ps.setString(8, String.valueOf(c.oldteleport.getX()) + "," + String.valueOf(c.oldteleport.getY()) + "," + String.valueOf(c.oldteleport.getZ()));
 			ps.executeUpdate();
 			conn.commit();
 			

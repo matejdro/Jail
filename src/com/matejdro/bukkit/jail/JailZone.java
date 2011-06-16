@@ -189,7 +189,7 @@ public class JailZone {
 	 */
 	public Boolean isInside(Location loc)
 	{
-		if (isBetween(X1,X2, loc.getX()) && isBetween(Y1,Y2, loc.getY()) && isBetween(Z1,Z2, loc.getZ()) )
+		if (loc.getWorld().getName().equalsIgnoreCase(teleWorldname) && isBetween(X1,X2, loc.getX()) && isBetween(Y1,Y2, loc.getY()) && isBetween(Z1,Z2, loc.getZ()) )
 			return true;
 		return false;
 	}

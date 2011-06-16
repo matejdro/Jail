@@ -4,6 +4,8 @@ import org.bukkit.Material;
 import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -174,6 +176,17 @@ public class PrisonerManager {
 			cell.update();
 		}
 		
+//		if (Settings.ChangePermissionsGroup && Jail.permissions != null)
+//		{
+//			Permissions permissions = (Permissions) Jail.permissions;
+//			User user = permissions.getHandler().getUserObject("test", "test");
+//			for (Entry e : user.getParents())
+//			{
+//				permissions.getHandler().getGroupObject(arg0, arg1)
+//			}
+//			
+//		}
+		
 		player.teleport(prisoner.getTeleportLocation());
 		if (Settings.StoreInventory) 
 		{
@@ -187,6 +200,13 @@ public class PrisonerManager {
 			InputOutput.InsertPrisoner(prisoner);
 		Jail.prisoners.put(prisoner.getName(), prisoner);
 		prisoner.SetBeingReleased(false);
+		
+		for (String s : Settings.ExecutedCommandsOnJail)
+		{
+			CraftServer cs = (CraftServer) Jail.instance.getServer();
+			CommandSender coms = new ConsoleCommandSender(Jail.instance.getServer());
+			cs.dispatchCommand(coms,s.replace("<Player>", player.getName()));
+		}
 		
 	}
 	
@@ -252,6 +272,13 @@ public class PrisonerManager {
 		
 		if (Settings.StoreInventory) prisoner.restoreInventory(player);
 		prisoner.delete();
+		
+		for (String s : Settings.ExecutedCommandsOnRelease)
+		{
+			CraftServer cs = (CraftServer) Jail.instance.getServer();
+			CommandSender coms = new ConsoleCommandSender(Jail.instance.getServer());
+			cs.dispatchCommand(coms,s.replace("<Player>", player.getName()));
+		}
 	}
 	
 	/**

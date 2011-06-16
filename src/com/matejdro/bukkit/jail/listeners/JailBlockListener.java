@@ -1,5 +1,6 @@
 package com.matejdro.bukkit.jail.listeners;
 
+import org.bukkit.Material;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockIgniteEvent.IgniteCause;
@@ -24,7 +25,8 @@ public class JailBlockListener extends BlockListener {
 	
 	public void onBlockBreak(BlockBreakEvent event) {
 		if (event.isCancelled()) return;
-		if (JailZoneManager.isInsideJail(event.getBlock().getLocation()) && (!Util.permission(event.getPlayer(), "jail.command.jailcreate", event.getPlayer().isOp()) || Jail.prisoners.containsKey(event.getPlayer().getName().toLowerCase())))
+		if (Settings.BlockProtectionExceptions.contains(String.valueOf(event.getBlock().getTypeId()))) return;
+		if (JailZoneManager.isInsideJail(event.getBlock().getLocation()) && (!Util.permission(event.getPlayer(), "jail.modifyjail", event.getPlayer().isOp()) || Jail.prisoners.containsKey(event.getPlayer().getName().toLowerCase())))
 		{
 			
 			if (Settings.BlockDestroyPenalty > 0 && Jail.prisoners.containsKey(event.getPlayer().getName().toLowerCase()) && Jail.prisoners.get(event.getPlayer().getName().toLowerCase()).getRemainingTime() > 0)
@@ -45,9 +47,10 @@ public class JailBlockListener extends BlockListener {
 	
 	public void onBlockPlace(BlockPlaceEvent event) {
 		if (event.isCancelled()) return;
-		if (JailZoneManager.isInsideJail(event.getBlockPlaced().getLocation()) && (!Util.permission(event.getPlayer(), "jail.command.jailcreate", event.getPlayer().isOp()) || Jail.prisoners.containsKey(event.getPlayer().getName())))
+		if (Settings.BlockProtectionExceptions.contains(String.valueOf(event.getBlock().getTypeId()))) return;
+		if (JailZoneManager.isInsideJail(event.getBlockPlaced().getLocation()) && (!Util.permission(event.getPlayer(), "jail.modifyjail", event.getPlayer().isOp()) || Jail.prisoners.containsKey(event.getPlayer().getName().toLowerCase())))
 		{
-			
+			event.getPlayer().sendMessage("test");
 			if (Settings.BlockPlacePenalty > 0 && Jail.prisoners.containsKey(event.getPlayer().getName()) && Jail.prisoners.get(event.getPlayer().getName()).getRemainingTime() > 0)
 				{
 					JailPrisoner prisoner = Jail.prisoners.get(event.getPlayer().getName());
@@ -66,6 +69,7 @@ public class JailBlockListener extends BlockListener {
 	
 	public void onBlockIgnite(BlockIgniteEvent event)
 	{
+		if (event.isCancelled()) return;
 		if (JailZoneManager.isInsideJail(event.getBlock().getLocation()))
 		{
 			if (event.getCause() == IgniteCause.FLINT_AND_STEEL)
