@@ -3,6 +3,10 @@ package com.matejdro.bukkit.jail;
 import org.bukkit.Location;
 
 public class JailZoneManager {
+	
+	/**
+	 * Find nearest jail zone to specified location.
+	 */
 	public static JailZone findNearestJail(Location loc)
 	{
 		JailZone jail = null;
@@ -24,6 +28,10 @@ public class JailZoneManager {
 			
 	}
 	
+	/** 
+	 * Find nearest jail zone to specified location with ignoring specified jail
+	 * @param ignore name of the jail zone that will be ignored while searching
+	 */
 	public static JailZone findNearestJail(Location loc, String ignore)
 	{
 		JailZone jail = null;
@@ -46,6 +54,9 @@ public class JailZoneManager {
 			
 	}
 	
+	/**
+	 * Check if location is inside any jail
+	 */
 	public static Boolean isInsideJail(Location loc)
 	{
 		for (JailZone zone : Jail.zones.values())

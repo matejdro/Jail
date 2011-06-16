@@ -39,9 +39,21 @@ public static HashMap<String,CreationPlayer> players = new HashMap<String,Creati
 			case 3:
 				chest(player,block);
 				break;
+			case 4:
+				noname(player, block);
 			
 			
 		}
+	}
+	
+	public static Boolean chatmessage(Player player, String message)
+	{
+		if (players.get(player.getName()).state == 4) 
+		{
+			name(player, message);
+			return true;
+		}
+		return false;
 	}
 	
 	private static void telepoint(Player player, Block block)
@@ -77,14 +89,37 @@ public static HashMap<String,CreationPlayer> players = new HashMap<String,Creati
 
 		}
 			
+		cr.state++;
+		Util.Message("Chest selected. Now type name of the cell into chat. If you don't want to select cell name, just righ click anywhere.", player);
+
+	}
+	
+	private static void noname(Player player, Block block)
+	{
+		CreationPlayer cr = players.get(player.getName());
+				
+		Util.Message("Cell created. Now select teleport point of next cell. To stop creating, type /jailstop.", player);
+		finish(cr, player);
+	}
+	
+	private static void name(Player player, String name)
+	{
+		CreationPlayer cr = players.get(player.getName());
 		
+		cr.cell.setName(name);
+		
+		Util.Message("Name set and cell created. Now select teleport point of next cell. To stop creating, type /jailstop.", player);
+
+		finish(cr, player);
+	}
+	
+	private static void finish(CreationPlayer cr, Player player)
+	{
 		cr.cell.getJail().getCellList().add(cr.cell);
 		InputOutput.InsertCell(cr.cell);
 		players.remove(player.getName());
 		players.put(player.getName(), new CreationPlayer(cr.cell.getJail().getName()));
-		Util.Message("Chest selected and cell created. Now select teleport point of next cell. To stop creating, type /jailstop", player);
 
-		
 	}
 	
 
@@ -97,7 +132,7 @@ public static HashMap<String,CreationPlayer> players = new HashMap<String,Creati
 		public CreationPlayer(String name)
 		{
 			state = 1;
-			cell = new JailCell(name, "");
+			cell = new JailCell(name, "", "");
 		}
 }
 

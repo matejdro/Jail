@@ -6,21 +6,42 @@ import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
 
 public class JailCell {
+	private String name;
 	private String jailname;
 	private String player;
 	private Location teleport;
 	private Location sign;
 	private Location chest;
 	private Location chest2;
+	Location oldteleport = null;
 	
 	/**
+	 * @param Name Name of the cell. Can be null if you don't want to specify one.
 	 * @param JailName Name of the jail that contains that cell
 	 * @param Player Name of the player that is jailed inside that cell. Make it empty string, if there is no such player.
 	 */
-	public JailCell(String JailName, String Player)
+	public JailCell(String JailName, String Player, String Name)
 	{
 		jailname = JailName;
 		player = Player;
+		name = Name;
+	}
+	
+	/**
+	 * @return Name of the cell. It can be null or empty if cell does not have a name.
+	 */
+	public String getName()
+	{
+		return name;
+	}
+	
+	/**
+	 * Set name of the cell
+	 * @param input Name of the cell. Can be null
+	 */
+	public void setName(String input)
+	{
+		name = input;
 	}
 	
 	/**
@@ -54,6 +75,7 @@ public class JailCell {
 	 */
 	public void setTeleportLocation(Location input)
 	{
+		if (oldteleport == null) oldteleport = teleport;
 		teleport = input;
 	}
 	
@@ -64,6 +86,7 @@ public class JailCell {
 	public void setTeleportLocation(String input)
 	{
 		if (input == null || input.trim().equals("")) return;
+		if (oldteleport == null) oldteleport = teleport;
 		String[] str = input.split(",");
 		Location loc = new Location(getJail().getTeleportLocation().getWorld(), Double.parseDouble(str[0]), Double.parseDouble(str[1]),Double.parseDouble(str[2]));
 		teleport = loc;
@@ -187,7 +210,9 @@ public class JailCell {
 	 */
 	public void update()
 	{
+		if (oldteleport == null) oldteleport = teleport;
 		InputOutput.UpdateCell(this);
+		oldteleport = null;
 	}
 	
 	/**

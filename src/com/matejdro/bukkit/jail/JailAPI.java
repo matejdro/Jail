@@ -4,6 +4,9 @@ import java.util.Collection;
 
 import org.bukkit.Location;
 
+/**
+ * Collection of useful methods to easily access and mess with Jail API.
+ */
 public class JailAPI {
 private Jail plugin;
 	public JailAPI(Jail instance)
@@ -27,6 +30,28 @@ private Jail plugin;
 		args[0] = playerName;
 		args[1] = String.valueOf(time);
 		args[2] = jailName;
+		args[3] = reason;
+	
+		PrisonerManager.PrepareJail(null, args);
+	}
+	
+	/**
+	 * Jail specified player
+	 * @param playerName Name of the player you want to jail
+	 * @param time Jail time in minutes
+	 * @param jailName Name of the jail, where prisoner will be jailed. Use null to let plugin select nearest jail.
+	 * @param cellName Name of the cell, where prisoner will be jailed.
+	 * @param reason Reason for jailing. Use null if you don't want to specify reason.
+	 */
+	public void jailPlayer(String playerName, int time, String jailName, String cellName, String reason)
+	{
+		if (jailName == null) jailName = "";
+		if (reason == null) reason = "";
+		
+		String[] args = new String[4];
+		args[0] = playerName;
+		args[1] = String.valueOf(time);
+		args[2] = jailName + ":" + cellName;
 		args[3] = reason;
 	
 		PrisonerManager.PrepareJail(null, args);
@@ -102,6 +127,16 @@ private Jail plugin;
 	{
 		InputOutput.InsertZone(zone);
 		Jail.zones.put(zone.getName(), zone);
+	}
+	
+	/**
+	 * Insert new prisoner into jail system. Use if you want to jail someone manually.
+	 * @param prisoner new prisoner that you want to insert into jail system
+	 */
+	public void InsertPrisoner(JailPrisoner prisoner)
+	{
+		InputOutput.InsertPrisoner(prisoner);
+		Jail.prisoners.put(prisoner.getName(), prisoner);
 	}
 	
 }

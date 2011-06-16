@@ -8,6 +8,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -75,6 +76,14 @@ public class JailPlayerListener extends PlayerListener {
 				args[3] = param[4];
 				PrisonerManager.PrepareJail((CommandSender) event.getPlayer(), args); 
 			}
+	}
+	
+	public void onPlayerChat(PlayerChatEvent event) {
+		if ( JailCellCreation.players.containsKey(event.getPlayer().getName()))
+		{
+			if (JailCellCreation.chatmessage(event.getPlayer(), event.getMessage()));
+				event.setCancelled(true);
+		}
 	}
 
 	

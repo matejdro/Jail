@@ -9,6 +9,11 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 public class PrisonerManager {
+	/**
+	 * Parse jail command and prepare user for jailing (if he is online, he will be instantly jailed. Otherwise, he will be jailed first time when he comes online)
+	 * @param sender CommandSender that send this command
+	 * @param args Arguments for the command. 0 = name, 1 = time, 2 = jailname:cellname, 3 = reason
+	 */
 	public static void PrepareJail(CommandSender sender, String args[])
 	{
 		String playername;
@@ -63,6 +68,13 @@ public class PrisonerManager {
 		if (jailname.equals(Settings.NearestJailCode)) 
 			jailname = "";
 		
+		String cellname = null;
+		if (jailname.contains(":"))
+		{
+			cellname = jailname.split(":")[1];
+			jailname = jailname.split(":")[0];			
+		}
+			
 		String jailer;
 		if (sender instanceof Player)
 			jailer = ((Player) sender).getName();
@@ -72,21 +84,39 @@ public class PrisonerManager {
 		Player player = Jail.instance.getServer().getPlayer(playername);		
 		if (player == null)
 		{
-			JailPrisoner prisoner = new JailPrisoner(playername, time * 6, jailname, true, "", reason, Settings.AutomaticMute,  "" ,jailer);
+			JailPrisoner prisoner = new JailPrisoner(playername, time * 6, jailname, null, true, "", reason, Settings.AutomaticMute,  "" ,jailer);
+			
+			JailCell cell = prisoner.getJail().getRequestedCell(prisoner);
+			if (cell != null && (cell.getPlayerName() == null || !cell.getPlayerName().trim().equals("")))
+			{
+				cell.setPlayerName(prisoner.getName());
+				cell.update();
+			}
+			
 			InputOutput.InsertPrisoner(prisoner);
 			Jail.prisoners.put(prisoner.getName(), prisoner);
+			
+			
+			
 			Util.Message("Player is offline. He will be automatically jailed when he connnects.", sender);
 			
 		}
 		else
 		{
-			JailPrisoner prisoner = new JailPrisoner(playername, time * 6, jailname, false, "", reason, Settings.AutomaticMute,  "", jailer);
+			JailPrisoner prisoner = new JailPrisoner(playername, time * 6, jailname, cellname, false, "", reason, Settings.AutomaticMute,  "", jailer);
 			Jail(prisoner, player);
 			Util.Message("Player jailed.", sender);
 			
 		}
 	}
 	
+	/**
+	 * Performs jailing of specified JailPrisoner. 
+	 * If you just want to jail someone, I recommend using JailAPI.jailPlayer, 
+	 * because it supports offline jail and it's easier to do.
+	 * @param prisoner JailPrisoner class of the new prisoner. Must be already inserted into database
+	 * @param player Player that will be teleported
+	 */
 	public static void Jail(JailPrisoner prisoner, Player player)
 	{
 		prisoner.SetBeingReleased(true);
@@ -103,9 +133,13 @@ public class PrisonerManager {
 			Util.Message(Settings.MessageJailReason.replace("<Reason>", prisoner.getReason()), player);
 
 		if (Settings.DeleteInventoryOnJail) player.getInventory().clear();
-
 		
-		JailCell cell = jail.getEmptyCell();
+		JailCell cell = jail.getRequestedCell(prisoner);
+		if (cell == null || (cell.getPlayerName() != null && !cell.getPlayerName().equals("") && !cell.getPlayerName().equals(prisoner.getName()))) 
+		{
+			cell = null;
+			cell = jail.getEmptyCell();
+		}
 		if (cell != null)
 		{
 			cell.setPlayerName(player.getName());
@@ -156,6 +190,13 @@ public class PrisonerManager {
 		
 	}
 	
+	/**
+	 * Performs releasing of specified JailPrisoner. 
+	 * If you just want to release someone, I recommend using prisoner.release, 
+	 * because it supports offline release and it's easier to do.
+	 * @param prisoner prisoner that will be released
+	 * @param player Player that will be teleported
+	 */
 	public static void UnJail(JailPrisoner prisoner, Player player)
 	{
 		prisoner.SetBeingReleased(true);
@@ -206,18 +247,25 @@ public class PrisonerManager {
 
 			}
 			cell.setPlayerName("");
-			InputOutput.UpdateCell(cell);
+			cell.update();
 		}
 		
 		if (Settings.StoreInventory) prisoner.restoreInventory(player);
 		prisoner.delete();
 	}
 	
+	/**
+	 * Initiate transfer of every prisoner in specified jail zone to another nearest jail zone
+	 */
 	public static void PrepareTransferAll(JailZone jail)
 	{
 		PrepareTransferAll(jail, "find nearest");
 	}
 	
+	/**
+	 * Initiate transfer of every prisoner in specified jail zone to another jail zone
+	 * @param target Name of the destination jail zone
+	 */
 	public static void PrepareTransferAll(JailZone zone, String target)
 	{
 		for (JailPrisoner prisoner : zone.getPrisoners())
@@ -241,6 +289,13 @@ public class PrisonerManager {
 		
 	}
 	
+	/**
+	 * Performs transfer of specified JailPrisoner. 
+	 * If you just want to transfer someone, I recommend using prisoner.transfer, 
+	 * because it supports offline transfer and it's easier to do.
+	 * @param prisoner Prisoner that will be transfered
+	 * @param player Player that will be teleported
+	 */
 	public static void Transfer(JailPrisoner prisoner, Player player)
 	{
 		if (prisoner.getTransferDestination() == "find nearest") prisoner.setTransferDestination(JailZoneManager.findNearestJail(player.getLocation(), prisoner.getJail().getName()).getName());
@@ -321,7 +376,7 @@ public class PrisonerManager {
 
 				}
 			}
-			InputOutput.UpdateCell(cell);
+			cell.update();
 		}
 		
 		if (Settings.StoreInventory) 

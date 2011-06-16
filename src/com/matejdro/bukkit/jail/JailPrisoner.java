@@ -34,6 +34,7 @@ public class JailPrisoner {
 	private String inventory = "";
 	private String jailer = "";
 	private HashSet<Wolf> guards = new HashSet<Wolf>();
+	private String requestedCell;
 	
 	public JailPrisoner()
 	{
@@ -46,6 +47,7 @@ public class JailPrisoner {
 	 * @param Name Name of this prisoner (player name)
 	 * @param Remaintime Jail time of this prisoner in tens of seconds (1 means 10 seconds)
 	 * @param Jail Name of the jail zone, where this prisoner will be jailed
+	 * @param Cell Name of the cell inside jail zone that prisoner will be jailed in. Can be empty or null if you don't want to specify cell.
 	 * @param Offline Is this prisoner scheduled for any actions such as jailing or transfering when he logs in.
 	 * @param TransferDest If this prisoner is waiting for transfer, this contains name of the destination jail zone
 	 * @param Reason Reason for jailing this prisoner
@@ -53,7 +55,7 @@ public class JailPrisoner {
 	 * @param Inventory Inventory string for this prisoner
 	 * @param Jailer Who jailed this prisoner
 	 */
-	public JailPrisoner(String Name, int Remaintime, String Jail, Boolean Offline, String TransferDest, String Reason, Boolean Muted, String Inventory, String Jailer)
+	public JailPrisoner(String Name, int Remaintime, String Jail, String Cell,  Boolean Offline, String TransferDest, String Reason, Boolean Muted, String Inventory, String Jailer)
 	{
 		name = Name.toLowerCase();
 		remaintime = Remaintime;
@@ -64,6 +66,7 @@ public class JailPrisoner {
 		reason = Reason;
 		inventory = Inventory;
 		jailer = Jailer;
+		requestedCell = Cell;
 	}
 		
 	/**
@@ -243,7 +246,14 @@ public class JailPrisoner {
 	{
 		cell = input;
 	}
-
+	
+	/**
+	 * @return Name of the cell that was requested when prisoner was jailed.
+	 */
+	public String getRequestedCell()
+	{
+		return requestedCell;
+	}
 	
 	/**
 	 * @return Inventory string of this prisoner. Format is: id,amount,durability,data;

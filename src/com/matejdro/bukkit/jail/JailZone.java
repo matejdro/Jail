@@ -165,8 +165,21 @@ public class JailZone {
 		}
 		return null;
 	}
-
-
+	
+	/**
+	 * If jailer selected cell for prisoner, it will be
+	 * @param prisoner
+	 * @return
+	 */
+	public JailCell getRequestedCell(JailPrisoner prisoner)
+	{
+		for (JailCell cell : getCellList())
+		{
+			if (cell.getName() != null && cell.getName().equals(prisoner.getRequestedCell())) return cell;
+			if (cell.getPlayerName() != null && cell.equals(prisoner.getName())) return cell;
+		}
+		return null;
+	}
 	
 	/**
 	 * Checks if location is inside this jail zone
