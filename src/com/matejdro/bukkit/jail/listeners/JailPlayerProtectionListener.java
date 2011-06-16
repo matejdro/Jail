@@ -18,6 +18,7 @@ import com.matejdro.bukkit.jail.Jail;
 import com.matejdro.bukkit.jail.JailCell;
 import com.matejdro.bukkit.jail.JailPrisoner;
 import com.matejdro.bukkit.jail.JailZone;
+import com.matejdro.bukkit.jail.JailZoneManager;
 import com.matejdro.bukkit.jail.Settings;
 import com.matejdro.bukkit.jail.Util;
 
@@ -152,7 +153,7 @@ public class JailPlayerProtectionListener extends PlayerListener {
 	 
 	 
 	 public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event) {
-		 if (plugin.isInsideJail(event.getBlockClicked().getLocation()) || plugin.isInsideJail(event.getBlockClicked().getFace(event.getBlockFace()).getLocation()))
+		 if (JailZoneManager.isInsideJail(event.getBlockClicked().getLocation()) || JailZoneManager.isInsideJail(event.getBlockClicked().getFace(event.getBlockFace()).getLocation()))
 		 {
 			 if (Settings.BucketPenalty > 0 && Jail.prisoners.containsKey(event.getPlayer().getName().toLowerCase()) && Jail.prisoners.get(event.getPlayer().getName().toLowerCase()).getRemainingTime() > 0)
 				{

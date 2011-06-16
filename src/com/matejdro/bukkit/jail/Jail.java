@@ -7,7 +7,6 @@ import java.util.logging.Logger;
 
 import javax.swing.Timer;
 
-import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -153,27 +152,7 @@ public class Jail extends JavaPlugin {
 		commands.put("jailpay", new JailPayCommand());
 		commands.put("jailcreate", new JailCreateCommand());
 		commands.put("jaildeletecells", new JailDeleteCellsCommand());
-		
 	}
-		
-	
-	public Boolean isInsideJail(Location loc)
-	{
-		for (JailZone zone : zones.values())
-		{
-			if (zone.isInside(loc))
-			{
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	
-	
-	
-		
-	
 	
 	ActionListener action = new ActionListener ()
     {

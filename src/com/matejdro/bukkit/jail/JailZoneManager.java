@@ -45,4 +45,16 @@ public class JailZoneManager {
 		return jail;
 			
 	}
+	
+	public static Boolean isInsideJail(Location loc)
+	{
+		for (JailZone zone : Jail.zones.values())
+		{
+			if (zone.isInside(loc))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
 }

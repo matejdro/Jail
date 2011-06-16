@@ -263,13 +263,19 @@ public class PrisonerManager {
 			if (cell.getChest() != null) 
 			{
 				for (ItemStack i: cell.getChest().getInventory().getContents())
+				{
+					if (i == null || i.getType() == Material.AIR) continue;
 					inventory.addItem(i);
+				}
 				cell.getChest().getInventory().clear();
 			}
 			if (cell.getSecondChest() != null) 
 			{
 				for (ItemStack i: cell.getSecondChest().getInventory().getContents())
+				{
+					if (i == null || i.getType() == Material.AIR) continue;
 					inventory.addItem(i);
+				}
 				cell.getSecondChest().getInventory().clear();
 			}
 			prisoner.setCell(null);
