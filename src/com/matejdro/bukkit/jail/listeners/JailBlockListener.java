@@ -50,7 +50,6 @@ public class JailBlockListener extends BlockListener {
 		if (Settings.BlockProtectionExceptions.contains(String.valueOf(event.getBlock().getTypeId()))) return;
 		if (JailZoneManager.isInsideJail(event.getBlockPlaced().getLocation()) && (!Util.permission(event.getPlayer(), "jail.modifyjail", event.getPlayer().isOp()) || Jail.prisoners.containsKey(event.getPlayer().getName().toLowerCase())))
 		{
-			event.getPlayer().sendMessage("test");
 			if (Settings.BlockPlacePenalty > 0 && Jail.prisoners.containsKey(event.getPlayer().getName()) && Jail.prisoners.get(event.getPlayer().getName()).getRemainingTime() > 0)
 				{
 					JailPrisoner prisoner = Jail.prisoners.get(event.getPlayer().getName());
