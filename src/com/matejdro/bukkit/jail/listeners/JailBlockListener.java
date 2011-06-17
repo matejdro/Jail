@@ -1,6 +1,5 @@
 package com.matejdro.bukkit.jail.listeners;
 
-import org.bukkit.Material;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockIgniteEvent.IgniteCause;

@@ -10,12 +10,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import com.nijiko.permissions.Entry;
-import com.nijiko.permissions.EntryType;
-import com.nijiko.permissions.Group;
-import com.nijiko.permissions.User;
-import com.nijikokun.bukkit.Permissions.Permissions;
-
 public class PrisonerManager {
 	/**
 	 * Parse jail command and prepare user for jailing (if he is online, he will be instantly jailed. Otherwise, he will be jailed first time when he comes online)
