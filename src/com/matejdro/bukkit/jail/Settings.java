@@ -37,9 +37,7 @@ public class Settings {
 	public static Boolean EnableEscape;
 	public static boolean AlwaysTeleportIntoJailCenter;
 	public static boolean CanPrisonerOpenHisChest;
-	public static String NewPermissionsGroup = "noob";
-	public static Boolean ChangePermissionsGroup = true;
-		
+
 	public static Boolean EnablePaying = true;
 	public static double PricePerMinute = 10;
 	public static double PriceForInfiniteJail = 9999;

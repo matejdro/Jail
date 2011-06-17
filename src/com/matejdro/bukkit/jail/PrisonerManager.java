@@ -10,6 +10,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import com.nijiko.permissions.Entry;
+import com.nijiko.permissions.EntryType;
+import com.nijiko.permissions.Group;
+import com.nijiko.permissions.User;
+import com.nijikokun.bukkit.Permissions.Permissions;
+
 public class PrisonerManager {
 	/**
 	 * Parse jail command and prepare user for jailing (if he is online, he will be instantly jailed. Otherwise, he will be jailed first time when he comes online)
@@ -175,18 +181,7 @@ public class PrisonerManager {
 			}
 			cell.update();
 		}
-		
-//		if (Settings.ChangePermissionsGroup && Jail.permissions != null)
-//		{
-//			Permissions permissions = (Permissions) Jail.permissions;
-//			User user = permissions.getHandler().getUserObject("test", "test");
-//			for (Entry e : user.getParents())
-//			{
-//				permissions.getHandler().getGroupObject(arg0, arg1)
-//			}
-//			
-//		}
-		
+				
 		player.teleport(prisoner.getTeleportLocation());
 		if (Settings.StoreInventory) 
 		{

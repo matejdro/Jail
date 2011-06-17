@@ -135,7 +135,7 @@ public class Jail extends JavaPlugin {
 		timer = new Timer(1000,action);
 		timer.start();
 		
-		permissions = this.getServer().getPluginManager().getPlugin("Util.permissions");
+		permissions = this.getServer().getPluginManager().getPlugin("Permissions");
 		
 		commands.put("jail", new JailCommand());
 		commands.put("unjail", new UnJailCommand());
