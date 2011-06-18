@@ -20,7 +20,7 @@ public static HashMap<String,CreationPlayer> players = new HashMap<String,Creati
 			player.getInventory().addItem(new ItemStack(Settings.SelectionTool,1));
 		
 		Util.Message("§cJail Zone Creation:", player);
-		Util.Message("First, you must select jail cuboid. Select first point of the cuboid by right clicking on the block with your wooden sword. Don't forget to mark floor too!", player);
+		Util.Message("First, you must select jail cuboid. Select first point of the cuboid by right clicking on the block with your wooden sword. DO NOT FORGET TO MARK FLOOR AND CEILING TOO!", player);
 		players.put(player.getName(), new CreationPlayer());
 		players.get(player.getName()).name = name.toLowerCase();
 	}

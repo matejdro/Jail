@@ -1,6 +1,6 @@
 name: Jail
 main: com.matejdro.bukkit.jail.Jail
-version: 1.1.0
+version: 1.2.0
 author: matejdro
 commands:
     jailcreate:
@@ -43,5 +43,7 @@ commands:
         description: Pay money to be released early.
     jaildeletecells:
         description: Delete all cells from specified jail.
+    jaillistcells:
+        description: List all named cells from specified jail.
     
         

@@ -16,7 +16,7 @@ public class JailTeleInCommand extends BaseCommand {
 	
 	public Boolean run(CommandSender sender, String[] args) {		
 		if (args.length < 1)
-			Util.Message("Usage: /jaildelete [Name]",sender);
+			Util.Message("Usage: /jailtelein [Name]",sender);
 		else if (!Jail.zones.containsKey(args[0].toLowerCase()))
 		{
 			Util.Message("There is no such jail!", sender);

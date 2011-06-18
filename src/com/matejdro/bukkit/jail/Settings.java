@@ -6,11 +6,26 @@ import java.util.List;
 public class Settings {
 
 	public static int SelectionTool;
+	public static List<String> ExecutedCommandsOnJail;
+	public static List<String> ExecutedCommandsOnRelease;
+	public static Boolean DeleteInventoryOnJail;
+	public static Boolean AutomaticMute;
+	public static String NearestJailCode;
+	public static Boolean StoreInventory;
+	public static String SignText;
+	public static boolean AlwaysTeleportIntoJailCenter;
+	public static boolean CanPrisonerOpenHisChest;
+	
+	//JailStick
+	public static Boolean EnableJailStick;
+	public static String JailStickParameters;
+	
+	//Protections
 	public static Boolean BlockDestroyProtection;
 	public static int BlockDestroyPenalty;
 	public static Boolean BlockPlaceProtection;
 	public static int BlockPlacePenalty;
-	public static List<String> BlockProtectionExceptions = Arrays.asList(new String[]{"59"});
+	public static List<String> BlockProtectionExceptions;
 	public static Boolean PlayerMoveProtection;
 	public static int PlayerMovePenalty;
 	public static String PlayerMoveProtectionAction;
@@ -20,28 +35,18 @@ public class Settings {
 	public static int BucketPenalty;
 	public static String[] PreventCommands;
 	public static int CommandPenalty;
-	public static List<String> PreventInteractionBlocks = Arrays.asList(new String[]{"69", "72", "70", "77", "46", "64", "96"});
-	public static List<String> PreventInteractionItems = Arrays.asList(new String[]{"357"});
-	public static Boolean ExplosionProtection = true;
-	public static int InteractionPenalty = 10;
-	public static Boolean PreventPvPInJail = true;
-	public static List<String> ExecutedCommandsOnJail = Arrays.asList(new String[]{"deop <Player>"});
-	public static List<String> ExecutedCommandsOnRelease = Arrays.asList(new String[]{""});
-	public static Boolean DeleteInventoryOnJail;
-	public static Boolean AutomaticMute;
-	public static String NearestJailCode;
-	public static Boolean StoreInventory;
-	public static String SignText;
-	public static Boolean EnableJailStick;
-	public static String JailStickParameters;
-	public static Boolean EnableEscape;
-	public static boolean AlwaysTeleportIntoJailCenter;
-	public static boolean CanPrisonerOpenHisChest;
+	public static List<String> PreventInteractionBlocks;
+	public static List<String> PreventInteractionItems;
+	public static Boolean ExplosionProtection;
+	public static int InteractionPenalty;
+	public static Boolean PreventPvPInJail;
 
-	public static Boolean EnablePaying = true;
-	public static double PricePerMinute = 10;
-	public static double PriceForInfiniteJail = 9999;
+	//JailPay
+	public static Boolean EnablePaying;
+	public static double PricePerMinute;
+	public static double PriceForInfiniteJail;
 	
+	//Guards
 	public static int GuardHealth;
 	public static int GuardDamage;
 	public static int NumberOfGuards;
@@ -50,6 +55,7 @@ public class Settings {
 	public static Boolean RespawnGuards;
 	public static int GuardTeleportDistance;
 	
+	//Messages
 	public static String MessageJail;
 	public static String MessageJailReason;
 	public static String MessageUnjail;
@@ -67,10 +73,10 @@ public class Settings {
 	public static String MessageBucketNoPenalty;
 	public static String MessageTransfer;
 	public static String MessageMute;
-	public static String MessageInteractionPenalty = "Don't do that in Jail!  You have just earned additional 10 minutes in jail!";
-	public static String MessageInteractionNoPenalty = "Don't do that in Jail!";
+	public static String MessageInteractionPenalty;
+	public static String MessageInteractionNoPenalty;
 
-	
+	//Database
 	public static Boolean UseMySql;
 	public static String MySqlConn;
 	public static String MySqlUsername;

@@ -42,7 +42,7 @@ String comment = "";
 if (commentIndex < line.length() - 1) {
 comment = line.substring(commentIndex + 1, line.length()).trim();
 }
-map.put(key, new PropertiesEntry(value, comment));
+map.put(key, new PropertiesEntry(value));
 }
 } catch (FileNotFoundException e) {
 Jail.log.log(Level.SEVERE, "[Jail]: Cannot read file " + file.getName());
@@ -51,27 +51,27 @@ Jail.log.log(Level.SEVERE, "[Jail]: Cannot create file " + file.getName());
 }
 }
 
-public boolean getBoolean(String key, Boolean defaultValue, String defaultComment) {
+public boolean getBoolean(String key, Boolean defaultValue) {
 if (map.containsKey(key)) {
 return Boolean.parseBoolean(map.get(key).value);
 } else {
-map.put(key, new PropertiesEntry(defaultValue.toString(), defaultComment));
+map.put(key, new PropertiesEntry(defaultValue.toString()));
 modified = true;
 return defaultValue;
 }
 }
 
-public String getString(String key, String defaultValue, String defaultComment) {
+public String getString(String key, String defaultValue) {
 if (map.containsKey(key)) {
 return map.get(key).value;
 } else {
-map.put(key, new PropertiesEntry(defaultValue.toString(), defaultComment));
+map.put(key, new PropertiesEntry(defaultValue.toString()));
 modified = true;
 return defaultValue;
 }
 }
 
-public int getInt(String key, Integer defaultValue, String defaultComment) {
+public int getInt(String key, Integer defaultValue) {
 if (map.containsKey(key)) {
 try {
 return Integer.parseInt(map.get(key).value);
@@ -80,13 +80,13 @@ Jail.log.log(Level.WARNING, "[Jail]: Trying to get Integer from " + key + ": " +
 return 0;
 }
 } else {
-map.put(key, new PropertiesEntry(defaultValue.toString(), defaultComment));
+map.put(key, new PropertiesEntry(defaultValue.toString()));
 modified = true;
 return defaultValue;
 }
 }
 
-public double getDouble(String key, Double defaultValue, String defaultComment) {
+public double getDouble(String key, Double defaultValue) {
 if (map.containsKey(key)) {
 try {
 return Double.parseDouble(map.get(key).value);
@@ -95,7 +95,7 @@ Jail.log.log(Level.WARNING, "[Jail]: Trying to get Double from " + key + ": " + 
 return 0;
 }
 } else {
-map.put(key, new PropertiesEntry(defaultValue.toString(), defaultComment));
+map.put(key, new PropertiesEntry(defaultValue.toString()));
 modified = true;
 return defaultValue;
 }
@@ -115,10 +115,6 @@ StringBuilder builder = new StringBuilder();
 builder.append(entry.getKey());
 builder.append(" = ");
 builder.append(entry.getValue().value);
-if(!entry.getValue().comment.equals("")) {
-builder.append(" #");
-builder.append(entry.getValue().comment);
-}
 bwriter.write(builder.toString());
 bwriter.newLine();
 }
@@ -142,11 +138,9 @@ Jail.log.log(Level.SEVERE, "[Jail]: IO Exception with file " + file.getName() + 
 
 private class PropertiesEntry {
 public String value;
-public String comment;
 
-public PropertiesEntry(String value, String comment) {
+public PropertiesEntry(String value) {
 this.value = value;
-this.comment = comment;
 }
 }
 }

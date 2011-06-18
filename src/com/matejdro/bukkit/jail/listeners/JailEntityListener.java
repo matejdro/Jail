@@ -32,8 +32,9 @@ public class JailEntityListener extends EntityListener {
 			JailPrisoner prisoner = Jail.prisoners.get(player.getName());
 			if (prisoner == null) return;
 			
-			for (Wolf w : prisoner.getGuards())
+			for (Object o : prisoner.getGuards().toArray())
 			{
+				Wolf w = (Wolf) o;
 				prisoner.getGuards().remove(w);
 				w.remove();
 			}

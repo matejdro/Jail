@@ -428,6 +428,11 @@ public class JailPrisoner {
 				str = str.replace("<Player>", getName());
 				str = str.replace("<Time>", tim);
 				str = str.replace("<Reason>", getReason());
+				str = str.replace("<Jailer>", getJailer());
+				if (getCell() == null || getCell().getName() == null)
+					str = str.replace("<Cell>", "");
+				else
+					str = str.replace("<Cell>", getCell().getName());
 				sign.setLine(i, str);
 			}
 			sign.update();

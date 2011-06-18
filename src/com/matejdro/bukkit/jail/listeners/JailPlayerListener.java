@@ -52,7 +52,7 @@ public class JailPlayerListener extends PlayerListener {
 		}
 		Player player = event.getPlayer();
 
-		if (!InputOutput.jailStickParameters.containsKey(player.getItemInHand().getTypeId())) return;
+		if (!Settings.EnableJailStick || !InputOutput.jailStickParameters.containsKey(player.getItemInHand().getTypeId())) return;
 		if (!Util.permission(player, "jail.usejailstick" + String.valueOf(player.getItemInHand().getTypeId()), player.isOp())) return;
 		String[] param = InputOutput.jailStickParameters.get(player.getItemInHand().getTypeId());
 		

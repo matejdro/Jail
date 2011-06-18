@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.logging.Level;
 
@@ -71,64 +72,83 @@ public class InputOutput {
     
     public void LoadSettings()
 	{
-    	Settings.SelectionTool = pf.getInt("SelectionTool", 268, "What tool is used to create jail zones. Default: Wooden sword.");
-    	Settings.BlockDestroyProtection = pf.getBoolean("BlockDestroyProtection", true, "Should jail be protected against destroying it?");
-    	Settings.BlockDestroyPenalty = pf.getInt("BlockDestroyPenalty", 15, "For how much time is prisoner's time increased if he tries to destroy jail. Use 0 to disable penalty.");
-    	Settings.BlockPlaceProtection = pf.getBoolean("BlockPlaceProtection", true, "Should jail be protected against placing blocks in it it?");
-    	Settings.BlockPlacePenalty = pf.getInt("BlockPlacePenalty", 10, "For how much time is prisoner's time increased if he tries place block inside jail. Use 0 to disable penalty.");
-    	Settings.PlayerMoveProtection = pf.getBoolean("PlayerMoveProtection", true, "Should we protect prisoners against moving out of jail?");
-    	Settings.PlayerMovePenalty = pf.getInt("PlayerMovePenalty", 30, "For how much time is prisoner's time increased if he tries to move out of jail. Use 0 to disable penalty.");
-    	Settings.PlayerMoveProtectionAction = pf.getString("PlayerMoveProtectionAction", "guards", "What should happen when player moves out of jail? guards - spawn some guards that will attempt to kill player, teleport - keep player inside by teleporting, escape - announce esacpe and delete player from jail");
-    	Settings.FireProtection = pf.getBoolean("FireProtection", true, "Should we protect prisoners against starting fires?");
-    	Settings.FirePenalty = pf.getInt("FirePenalty", 10, "For how much time is prisoner's time increased if he tries to start a fire? Use 0 to disable penalty.");
-    	Settings.BucketProtection = pf.getBoolean("BucketProtection", true, "Should we protect prisoners against using buckets?");
-    	Settings.BucketPenalty = pf.getInt("BucketPenalty", 10, "For how much time is prisoner's time increased if he tries to use a bucket? Use 0 to disable penalty.");
-    	Settings.DeleteInventoryOnJail = pf.getBoolean("DeleteInventoryOnJail", false, "Should we delete player's inventory when jailing?");
-    	Settings.AutomaticMute = pf.getBoolean("AutomaticMute", false, "Should prisoners be automatically muted after jailing?");
-    	Settings.NearestJailCode = pf.getString("NearestJailCode", "nearest", "If you enter this as a jail name, it will automatically search for nearest jail.");
-    	Settings.StoreInventory = pf.getBoolean("StoreInventory", true, "Should we take player's inventory when he get jailed and return it to him when he gets released?");
-    	Settings.SignText = pf.getString("SignText", "<Player>[NEWLINE]<Time> minutes[NEWLINE]for[NEWLINE]<Reason>", "Text that appears on the cell sign.");
-    	Settings.PreventCommands = pf.getString("PreventCommands", "/spawn,/kill,/warp", "Which commands should we prevent from using in jail?").split(",");
-    	Settings.CommandPenalty = pf.getInt("CommandPenalty", 10, "For how much time is prisoner's time increased if he tries to use forbidden command. Use 0 to disable penalty.");
-    	Settings.EnableJailStick = pf.getBoolean("EnableJailStick", false, "Should we enable jailing with an item?");
-    	Settings.JailStickParameters = pf.getString("JailStickParameters", "280,5,10,,police;50,5,20,,admin", "Parameters for JailStick feature. Form: item id,range,time,jail name,reason. You may create multiple entries and split them with semicolon (;). You may leave jail name or reason blank.");
-    	Settings.EnableEscape = pf.getBoolean("EnableEscape", false, "When player moves out of the jail, he will be released instead of teleported back.");
-    	Settings.CanPrisonerOpenHisChest = pf.getBoolean("CanPrisonerOpenHisChest", false, "Can prisoner open hi own chest? Useful for example in RPG, so prisoners can grab their stuff while escaping.");
+    	Settings.SelectionTool = pf.getInt("SelectionTool", 268);
+    	Settings.ExecutedCommandsOnJail = Arrays.asList(pf.getString("ExecutedCommandsOnJail", "").split(";"));
+    	Settings.ExecutedCommandsOnRelease = Arrays.asList(pf.getString("ExecutedCommandsOnRelease", "").split(";"));
+    	Settings.DeleteInventoryOnJail = pf.getBoolean("DeleteInventoryOnJail", false);
+    	Settings.AutomaticMute = pf.getBoolean("AutomaticMute", false);
+    	Settings.NearestJailCode = pf.getString("NearestJailCode", "nearest");
+    	Settings.StoreInventory = pf.getBoolean("StoreInventory", true);
+    	Settings.SignText = pf.getString("SignText", "<Player>[NEWLINE]<Time> minutes[NEWLINE]for[NEWLINE]<Reason>");
+		Settings.AlwaysTeleportIntoJailCenter = pf.getBoolean("AlwaysTeleportIntoJailCenter", false);
+    	Settings.CanPrisonerOpenHisChest = pf.getBoolean("CanPrisonerOpenHisChest", false);
     	
-    	Settings.GuardHealth = pf.getInt("GuardHealth", 20, "Health of a guard wolf in range 1-20. 1 health unit means half hearth (so 10 health units means 5 hearths of health)");
-    	Settings.GuardDamage = pf.getInt("GuardDamage", 1, "How much damage will guard deal per attack? 1 health unit means half hearth (so 10 health units means 5 hearths of damage)");
-    	Settings.NumberOfGuards = pf.getInt("NumberOfGuards", 3, "How many guards are spawned after player tries to escape?");
-    	Settings.Guardinvincibility = pf.getBoolean("Guardinvincibility", false, "Invincibility will remove any damage, making wolf invulnerable.");
-    	Settings.GuardAttackSpeedPercent = pf.getInt("GuardAttackSpeedPercent", 50, "1 unit of damage still too much? Lower the attack speed then. This sets percentage of wolf attack speed, so 100 means default wolf attack speed.");
-    	Settings.RespawnGuards = pf.getBoolean("RespawnGuards", true, "true - wolves will respawn immediatelly after being killed, thus making prisoners impossible to kill all wolfs. false - when all wolves that are protecting specified prisoner are killed, prisoner is free");
-    	Settings.GuardTeleportDistance = pf.getInt("GuardTeleportDistance", 10, "How many blocks away must prisoner be from the guard to make guard teleport to prisoner. Enter 0 to disable this.");
+    	//JailStick
+    	Settings.EnableJailStick = pf.getBoolean("EnableJailStick", false);
+    	Settings.JailStickParameters = pf.getString("JailStickParameters", "280,5,10,,police;50,5,20,,admin");
+    	loadJailStickParameters();
     	
-		Settings.UseMySql = pf.getBoolean("UseMySQL", false, "true = use MySQL database / false = use SQLLite");
-		Settings.MySqlConn = pf.getString("MySQLConn", "jdbc:mysql://localhost:3306/minecraft", "MySQL Connection string (only if using MySQL)");
-		Settings.MySqlUsername = pf.getString("MySQLUsername", "root", "MySQL Username (only if using MySQL)");
-		Settings.MySqlPassword = pf.getString("MySQLPassword", "password", "MySQL Password (only if using MySQL)");
+    	//Protections
+    	Settings.BlockDestroyProtection = pf.getBoolean("BlockDestroyProtection", true);
+    	Settings.BlockDestroyPenalty = pf.getInt("BlockDestroyPenalty", 15);
+    	Settings.BlockPlaceProtection = pf.getBoolean("BlockPlaceProtection", true);
+    	Settings.BlockPlacePenalty = pf.getInt("BlockPlacePenalty", 10);
+    	Settings.BlockProtectionExceptions = Arrays.asList(pf.getString("BlockProtectionExceptions", "59").split(","));
+    	Settings.PlayerMoveProtection = pf.getBoolean("PlayerMoveProtection", true);
+    	Settings.PlayerMovePenalty = pf.getInt("PlayerMovePenalty", 30);
+    	Settings.PlayerMoveProtectionAction = pf.getString("PlayerMoveProtectionAction", "guards");
+    	Settings.FireProtection = pf.getBoolean("FireProtection", true);
+    	Settings.FirePenalty = pf.getInt("FirePenalty", 10);
+    	Settings.BucketProtection = pf.getBoolean("BucketProtection", true);
+    	Settings.BucketPenalty = pf.getInt("BucketPenalty", 10);
+    	Settings.PreventCommands = pf.getString("PreventCommands", "/spawn,/kill,/warp").split(",");
+    	Settings.CommandPenalty = pf.getInt("CommandPenalty", 10);
+    	Settings.PreventInteractionBlocks = Arrays.asList(pf.getString("PreventInteractionBlocks", "69,72,70,46,64,96").split(","));
+    	Settings.PreventInteractionItems = Arrays.asList(pf.getString("PreventInteractionItems", "").split(","));
+    	Settings.InteractionPenalty = pf.getInt("InteractionPenalty", 10);
+    	Settings.ExplosionProtection = pf.getBoolean("ExplosionProtection", true);
+    	Settings.PreventPvPInJail = pf.getBoolean("PreventPvPInJail", true);
+    	
+    	//JailPay
+    	Settings.EnablePaying = pf.getBoolean("EnablePaying", false);
+    	Settings.PricePerMinute = pf.getInt("PricePerMinute", 10);
+    	Settings.PriceForInfiniteJail = pf.getInt("PriceForInfiniteJail", 9999);
+    	
+    	//Guards
+    	Settings.GuardHealth = pf.getInt("GuardHealth", 20);
+    	Settings.GuardDamage = pf.getInt("GuardDamage", 2);
+    	Settings.NumberOfGuards = pf.getInt("NumberOfGuards", 3);
+    	Settings.Guardinvincibility = pf.getBoolean("Guardinvincibility", false);
+    	Settings.GuardAttackSpeedPercent = pf.getInt("GuardAttackSpeedPercent", 100);
+    	Settings.RespawnGuards = pf.getBoolean("RespawnGuards", true);
+    	Settings.GuardTeleportDistance = pf.getInt("GuardTeleportDistance", 10);
+    	
+    	//Database
+		Settings.UseMySql = pf.getBoolean("UseMySQL", false);
+		Settings.MySqlConn = pf.getString("MySQLConn", "jdbc:mysql://localhost:3306/minecraft");
+		Settings.MySqlUsername = pf.getString("MySQLUsername", "root");
+		Settings.MySqlPassword = pf.getString("MySQLPassword", "password");
 		
-		Settings.MessageJail = pf.getString("MessageJail", "§cYou have been jailed!", "");
-		Settings.MessageJailReason = pf.getString("MessageJailReason", "§cYou have been jailed! Reason: <Reason>", "");
-		Settings.MessageUnjail = pf.getString("MessageUnJail", "§2You have been released! Please respect server rules.", "");
-		Settings.MessageDestroyNoPenalty = pf.getString("MessageDestroyNoPenalty", "§cDo not destroy The Jail!", "");
-		Settings.MessageDestroyPenalty = pf.getString("MessageDestroyPenalty", "§cDo not destroy The Jail! You have just earned additional 15 minutes in jail!", "");
-		Settings.MessageMoveNoPenalty = pf.getString("MessageMoveNoPenalty", "§cDo not try to escape out of Jail!", "");
-		Settings.MessageMovePenalty = pf.getString("MessageMovePenalty", "§cDo not try to escape out of Jail! You have just earned additional 30 minutes in jail!!", "");
-		Settings.MessagePlaceNoPenalty = pf.getString("MessagePlaceNoPenalty", "§cDo not place blocks inside Jail!", "");
-		Settings.MessagePlacePenalty = pf.getString("MessagePlacePenalty", "§cDo not place blocks inside Jail! You have just earned additional 10 minutes in jail!", "");
-		Settings.MessageCommandNoPenalty = pf.getString("MessageCommandNoPenalty", "§cDo not try to escape with commands!", "");
-		Settings.MessageCommandPenalty = pf.getString("MessageCommandPenalty", "§cDo not try to escape with commands! You have just earned additional 10 minutes in jail!", "");
-		Settings.MessageTransfer = pf.getString("MessageTransfer", "§9You have been transferred to another jail!", "");
-		Settings.MessageFireNoPenalty = pf.getString("MessageFireNoPenalty", "§cDo not try to burn the jail!", "");
-		Settings.MessageFirePenalty = pf.getString("MessageFirePenalty", "§cDo not try to burn the jail! You have just earned additional 15 minutes in jail!", "");
-		Settings.MessageBucketNoPenalty = pf.getString("MessageBucketNoPenalty", "§cDo not try to flood the jail!", "");
-		Settings.MessageBucketPenalty = pf.getString("MessageBucketPenalty", "§cDo not try to flood the jail! You have just earned additional 10 minutes in jail!", "");
-		Settings.MessageMute = pf.getString("MessageMute", "Stop chatting and quietly wait for the end of your sentence!", "");
-		Settings.AlwaysTeleportIntoJailCenter = pf.getBoolean("AlwaysTeleportIntoJailCenter", false, "When player tries to escape, should he always be teleported back to teleport point? Otherwise, he will simply be kept inside jail?");
-		
-		loadJailStickParameters();
-		
+		//Messages
+		Settings.MessageJail = pf.getString("MessageJail", "§cYou have been jailed!");
+		Settings.MessageJailReason = pf.getString("MessageJailReason", "§cYou have been jailed! Reason: <Reason>");
+		Settings.MessageUnjail = pf.getString("MessageUnJail", "§2You have been released! Please respect server rules.");
+		Settings.MessageDestroyNoPenalty = pf.getString("MessageDestroyNoPenalty", "§cDo not destroy The Jail!");
+		Settings.MessageDestroyPenalty = pf.getString("MessageDestroyPenalty", "§cDo not destroy The Jail! You have just earned additional 15 minutes in jail!");
+		Settings.MessageMoveNoPenalty = pf.getString("MessageMoveNoPenalty", "§cDo not try to escape out of Jail!");
+		Settings.MessageMovePenalty = pf.getString("MessageMovePenalty", "§cDo not try to escape out of Jail! You have just earned additional 30 minutes in jail!!");
+		Settings.MessagePlaceNoPenalty = pf.getString("MessagePlaceNoPenalty", "§cDo not place blocks inside Jail!");
+		Settings.MessagePlacePenalty = pf.getString("MessagePlacePenalty", "§cDo not place blocks inside Jail! You have just earned additional 10 minutes in jail!");
+		Settings.MessageCommandNoPenalty = pf.getString("MessageCommandNoPenalty", "§cDo not try to escape with commands!");
+		Settings.MessageCommandPenalty = pf.getString("MessageCommandPenalty", "§cDo not try to escape with commands! You have just earned additional 10 minutes in jail!");
+		Settings.MessageTransfer = pf.getString("MessageTransfer", "§9You have been transferred to another jail!");
+		Settings.MessageFireNoPenalty = pf.getString("MessageFireNoPenalty", "§cDo not try to burn the jail!");
+		Settings.MessageFirePenalty = pf.getString("MessageFirePenalty", "§cDo not try to burn the jail! You have just earned additional 15 minutes in jail!");
+		Settings.MessageBucketNoPenalty = pf.getString("MessageBucketNoPenalty", "§cDo not try to flood the jail!");
+		Settings.MessageBucketPenalty = pf.getString("MessageBucketPenalty", "§cDo not try to flood the jail! You have just earned additional 10 minutes in jail!");
+		Settings.MessageMute = pf.getString("MessageMute", "Stop chatting and quietly wait for the end of your sentence!");
+		Settings.MessageInteractionPenalty  = pf.getString("MessageInteractionPenalty", "Don't do that in Jail!  You have just earned additional 10 minutes in jail!");
+		Settings.MessageInteractionNoPenalty = pf.getString("MessageInteractionNoPenalty", "Don't do that in Jail!");
 		pf.save();
 	}
     

@@ -91,9 +91,9 @@ public class JailPlayerProtectionListener extends PlayerListener {
 									Jail.guards.remove(w);
 									continue;
 								}
+								if (w.getTarget() == null) w.setTarget(event.getPlayer());
 								if (Settings.GuardTeleportDistance > 0 && w.getLocation().distanceSquared(w.getTarget().getLocation()) > Settings.GuardTeleportDistance)
 									w.teleport(w.getTarget().getLocation());
-								if (w.getTarget() == null) w.setTarget(event.getPlayer());
 							}
 						}
 						else
