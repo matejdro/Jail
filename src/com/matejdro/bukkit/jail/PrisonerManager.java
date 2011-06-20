@@ -86,13 +86,16 @@ public class PrisonerManager {
 		Player player = Jail.instance.getServer().getPlayer(playername);		
 		if (player == null)
 		{
-			JailPrisoner prisoner = new JailPrisoner(playername, time * 6, jailname, null, true, "", reason, Settings.AutomaticMute,  "" ,jailer);
-			
-			JailCell cell = prisoner.getJail().getRequestedCell(prisoner);
-			if (cell != null && (cell.getPlayerName() == null || !cell.getPlayerName().trim().equals("")))
+			JailPrisoner prisoner = new JailPrisoner(playername, time * 6, jailname, cellname, true, "", reason, Settings.AutomaticMute,  "" ,jailer);
+
+			if (prisoner.getJail() != null)
 			{
-				cell.setPlayerName(prisoner.getName());
-				cell.update();
+				JailCell cell = prisoner.getJail().getRequestedCell(prisoner);
+				if (cell != null && (cell.getPlayerName() == null || !cell.getPlayerName().trim().equals("")))
+				{
+					cell.setPlayerName(prisoner.getName());
+					cell.update();
+				}
 			}
 			
 			InputOutput.InsertPrisoner(prisoner);
@@ -105,6 +108,7 @@ public class PrisonerManager {
 		}
 		else
 		{
+			playername = player.getName().toLowerCase();
 			JailPrisoner prisoner = new JailPrisoner(playername, time * 6, jailname, cellname, false, "", reason, Settings.AutomaticMute,  "", jailer);
 			Jail(prisoner, player);
 			Util.Message("Player jailed.", sender);
@@ -121,6 +125,7 @@ public class PrisonerManager {
 	 */
 	public static void Jail(JailPrisoner prisoner, Player player)
 	{
+		if (!prisoner.getName().equals(player.getName().toLowerCase())) return;
 		prisoner.SetBeingReleased(true);
 		JailZone jail = prisoner.getJail();
 		if (jail == null)

@@ -1,6 +1,5 @@
 package com.matejdro.bukkit.jail;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class Settings {

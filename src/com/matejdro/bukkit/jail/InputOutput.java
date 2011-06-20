@@ -103,7 +103,7 @@ public class InputOutput {
     	Settings.BucketPenalty = pf.getInt("BucketPenalty", 10);
     	Settings.PreventCommands = pf.getString("PreventCommands", "/spawn,/kill,/warp").split(",");
     	Settings.CommandPenalty = pf.getInt("CommandPenalty", 10);
-    	Settings.PreventInteractionBlocks = Arrays.asList(pf.getString("PreventInteractionBlocks", "69,72,70,46,64,96").split(","));
+    	Settings.PreventInteractionBlocks = Arrays.asList(pf.getString("PreventInteractionBlocks", "69,72,70,46,64,96,77").split(","));
     	Settings.PreventInteractionItems = Arrays.asList(pf.getString("PreventInteractionItems", "").split(","));
     	Settings.InteractionPenalty = pf.getInt("InteractionPenalty", 10);
     	Settings.ExplosionProtection = pf.getBoolean("ExplosionProtection", true);

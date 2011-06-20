@@ -38,10 +38,6 @@ String key = line.substring(0, equals).trim();
 if (key.equals(""))
 continue;
 String value = line.substring(equals + 1, commentIndex).trim();
-String comment = "";
-if (commentIndex < line.length() - 1) {
-comment = line.substring(commentIndex + 1, line.length()).trim();
-}
 map.put(key, new PropertiesEntry(value));
 }
 } catch (FileNotFoundException e) {

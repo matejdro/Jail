@@ -158,7 +158,7 @@ public class JailZone {
 	{
 		for (JailCell c : cells)
 		{
-			if (c.getPlayerName() == null || c.getPlayerName().trim().equals(""))
+			if (c.getPlayerName() == null || c.getPlayerName().trim().equals("") || !Jail.prisoners.containsKey(c.getPlayerName()))
 			{
 				return c;
 			}

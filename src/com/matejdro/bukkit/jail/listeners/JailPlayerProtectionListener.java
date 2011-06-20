@@ -2,6 +2,7 @@ package com.matejdro.bukkit.jail.listeners;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
@@ -254,7 +255,15 @@ public class JailPlayerProtectionListener extends PlayerListener {
 						{
 							Util.Message(Settings.MessageMoveNoPenalty, event.getPlayer());
 						}
-					event.setRespawnLocation(prisoner.getTeleportLocation());					
+					final Location teleloc = prisoner.getTeleportLocation();
+					final Player player = event.getPlayer();
+					Jail.instance.getServer().getScheduler().scheduleSyncDelayedTask(Jail.instance, new Runnable() {
+
+					    public void run() {
+					        if (player != null)
+					        	player.teleport(teleloc);
+					    }
+					}, 1);
 				}
 			}
 
