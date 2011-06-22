@@ -12,7 +12,7 @@ public class JailStatusCommand extends BaseCommand {
 	public JailStatusCommand()
 	{
 		needPlayer = true;
-		permission = "jail.command.jailstatus";
+		permission = "jail.usercmd.jailstatus";
 	}
 
 

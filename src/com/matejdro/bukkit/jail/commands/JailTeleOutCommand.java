@@ -23,7 +23,7 @@ public class JailTeleOutCommand extends BaseCommand {
 		}
 		else
 		{
-			JailZone jail = Jail.zones.get(args[0]);
+			JailZone jail = Jail.zones.get(args[0].toLowerCase());
 			((Player) sender).teleport(jail.getReleaseTeleportLocation());
 		}
 		return true;

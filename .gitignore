@@ -1,3 +1,5 @@
 .settings/
+doc/
+bin/
 .classpath
 .project
