@@ -97,7 +97,7 @@ public class JailCell {
 	 */
 	public Chest getChest()
 	{
-		if (chest == null || chest.getBlock() == null || chest.getBlock().getType() != Material.CHEST) return null;
+		if (chest == null || chest.getWorld() == null || chest.getBlock() == null || chest.getBlock().getType() != Material.CHEST) return null;
 
 		return (Chest) chest.getBlock().getState();
 	}
@@ -129,7 +129,7 @@ public class JailCell {
 	 */
 	public Chest getSecondChest()
 	{
-		if (chest2 == null || chest2.getBlock() == null || chest2.getBlock().getType() != Material.CHEST) return null;
+		if (chest2 == null || chest2.getWorld() == null ||chest2.getBlock() == null || chest2.getBlock().getType() != Material.CHEST) return null;
 
 		return (Chest) chest2.getBlock().getState();
 	}
@@ -162,7 +162,7 @@ public class JailCell {
 	 */
 	public Sign getSign()
 	{
-		if (sign == null || sign.getBlock() == null || (sign.getBlock().getType() != Material.SIGN_POST && sign.getBlock().getType() != Material.WALL_SIGN)) return null;
+		if (sign == null || sign.getWorld() == null || sign.getBlock() == null || (sign.getBlock().getType() != Material.SIGN_POST && sign.getBlock().getType() != Material.WALL_SIGN)) return null;
 		return (Sign) sign.getBlock().getState();
 	}
 	
