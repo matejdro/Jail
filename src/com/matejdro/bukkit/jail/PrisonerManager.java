@@ -156,7 +156,7 @@ public class PrisonerManager {
 			{
 				Chest chest = cell.getChest();
 				chest.getInventory().clear();
-				for (int i = 0;i<player.getInventory().getSize();i++)
+				for (int i = 0;i<40;i++)
 				{
 					if (chest.getInventory().getSize() <= Util.getNumberOfOccupiedItemSlots(chest.getInventory().getContents())) break;
 					if (player.getInventory().getItem(i) == null || player.getInventory().getItem(i).getType() == Material.AIR) continue;
@@ -168,7 +168,7 @@ public class PrisonerManager {
 				{
 					chest = cell.getSecondChest();
 					chest.getInventory().clear();
-					for (int i = 0;i<player.getInventory().getSize();i++)
+					for (int i = 0;i<40;i++)
 					{
 						if (chest.getInventory().getSize() <= Util.getNumberOfOccupiedItemSlots(chest.getInventory().getContents())) break;
 						if (player.getInventory().getItem(i) == null || player.getInventory().getItem(i).getType() == Material.AIR) continue;
@@ -185,7 +185,11 @@ public class PrisonerManager {
 		if (Settings.StoreInventory) 
 		{
 			prisoner.storeInventory(player.getInventory());
-			player.getInventory().clear();
+			for (int i = 0;i<40;i++)
+			{
+				player.getInventory().clear(i);
+			}
+			
 		}
 		
 		if (Jail.prisoners.containsKey(prisoner.getName()))
@@ -375,7 +379,7 @@ public class PrisonerManager {
 			{
 				Chest chest = cell.getChest();
 				chest.getInventory().clear();
-				for (int i = 0;i<player.getInventory().getSize();i++)
+				for (int i = 0;i<40;i++)
 				{
 					if (chest.getInventory().getSize() <= Util.getNumberOfOccupiedItemSlots(chest.getInventory().getContents())) break;
 					if (player.getInventory().getItem(i) == null || player.getInventory().getItem(i).getType() == Material.AIR) continue;
@@ -387,7 +391,7 @@ public class PrisonerManager {
 				{
 					chest = cell.getSecondChest();
 					chest.getInventory().clear();
-					for (int i = 0;i<player.getInventory().getSize();i++)
+					for (int i = 0;i<40;i++)
 					{
 						if (chest.getInventory().getSize() <= Util.getNumberOfOccupiedItemSlots(chest.getInventory().getContents())) break;
 						if (player.getInventory().getItem(i) == null || player.getInventory().getItem(i).getType() == Material.AIR) continue;
