@@ -127,7 +127,6 @@ public class JailPlayerProtectionListener extends PlayerListener {
 						teleport = event.getFrom();
 					else
 						teleport = prisoner.getTeleportLocation();
-					event.getPlayer().teleport(teleport);
 					event.setTo(teleport);
 					event.setCancelled(true);
 					}					
