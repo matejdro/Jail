@@ -369,7 +369,6 @@ public class JailPrisoner {
 		for (int i = 0;i<40;i++)
 		{
 			ItemStack item = playerinv.getItem(i);
-			Jail.log.info(item.toString());
 			if (item == null || item.getType() == Material.AIR) continue;
 			byte data = (byte) 0;
 			if (item.getData() != null) data = item.getData().getData();
