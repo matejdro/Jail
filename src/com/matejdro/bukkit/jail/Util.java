@@ -67,4 +67,14 @@ public class Util {
     	}
     	return size;
     }
+    
+    public static Boolean isInteger(String text) {
+    	  try {
+    	    Integer.parseInt(text);
+    	    return true;
+    	  } catch (NumberFormatException e) {
+    	    return false;
+    	  }
+    	}
+
 }

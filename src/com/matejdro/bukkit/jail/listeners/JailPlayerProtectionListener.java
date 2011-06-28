@@ -84,7 +84,7 @@ public class JailPlayerProtectionListener extends PlayerListener {
 					{
 						if (prisoner.getGuards().size() > 0)
 						{
-							for (Wolf w : prisoner.getGuards())
+							for (Wolf w : prisoner.getGuards().toArray(new Wolf[0]))
 							{
 								if (w == null || w.isDead())
 								{
@@ -128,7 +128,6 @@ public class JailPlayerProtectionListener extends PlayerListener {
 					else
 						teleport = prisoner.getTeleportLocation();
 					event.setTo(teleport);
-					event.setCancelled(true);
 					}					
 				}
 				else if (Settings.PlayerMoveProtectionAction.equals("guards"))

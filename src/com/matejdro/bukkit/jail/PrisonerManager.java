@@ -21,9 +21,9 @@ public class PrisonerManager {
 		String playername;
 		int time = -1;
 		String jailname = "";
-		if (args.length < 1)
+		if (args.length < 1 || (args.length > 1 && !Util.isInteger(args[1])))
 		{
-			if (sender != null) Util.Message("Usage: /jail [Name] (Time) (Jail Name) (Reason)", sender);
+			if (sender != null) Util.Message("Usage: /jail [Name] (Time) (Jail Name:Cell Name) (Reason)", sender);
 			return;
 		}
 		if (Jail.zones.size() < 1)
