@@ -221,7 +221,8 @@ public class JailCell {
 	public void delete()
 	{
 		InputOutput.DeleteCell(this);
-		getJail().getCellList().remove(this);
+		if (getJail() != null)
+			getJail().getCellList().remove(this);
 	}
 
 	

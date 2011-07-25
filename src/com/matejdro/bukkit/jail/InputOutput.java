@@ -82,6 +82,7 @@ public class InputOutput {
     	Settings.SignText = pf.getString("SignText", "<Player>[NEWLINE]<Time> minutes[NEWLINE]for[NEWLINE]<Reason>");
 		Settings.AlwaysTeleportIntoJailCenter = pf.getBoolean("AlwaysTeleportIntoJailCenter", false);
     	Settings.CanPrisonerOpenHisChest = pf.getBoolean("CanPrisonerOpenHisChest", false);
+ 
     	
     	//JailStick
     	Settings.EnableJailStick = pf.getBoolean("EnableJailStick", false);
