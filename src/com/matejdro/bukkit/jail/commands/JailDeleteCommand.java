@@ -11,6 +11,7 @@ public class JailDeleteCommand extends BaseCommand {
 	public JailDeleteCommand()
 	{
 		needPlayer = false;
+		adminCommand = true;
 		permission = "jail.command.jaildelete";
 	}
 

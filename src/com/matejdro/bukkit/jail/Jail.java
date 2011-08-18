@@ -87,11 +87,11 @@ public class Jail extends JavaPlugin {
 		instance = this;
 		
 		PlayerListener = new JailPlayerListener(this);
-		BlockListener = new JailBlockListener(this);
+		BlockListener = new JailBlockListener();
 		PlayerPreventListener = new JailPlayerProtectionListener(this);
 		EntityListener = new JailEntityListener(this);
 		IO = new InputOutput();
-		API = new JailAPI(this);
+		API = new JailAPI();
 		UpdateTime = 0;
 		
 		IO.LoadSettings();

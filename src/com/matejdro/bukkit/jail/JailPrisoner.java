@@ -323,7 +323,7 @@ public class JailPrisoner {
 			Location spawn = null;
 			for (int ci = 0; ci < 4; ci++)
 			{
-				Block block = location.getBlock().getFace(BlockFace.values()[ci]);
+				Block block = location.getBlock().getRelative(BlockFace.values()[ci]);
 				if (!checkedCorners.contains(BlockFace.values()[ci]) && (block.getType() == Material.AIR || block.getType() == Material.STATIONARY_WATER || block.getType() == Material.WATER))
 				{
 					spawn = block.getLocation();
@@ -337,9 +337,9 @@ public class JailPrisoner {
 				checkedCorners.clear();
 				for (int ci = 0; ci < 3; ci++)
 				{
-					if (!checkedCorners.contains(BlockFace.values()[ci]) && location.getBlock().getFace(BlockFace.values()[ci]).getType() == Material.AIR || location.getBlock().getFace(BlockFace.values()[ci]).getType() == Material.STATIONARY_WATER)
+					if (!checkedCorners.contains(BlockFace.values()[ci]) && location.getBlock().getRelative(BlockFace.values()[ci]).getType() == Material.AIR || location.getBlock().getRelative(BlockFace.values()[ci]).getType() == Material.STATIONARY_WATER)
 					{
-						spawn = location.getBlock().getFace(BlockFace.NORTH).getLocation();
+						spawn = location.getBlock().getRelative(BlockFace.NORTH).getLocation();
 						checkedCorners.add(BlockFace.values()[ci]);
 					}
 
@@ -468,7 +468,7 @@ public class JailPrisoner {
 	/**
 	 * Transfer prisoner to next nearest jail. 
 	 * If player is online, he will be transfered instantly, 
-	 * otherwise he will be released when he logs in.
+	 * otherwise he will be transfered when he logs in.
 	 */
 	public void transfer()
 	{
@@ -478,7 +478,7 @@ public class JailPrisoner {
 	/**
 	 * Transfer prisoner to specified jail. 
 	 * If player is online, he will be transfered instantly, 
-	 * otherwise he will be released when he logs in.
+	 * otherwise he will be transfered when he logs in.
 	 * @param targetjail Name of the destination jail zone
 	 */
 	public void transfer(String targetjail)

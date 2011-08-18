@@ -11,6 +11,7 @@ public class UnJailCommand extends BaseCommand {
 	public UnJailCommand()
 	{
 		needPlayer = false;
+		adminCommand = true;
 		permission = "jail.command.unjail";
 	}
 

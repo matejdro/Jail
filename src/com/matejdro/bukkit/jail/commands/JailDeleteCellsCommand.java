@@ -12,6 +12,7 @@ public class JailDeleteCellsCommand extends BaseCommand {
 	public JailDeleteCellsCommand()
 	{
 		needPlayer = false;
+		adminCommand = true;
 		permission = "jail.command.jaildeletecells";
 	}
 

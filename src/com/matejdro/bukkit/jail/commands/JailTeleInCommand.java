@@ -11,6 +11,7 @@ public class JailTeleInCommand extends BaseCommand {
 	public JailTeleInCommand()
 	{
 		needPlayer = true;
+		adminCommand = true;
 		permission = "jail.command.jailtelein";
 	}
 	

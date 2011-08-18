@@ -12,6 +12,7 @@ public class JailStopCommand extends BaseCommand {
 	public JailStopCommand()
 	{
 		needPlayer = true;
+		adminCommand = true;
 		permission = "jail.command.jailstop";
 	}
 

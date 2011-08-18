@@ -13,6 +13,7 @@ public class JailClearCommand extends BaseCommand {
 	public JailClearCommand()
 	{
 		needPlayer = false;
+		adminCommand = true;
 		permission = "jail.command.jailclear";
 	}
 

@@ -10,6 +10,7 @@ public class UnJailForceCommand extends BaseCommand {
 	public UnJailForceCommand()
 	{
 		needPlayer = false;
+		adminCommand = true;
 		permission = "jail.command.unjailforce";
 	}
 

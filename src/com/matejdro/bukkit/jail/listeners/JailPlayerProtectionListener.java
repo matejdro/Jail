@@ -13,6 +13,7 @@ import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.permissions.PermissionDefault;
 
 import com.matejdro.bukkit.jail.InputOutput;
 import com.matejdro.bukkit.jail.Jail;
@@ -154,7 +155,7 @@ public class JailPlayerProtectionListener extends PlayerListener {
 	 
 	 public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event) {
 		 if (event.isCancelled()) return;
-		 if (JailZoneManager.isInsideJail(event.getBlockClicked().getLocation()) || JailZoneManager.isInsideJail(event.getBlockClicked().getFace(event.getBlockFace()).getLocation()))
+		 if (JailZoneManager.isInsideJail(event.getBlockClicked().getLocation()) || JailZoneManager.isInsideJail(event.getBlockClicked().getRelative(event.getBlockFace()).getLocation()))
 		 {
 			 if (Settings.BucketPenalty > 0 && Jail.prisoners.containsKey(event.getPlayer().getName().toLowerCase()) && Jail.prisoners.get(event.getPlayer().getName().toLowerCase()).getRemainingTime() > 0)
 				{
@@ -172,7 +173,7 @@ public class JailPlayerProtectionListener extends PlayerListener {
 	 }
 	 
 	 public void onPlayerInteract(PlayerInteractEvent event) {
-			if (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getClickedBlock().getType() == Material.CHEST && (Jail.prisoners.containsKey(event.getPlayer().getName().toLowerCase()) || !Util.permission(event.getPlayer(), "jail.openchest", event.getPlayer().isOp())))
+			if (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getClickedBlock().getType() == Material.CHEST && (Jail.prisoners.containsKey(event.getPlayer().getName().toLowerCase()) || !Util.permission(event.getPlayer(), "jail.openchest", PermissionDefault.OP)))
 				{
 				for (JailZone jail : Jail.zones.values())
 					for (JailCell cell : jail.getCellList())

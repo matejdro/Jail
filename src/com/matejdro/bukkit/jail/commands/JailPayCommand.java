@@ -17,7 +17,8 @@ public class JailPayCommand extends BaseCommand {
 	public JailPayCommand()
 	{
 		needPlayer = true;
-		permission = "jail.command.jailpay";
+		adminCommand = false;
+		permission = "jail.usercmd.jailpay";
 	}
 
 

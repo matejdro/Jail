@@ -34,6 +34,13 @@ public class InputOutput {
     
     public static synchronized Connection getConnection() {
     	if (connection == null) connection = createConnection();
+    	if(Settings.UseMySql) {
+            try {
+                if(!connection.isValid(10)) connection = createConnection();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
     	return connection;
     }
 

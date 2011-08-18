@@ -15,6 +15,7 @@ public class JailListCellsCommand extends BaseCommand {
 	public JailListCellsCommand()
 	{
 		needPlayer = false;
+		adminCommand = true;
 		permission = "jail.command.jaillistcells";
 	}
 

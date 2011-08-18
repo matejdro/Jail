@@ -11,6 +11,7 @@ public class JailTeleOutCommand extends BaseCommand {
 	public JailTeleOutCommand()
 	{
 		needPlayer = true;
+		adminCommand = true;
 		permission = "jail.command.jailteleout";
 	}
 	
@@ -26,6 +27,7 @@ public class JailTeleOutCommand extends BaseCommand {
 			JailZone jail = Jail.zones.get(args[0].toLowerCase());
 			((Player) sender).teleport(jail.getReleaseTeleportLocation());
 		}
+		
 		return true;
 		
 	}

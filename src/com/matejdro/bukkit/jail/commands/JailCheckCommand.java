@@ -11,6 +11,7 @@ public class JailCheckCommand extends BaseCommand {
 	public JailCheckCommand()
 	{
 		needPlayer = false;
+		adminCommand = true;
 		permission = "jail.command.jailcheck";
 	}
 

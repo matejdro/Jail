@@ -10,6 +10,7 @@ public class JailClearForceCommand extends BaseCommand {
 	public JailClearForceCommand()
 	{
 		needPlayer = false;
+		adminCommand = true;
 		permission = "jail.command.jailclearforce";
 	}
 

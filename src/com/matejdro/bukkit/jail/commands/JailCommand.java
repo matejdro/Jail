@@ -8,6 +8,7 @@ public class JailCommand extends BaseCommand {
 	public JailCommand()
 	{
 		needPlayer = false;
+		adminCommand = true;
 		permission = "jail.command.jail";
 	}
 	

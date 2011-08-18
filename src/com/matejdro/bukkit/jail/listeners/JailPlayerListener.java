@@ -12,6 +12,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.permissions.PermissionDefault;
 
 import com.matejdro.bukkit.jail.InputOutput;
 import com.matejdro.bukkit.jail.Jail;
@@ -53,7 +54,7 @@ public class JailPlayerListener extends PlayerListener {
 		Player player = event.getPlayer();
 
 		if (!Settings.EnableJailStick || !InputOutput.jailStickParameters.containsKey(player.getItemInHand().getTypeId())) return;
-		if (!Util.permission(player, "jail.usejailstick" + String.valueOf(player.getItemInHand().getTypeId()), player.isOp())) return;
+		if (!Util.permission(player, "jail.usejailstick" + String.valueOf(player.getItemInHand().getTypeId()), PermissionDefault.OP)) return;
 		String[] param = InputOutput.jailStickParameters.get(player.getItemInHand().getTypeId());
 		
 		List<Block> targets = player.getLineOfSight(null, Integer.parseInt(param[1]));
@@ -62,7 +63,7 @@ public class JailPlayerListener extends PlayerListener {
 		{
 			for (Player p : plugin.getServer().getOnlinePlayers())
 			{
-				if ((b == p.getLocation().getBlock() || b == p.getEyeLocation().getBlock()) && Util.permission(player, "jail.canbestickjailed", true))
+				if ((b == p.getLocation().getBlock() || b == p.getEyeLocation().getBlock()) && Util.permission(player, "jail.canbestickjailed", PermissionDefault.TRUE))
 				{
 					String args[] = new String[4];
 					args[0] = p.getName();

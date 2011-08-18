@@ -7,13 +7,7 @@ import org.bukkit.Location;
 /**
  * Collection of useful methods to easily access and mess with Jail API.
  */
-public class JailAPI {
-private Jail plugin;
-	public JailAPI(Jail instance)
-	{
-		plugin = instance;
-	}
-	
+public class JailAPI {	
 	/**
 	 * Jail specified player
 	 * @param playerName Name of the player you want to jail

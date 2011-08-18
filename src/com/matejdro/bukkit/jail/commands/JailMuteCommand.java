@@ -11,6 +11,7 @@ public class JailMuteCommand extends BaseCommand {
 	public JailMuteCommand()
 	{
 		needPlayer = false;
+		adminCommand = true;
 		permission = "jail.command.jailmute";
 	}
 	

@@ -1,49 +1,159 @@
 name: Jail
 main: com.matejdro.bukkit.jail.Jail
 version: 1.2.2
+description: Ban too harsh? Kick/mute/whatever not enough? Jail bad players!
 author: matejdro
+website: http://forums.bukkit.org/threads/admn-rpg-jail-v1-2-2-jail-bad-players-1060.1912/
+database: true
+softdepend: [PermissionsBukkut]
 commands:
     jailcreate:
         description: Creates a new jail zone.
+        permission: jail.command.jailcreate
     jailcreatecells:
         description: Creates cells in existing jail zone.
+        permission: jail.command.jailcreatecells
     jaildelete:
-        description: Delete existing jail zone.
+        description: Delete existing jail zone
+        permission: jail.command.jaildelete
     jail:
         description: Jail specified player for specified amount of time.
+        permission: jail.command.jail
+        usage: /jail [player name] (time) (jail name):(cell name) (reason)
     unjail:
         description: Release a player from jail.
+        permission: jail.command.unjail
     unjailforce:
         description: Remove player from the database.
+        permission: jail.command.unjailforce
     jailclear:
         description: Unjail every player on the server. Use with caution!
+        permission: jail.command.jailclear
     jailclearforce:
         description: Delete every player from the jail database.
+        permission: jail.command.jailclearforce
     jailtransfer:
         description: Transfer player from current jail to another
+        permission: jail.command.jailtransfer
     jailtransferall:
         description: Transfer all players in one jail to another jail
+        permission: jail.command.jailtransferall
     jailcheck:
         description: Check the status of the specified player
+        permission: jail.command.jailcheck
     jailtelein:
         description: Teleport inside jail
+        permission: jail.command.jailtelein
     jailteleout:
         description: Teleport outside of the jail.
+        permission: jail.command.jailteleout
     jaillist:
         description: List all created jails
+        permission: jail.command.jaillist
     jailstatus:
         description: Check your current jail status
+        permission: jail.usercmd.jailstatus
     jailmute:
         description: Toggle mute of the specified prisoner
+        permission: jail.command.jailmute
     jailstop:
         description: Stop any creation process.
+        permission: jail.command.jailstop
     jailset:
         description: modify existing jail or prisoner.
+        permission: jail.command.jailset
+        usage: /jailset [player/jail/cell name] [property name] (property value)
     jailpay:
         description: Pay money to be released early.
+        permission: jail.usercmd.jail
+        usage: /jailpay (amount) (prisoner name)
     jaildeletecells:
         description: Delete all cells from specified jail.
+        permission: jail.command.jaildeletecells
     jaillistcells:
         description: List all named cells from specified jail.
-    
-        
+        permission: jail.command.jaillistcells
+permissions:
+    jail.*:
+        children:
+            jail.command.*: true
+            jail.usercmd.*: true
+            jail.modifyjail: true
+            jail.usejailstick280: true
+            jail.canbestickjailed: true
+            jail.openchest: true
+    jail.command.*:
+        description: access to all admin commands
+        children:
+            jail.command.jailcreate: true
+            jail.command.jailcreatecells: true
+            jail.command.jaildelete: true
+            jail.command.jaildeletecells: true
+            jail.command.jail: true
+            jail.command.unjail: true
+            jail.command.jailtransfer: true
+            jail.command.jailtransferall: true
+            jail.command.jailcheck: true
+            jail.command.jailtelein: true
+            jail.command.jailteleout: true
+            jail.command.jaillist: true
+            jail.command.jaillistcells: true
+            jail.command.unjailforce: true
+            jail.command.jailclear: true
+            jail.command.jailclearforce: true
+            jail.command.jailmute: true
+            jail.command.jailstop: true
+    jail.usercmd.*:
+        description: access to all user commands
+        children:
+            jail.usercmd.jailstatus: true
+            jail.usercmd.jailpay: true
+    jail.command.jail:
+        default: op
+    jail.command.jailcreate:
+        default: op
+    jail.command.jailcreatecells:
+        default: op
+    jail.command.jaildelete:
+        default: op
+    jail.command.jaildeletecells:
+        default: op
+    jail.command.unjail:
+        default: op
+    jail.command.jailtransfer:
+        default: op
+    jail.command.jailtransferall:
+        default: op
+    jail.command.jailcheck:
+        default: op
+    jail.command.jailtelein:
+        default: op
+    jail.command.jailteleout:
+        default: op
+    jail.command.jaillist:
+        default: op
+    jail.command.jaillistcells:
+        default: op
+    jail.command.unjailforce:
+        default: op
+    jail.command.jailclear:
+        default: op
+    jail.command.jailclearforce:
+        default: op
+    jail.command.jailmute:
+        default: op
+    jail.command.jailstop:
+        default: op
+    jail.usercmd.jailstatus:
+        default: true
+    jail.usercmd.jailpay:
+        default: true
+    jail.modifyjail:
+        default: op
+    jail.usejailstick280:
+        default: op
+        description: change 280 for another jailstick item
+    jail.canbestickjailed:
+        default: true
+    jail.openchest:
+        default: op

@@ -1,9 +1,19 @@
 package com.matejdro.bukkit.jail;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.logging.Level;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.permissions.Permission;
+import org.bukkit.permissions.PermissionDefault;
 
 import com.nijikokun.bukkit.Permissions.Permissions;
 
@@ -49,12 +59,12 @@ public class Util {
 		}
 	}
 	
-    public static Boolean permission(Player player, String line, Boolean def)
+    public static Boolean permission(Player player, String line, PermissionDefault def)
     {
     	    if(Jail.permissions != null) {
     	    	return (((Permissions) Jail.permissions).getHandler()).has(player, line);
     	    } else {
-    	    	return def;
+    	    	return player.hasPermission(new Permission(line, def));
     	    }
     }
     
@@ -76,5 +86,25 @@ public class Util {
     	    return false;
     	  }
     	}
+    
+    public static void log(String text)
+    {
+		try {
+			FileWriter fstream = new FileWriter(new File("plugins" + File.separator + "Jail","jail.log"), true);
+			BufferedWriter out = new BufferedWriter(fstream);
+			DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+			out.append("[" + dateFormat.format(new Date()) + "] " + text);
+	    	out.newLine();
+	    	  //Close the output stream
+	    	out.close();
+	    	fstream.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			Jail.log.log(Level.SEVERE, "[Jail]: Unable to write data to log file.");
+
+			e.printStackTrace();
+		}
+    	 
+    }
 
 }

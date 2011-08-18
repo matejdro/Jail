@@ -5,6 +5,7 @@ import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockIgniteEvent.IgniteCause;
 import org.bukkit.event.block.BlockListener;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.permissions.PermissionDefault;
 
 import com.matejdro.bukkit.jail.InputOutput;
 import com.matejdro.bukkit.jail.Jail;
@@ -14,18 +15,12 @@ import com.matejdro.bukkit.jail.Settings;
 import com.matejdro.bukkit.jail.Util;
 
 public class JailBlockListener extends BlockListener {
-	private Jail plugin;
-
-	public JailBlockListener(Jail instance)
-	{
-		plugin = instance;
-	}
 	
 	
 	public void onBlockBreak(BlockBreakEvent event) {
 		if (event.isCancelled()) return;
 		if (Settings.BlockProtectionExceptions.contains(String.valueOf(event.getBlock().getTypeId()))) return;
-		if (JailZoneManager.isInsideJail(event.getBlock().getLocation()) && (!Util.permission(event.getPlayer(), "jail.modifyjail", event.getPlayer().isOp()) || Jail.prisoners.containsKey(event.getPlayer().getName().toLowerCase())))
+		if (JailZoneManager.isInsideJail(event.getBlock().getLocation()) && (!Util.permission(event.getPlayer(), "jail.modifyjail", PermissionDefault.OP) || Jail.prisoners.containsKey(event.getPlayer().getName().toLowerCase())))
 		{
 			
 			if (Settings.BlockDestroyPenalty > 0 && Jail.prisoners.containsKey(event.getPlayer().getName().toLowerCase()) && Jail.prisoners.get(event.getPlayer().getName().toLowerCase()).getRemainingTime() > 0)
@@ -47,7 +42,7 @@ public class JailBlockListener extends BlockListener {
 	public void onBlockPlace(BlockPlaceEvent event) {
 		if (event.isCancelled()) return;
 		if (Settings.BlockProtectionExceptions.contains(String.valueOf(event.getBlock().getTypeId()))) return;
-		if (JailZoneManager.isInsideJail(event.getBlockPlaced().getLocation()) && (!Util.permission(event.getPlayer(), "jail.modifyjail", event.getPlayer().isOp()) || Jail.prisoners.containsKey(event.getPlayer().getName().toLowerCase())))
+		if (JailZoneManager.isInsideJail(event.getBlockPlaced().getLocation()) && (!Util.permission(event.getPlayer(), "jail.modifyjail", PermissionDefault.OP) || Jail.prisoners.containsKey(event.getPlayer().getName().toLowerCase())))
 		{
 			if (Settings.BlockPlacePenalty > 0 && Jail.prisoners.containsKey(event.getPlayer().getName()) && Jail.prisoners.get(event.getPlayer().getName()).getRemainingTime() > 0)
 				{

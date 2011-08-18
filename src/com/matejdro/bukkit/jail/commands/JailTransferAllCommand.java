@@ -12,6 +12,7 @@ public class JailTransferAllCommand extends BaseCommand {
 	public JailTransferAllCommand()
 	{
 		needPlayer = false;
+		adminCommand = true;
 		permission = "jail.command.jailtransferall";
 	}
 

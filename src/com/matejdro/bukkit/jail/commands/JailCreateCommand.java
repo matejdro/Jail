@@ -11,6 +11,7 @@ public class JailCreateCommand extends BaseCommand {
 	public JailCreateCommand()
 	{
 		needPlayer = true;
+		adminCommand = true;
 		permission = "jail.command.jailcreate";
 	}
 	

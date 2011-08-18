@@ -18,6 +18,7 @@ public class JailSetCommand extends BaseCommand {
 	public JailSetCommand()
 	{
 		needPlayer = false;
+		adminCommand = true;
 		permission = "jail.command.jailset";
 	}
 
