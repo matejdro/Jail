@@ -139,6 +139,7 @@ public class InputOutput {
 				if (jails.getProperty(jail.name + ".Protections.EnableBlockDestroyProtection") == null) jails.setProperty(jail.name + ".Protections.EnableBlockDestroyProtection", true);
 			}
 			
+			jails.save();
 			set.close();
 			ps.close();
 			Jail.log.log(Level.INFO,"[Jail] Loaded " + String.valueOf(Jail.zones.size()) + " jail zones.");
@@ -271,7 +272,8 @@ public class InputOutput {
 			ps.close();
 			
 			if (jails.getProperty(z.name + ".Protections.EnableBlockDestroyProtection") == null) jails.setProperty(z.name + ".Protections.EnableBlockDestroyProtection", true);
-		} catch (SQLException e) {
+			jails.save();
+    	} catch (SQLException e) {
 			Jail.log.log(Level.SEVERE,"[Jail] Error while creating Jail Zone! - " + e.getMessage() );
 			e.printStackTrace();
 		}
