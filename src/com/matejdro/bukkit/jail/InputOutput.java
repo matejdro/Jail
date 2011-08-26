@@ -82,7 +82,13 @@ public class InputOutput {
     
     public void LoadSettings()
 	{
-    	
+    	global.load();
+    	jails.load();
+    	for (Setting s : Setting.values())
+    	{
+    		if (global.getProperty(s.getString()) == null) global.setProperty(s.getString(), s.getDefault());
+    	}
+    	global.save();
 	}
     
     public void loadJailStickParameters()
@@ -130,6 +136,7 @@ public class InputOutput {
 				
 				
 				Jail.zones.put(jail.getName(), jail);
+				if (jails.getProperty(jail.name + ".Protections.EnableBlockDestroyProtection") == null) jails.setProperty(jail.name + ".Protections.EnableBlockDestroyProtection", true);
 			}
 			
 			set.close();
@@ -262,6 +269,8 @@ public class InputOutput {
 			conn.commit();
 			
 			ps.close();
+			
+			if (jails.getProperty(z.name + ".Protections.EnableBlockDestroyProtection") == null) jails.setProperty(z.name + ".Protections.EnableBlockDestroyProtection", true);
 		} catch (SQLException e) {
 			Jail.log.log(Level.SEVERE,"[Jail] Error while creating Jail Zone! - " + e.getMessage() );
 			e.printStackTrace();
