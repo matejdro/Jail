@@ -22,7 +22,7 @@ public class JailBlockListener extends BlockListener {
 	public void onBlockBreak(BlockBreakEvent event) {
 		if (event.isCancelled()) return;
 		JailZone jail = JailZoneManager.getJail(event.getBlock().getLocation());
-		if (jail == null) return;
+		if (jail == null || !jail.getSettings().getBoolean(Setting.EnableBlockDestroyProtection)) return;
 		
 		if (jail.getSettings().getList(Setting.BlockProtectionExceptions).contains(String.valueOf(event.getBlock().getTypeId()))) return;
 		if ((!Util.permission(event.getPlayer(), "jail.modifyjail", PermissionDefault.OP) || Jail.prisoners.containsKey(event.getPlayer().getName().toLowerCase())))
@@ -48,7 +48,7 @@ public class JailBlockListener extends BlockListener {
 		if (event.isCancelled()) return;
 		
 		JailZone jail = JailZoneManager.getJail(event.getBlock().getLocation());
-		if (jail == null) return;
+		if (jail == null || !jail.getSettings().getBoolean(Setting.EnableBlockPlaceProtection)) return;
 		
 		if (jail.getSettings().getList(Setting.BlockProtectionExceptions).contains(String.valueOf(event.getBlock().getTypeId()))) return;
 		if (JailZoneManager.isInsideJail(event.getBlockPlaced().getLocation()) && (!Util.permission(event.getPlayer(), "jail.modifyjail", PermissionDefault.OP) || Jail.prisoners.containsKey(event.getPlayer().getName().toLowerCase())))

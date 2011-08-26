@@ -112,8 +112,10 @@ public class JailEntityListener extends EntityListener {
 		for (Object o : event.blockList().toArray())
 		{
 			Block b = (Block) o;
-			if (JailZoneManager.isInsideJail(b.getLocation()))
+			JailZone jail = JailZoneManager.getJail(b.getLocation());
+			if (jail != null)
 			{
+				if (!jail.getSettings().getBoolean(Setting.EnableExplosionProtection)) return;
 				event.setCancelled(true);
 				return;
 			}
