@@ -20,6 +20,7 @@ import com.matejdro.bukkit.jail.JailCellCreation;
 import com.matejdro.bukkit.jail.JailPrisoner;
 import com.matejdro.bukkit.jail.JailZoneCreation;
 import com.matejdro.bukkit.jail.PrisonerManager;
+import com.matejdro.bukkit.jail.Setting;
 import com.matejdro.bukkit.jail.Settings;
 import com.matejdro.bukkit.jail.Util;
 import com.matejdro.bukkit.jail.commands.JailSetCommand;
@@ -33,7 +34,7 @@ public class JailPlayerListener extends PlayerListener {
 	}		
 	
 	public void onPlayerInteract(PlayerInteractEvent event) {
-		if (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getPlayer().getItemInHand().getTypeId() == Settings.SelectionTool)
+		if (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getPlayer().getItemInHand().getTypeId() == InputOutput.global.getInt(Setting.SelectionTool.getString(), 280))
 		{
 			if ( JailZoneCreation.players.containsKey(event.getPlayer().getName()))
 			{
@@ -53,7 +54,7 @@ public class JailPlayerListener extends PlayerListener {
 		}
 		Player player = event.getPlayer();
 
-		if (!Settings.EnableJailStick || !InputOutput.jailStickParameters.containsKey(player.getItemInHand().getTypeId())) return;
+		if (!InputOutput.global.getBoolean(Setting.EnableJailStick.getString(), false) || !InputOutput.jailStickParameters.containsKey(player.getItemInHand().getTypeId())) return;
 		if (!Util.permission(player, "jail.usejailstick" + String.valueOf(player.getItemInHand().getTypeId()), PermissionDefault.OP)) return;
 		String[] param = InputOutput.jailStickParameters.get(player.getItemInHand().getTypeId());
 		

@@ -2,84 +2,52 @@ package com.matejdro.bukkit.jail;
 
 import java.util.List;
 
+
 public class Settings {
-
-	public static int SelectionTool;
-	public static List<String> ExecutedCommandsOnJail;
-	public static List<String> ExecutedCommandsOnRelease;
-	public static Boolean DeleteInventoryOnJail;
-	public static Boolean AutomaticMute;
-	public static String NearestJailCode;
-	public static Boolean StoreInventory;
-	public static String SignText;
-	public static boolean AlwaysTeleportIntoJailCenter;
-	public static boolean CanPrisonerOpenHisChest;
+	private JailZone jail;
 	
-	//JailStick
-	public static Boolean EnableJailStick;
-	public static String JailStickParameters;
+	public Settings(JailZone zone)
+	{
+		jail = zone;
+	}
 	
-	//Protections
-	public static Boolean BlockDestroyProtection;
-	public static int BlockDestroyPenalty;
-	public static Boolean BlockPlaceProtection;
-	public static int BlockPlacePenalty;
-	public static List<String> BlockProtectionExceptions;
-	public static Boolean PlayerMoveProtection;
-	public static int PlayerMovePenalty;
-	public static String PlayerMoveProtectionAction;
-	public static Boolean FireProtection;
-	public static int FirePenalty;
-	public static Boolean BucketProtection;
-	public static int BucketPenalty;
-	public static String[] PreventCommands;
-	public static int CommandPenalty;
-	public static List<String> PreventInteractionBlocks;
-	public static List<String> PreventInteractionItems;
-	public static Boolean ExplosionProtection;
-	public static int InteractionPenalty;
-	public static Boolean PreventPvPInJail;
-
-	//JailPay
-	public static Boolean EnablePaying;
-	public static double PricePerMinute;
-	public static double PriceForInfiniteJail;
+	public Integer getInt(Setting setting)
+	{
+		Integer property = InputOutput.jails.getInt(jail.getName() + "." + setting, (Integer) null);
+		if (property == null)
+			property = InputOutput.global.getInt(setting.getString(), (Integer) null);
+		return property;
+	}
 	
-	//Guards
-	public static int GuardHealth;
-	public static int GuardDamage;
-	public static int NumberOfGuards;
-	public static boolean Guardinvincibility;
-	public static int GuardAttackSpeedPercent;
-	public static Boolean RespawnGuards;
-	public static int GuardTeleportDistance;
+	public Double getDouble(Setting setting)
+	{
+		Double property = InputOutput.jails.getDouble(jail.getName() + "." + setting, (Double) null);
+		if (property == null)
+			property = InputOutput.global.getDouble(setting.getString(), (Double) null);
+		return property;
+	}
 	
-	//Messages
-	public static String MessageJail;
-	public static String MessageJailReason;
-	public static String MessageUnjail;
-	public static String MessageDestroyPenalty;
-	public static String MessageDestroyNoPenalty;
-	public static String MessageMovePenalty;
-	public static String MessageMoveNoPenalty;
-	public static String MessagePlacePenalty;
-	public static String MessagePlaceNoPenalty;
-	public static String MessageCommandPenalty;
-	public static String MessageCommandNoPenalty;
-	public static String MessageFirePenalty;
-	public static String MessageFireNoPenalty;
-	public static String MessageBucketPenalty;
-	public static String MessageBucketNoPenalty;
-	public static String MessageTransfer;
-	public static String MessageMute;
-	public static String MessageInteractionPenalty;
-	public static String MessageInteractionNoPenalty;
-
-	//Database
-	public static Boolean UseMySql;
-	public static String MySqlConn;
-	public static String MySqlUsername;
-	public static String MySqlPassword;
+	public String getString(Setting setting)
+	{
+		String property = InputOutput.jails.getString(jail.getName() + "." + setting, (String) null);
+		if (property == null)
+			property = InputOutput.global.getString(setting.getString(), (String) null);
+		return property;
+	}
 	
+	public Boolean getBoolean(Setting setting)
+	{
+		Boolean property = InputOutput.jails.getBoolean(jail.getName() + "." + setting, (Boolean) null);
+		if (property == null)
+			property = InputOutput.global.getBoolean(setting.getString(), (Boolean) null);
+		return property;
+	}
 	
+	public List<Object> getList(Setting setting)
+	{
+		List<Object> property = InputOutput.jails.getList(jail.getName() + "." + setting);
+		if (property == null)
+			property = InputOutput.global.getList(setting.getString());
+		return property;
+	}
 }

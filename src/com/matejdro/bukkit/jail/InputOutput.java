@@ -13,9 +13,11 @@ import java.util.HashMap;
 import java.util.logging.Level;
 
 import org.bukkit.Location;
+import org.bukkit.util.config.Configuration;
 public class InputOutput {
     private static Connection connection;
-    private PropertiesFile pf;
+    public static Configuration global;
+    public static Configuration jails;
     
     public static HashMap<Integer, String[]> jailStickParameters = new HashMap<Integer, String[]>();
     
@@ -28,13 +30,14 @@ public class InputOutput {
 			Jail.log.log(Level.SEVERE, "[Jail]: Unable to create plugins/Jail/ directory");
 			}
 			}
-		pf = new PropertiesFile(new File("plugins" + File.separator + "Jail","Jail.properties")); 
+		global = new Configuration(new File("plugins" + File.separator + "Jail","global.yml"));
+		jails = new Configuration(new File("plugins" + File.separator + "Jail","jails.yml")); 
 		connection = null;
 	}
     
     public static synchronized Connection getConnection() {
     	if (connection == null) connection = createConnection();
-    	if(Settings.UseMySql) {
+    	if(global.getBoolean(Setting.UseMySQL.getString(), false)) {
             try {
                 if(!connection.isValid(10)) connection = createConnection();
             } catch (SQLException ex) {
@@ -46,9 +49,9 @@ public class InputOutput {
 
     private static Connection createConnection() {
         try {
-            if (Settings.UseMySql) {
+            if (global.getBoolean(Setting.UseMySQL.getString(), false)) {
                 Class.forName("com.mysql.jdbc.Driver");
-                Connection ret = DriverManager.getConnection(Settings.MySqlConn, Settings.MySqlUsername, Settings.MySqlPassword);
+                Connection ret = DriverManager.getConnection(global.getString(Setting.MySQLConn.getString(), null), global.getString(Setting.MySQLUsername.getString(), null), global.getString(Setting.MySQLPassword.getString(), null));
                 ret.setAutoCommit(false);
                 return ret;
             } else {
@@ -79,90 +82,12 @@ public class InputOutput {
     
     public void LoadSettings()
 	{
-    	Settings.SelectionTool = pf.getInt("SelectionTool", 268);
-    	Settings.ExecutedCommandsOnJail = Arrays.asList(pf.getString("ExecutedCommandsOnJail", "").split(";"));
-    	Settings.ExecutedCommandsOnRelease = Arrays.asList(pf.getString("ExecutedCommandsOnRelease", "").split(";"));
-    	Settings.DeleteInventoryOnJail = pf.getBoolean("DeleteInventoryOnJail", false);
-    	Settings.AutomaticMute = pf.getBoolean("AutomaticMute", false);
-    	Settings.NearestJailCode = pf.getString("NearestJailCode", "nearest");
-    	Settings.StoreInventory = pf.getBoolean("StoreInventory", true);
-    	Settings.SignText = pf.getString("SignText", "<Player>[NEWLINE]<Time> minutes[NEWLINE]for[NEWLINE]<Reason>");
-		Settings.AlwaysTeleportIntoJailCenter = pf.getBoolean("AlwaysTeleportIntoJailCenter", false);
-    	Settings.CanPrisonerOpenHisChest = pf.getBoolean("CanPrisonerOpenHisChest", false);
- 
     	
-    	//JailStick
-    	Settings.EnableJailStick = pf.getBoolean("EnableJailStick", false);
-    	Settings.JailStickParameters = pf.getString("JailStickParameters", "280,5,10,,police;50,5,20,,admin");
-    	loadJailStickParameters();
-    	
-    	//Protections
-    	Settings.BlockDestroyProtection = pf.getBoolean("BlockDestroyProtection", true);
-    	Settings.BlockDestroyPenalty = pf.getInt("BlockDestroyPenalty", 15);
-    	Settings.BlockPlaceProtection = pf.getBoolean("BlockPlaceProtection", true);
-    	Settings.BlockPlacePenalty = pf.getInt("BlockPlacePenalty", 10);
-    	Settings.BlockProtectionExceptions = Arrays.asList(pf.getString("BlockProtectionExceptions", "59").split(","));
-    	Settings.PlayerMoveProtection = pf.getBoolean("PlayerMoveProtection", true);
-    	Settings.PlayerMovePenalty = pf.getInt("PlayerMovePenalty", 30);
-    	Settings.PlayerMoveProtectionAction = pf.getString("PlayerMoveProtectionAction", "guards");
-    	Settings.FireProtection = pf.getBoolean("FireProtection", true);
-    	Settings.FirePenalty = pf.getInt("FirePenalty", 10);
-    	Settings.BucketProtection = pf.getBoolean("BucketProtection", true);
-    	Settings.BucketPenalty = pf.getInt("BucketPenalty", 10);
-    	Settings.PreventCommands = pf.getString("PreventCommands", "/spawn,/kill,/warp").split(",");
-    	Settings.CommandPenalty = pf.getInt("CommandPenalty", 10);
-    	Settings.PreventInteractionBlocks = Arrays.asList(pf.getString("PreventInteractionBlocks", "69,72,70,46,64,96,77").split(","));
-    	Settings.PreventInteractionItems = Arrays.asList(pf.getString("PreventInteractionItems", "").split(","));
-    	Settings.InteractionPenalty = pf.getInt("InteractionPenalty", 10);
-    	Settings.ExplosionProtection = pf.getBoolean("ExplosionProtection", true);
-    	Settings.PreventPvPInJail = pf.getBoolean("PreventPvPInJail", true);
-    	
-    	//JailPay
-    	Settings.EnablePaying = pf.getBoolean("EnablePaying", false);
-    	Settings.PricePerMinute = pf.getInt("PricePerMinute", 10);
-    	Settings.PriceForInfiniteJail = pf.getInt("PriceForInfiniteJail", 9999);
-    	
-    	//Guards
-    	Settings.GuardHealth = pf.getInt("GuardHealth", 20);
-    	Settings.GuardDamage = pf.getInt("GuardDamage", 2);
-    	Settings.NumberOfGuards = pf.getInt("NumberOfGuards", 3);
-    	Settings.Guardinvincibility = pf.getBoolean("Guardinvincibility", false);
-    	Settings.GuardAttackSpeedPercent = pf.getInt("GuardAttackSpeedPercent", 100);
-    	Settings.RespawnGuards = pf.getBoolean("RespawnGuards", true);
-    	Settings.GuardTeleportDistance = pf.getInt("GuardTeleportDistance", 10);
-    	
-    	//Database
-		Settings.UseMySql = pf.getBoolean("UseMySQL", false);
-		Settings.MySqlConn = pf.getString("MySQLConn", "jdbc:mysql://localhost:3306/minecraft");
-		Settings.MySqlUsername = pf.getString("MySQLUsername", "root");
-		Settings.MySqlPassword = pf.getString("MySQLPassword", "password");
-		
-		//Messages
-		Settings.MessageJail = pf.getString("MessageJail", "§cYou have been jailed!");
-		Settings.MessageJailReason = pf.getString("MessageJailReason", "§cYou have been jailed! Reason: <Reason>");
-		Settings.MessageUnjail = pf.getString("MessageUnJail", "§2You have been released! Please respect server rules.");
-		Settings.MessageDestroyNoPenalty = pf.getString("MessageDestroyNoPenalty", "§cDo not destroy The Jail!");
-		Settings.MessageDestroyPenalty = pf.getString("MessageDestroyPenalty", "§cDo not destroy The Jail! You have just earned additional 15 minutes in jail!");
-		Settings.MessageMoveNoPenalty = pf.getString("MessageMoveNoPenalty", "§cDo not try to escape out of Jail!");
-		Settings.MessageMovePenalty = pf.getString("MessageMovePenalty", "§cDo not try to escape out of Jail! You have just earned additional 30 minutes in jail!!");
-		Settings.MessagePlaceNoPenalty = pf.getString("MessagePlaceNoPenalty", "§cDo not place blocks inside Jail!");
-		Settings.MessagePlacePenalty = pf.getString("MessagePlacePenalty", "§cDo not place blocks inside Jail! You have just earned additional 10 minutes in jail!");
-		Settings.MessageCommandNoPenalty = pf.getString("MessageCommandNoPenalty", "§cDo not try to escape with commands!");
-		Settings.MessageCommandPenalty = pf.getString("MessageCommandPenalty", "§cDo not try to escape with commands! You have just earned additional 10 minutes in jail!");
-		Settings.MessageTransfer = pf.getString("MessageTransfer", "§9You have been transferred to another jail!");
-		Settings.MessageFireNoPenalty = pf.getString("MessageFireNoPenalty", "§cDo not try to burn the jail!");
-		Settings.MessageFirePenalty = pf.getString("MessageFirePenalty", "§cDo not try to burn the jail! You have just earned additional 15 minutes in jail!");
-		Settings.MessageBucketNoPenalty = pf.getString("MessageBucketNoPenalty", "§cDo not try to flood the jail!");
-		Settings.MessageBucketPenalty = pf.getString("MessageBucketPenalty", "§cDo not try to flood the jail! You have just earned additional 10 minutes in jail!");
-		Settings.MessageMute = pf.getString("MessageMute", "Stop chatting and quietly wait for the end of your sentence!");
-		Settings.MessageInteractionPenalty  = pf.getString("MessageInteractionPenalty", "Don't do that in Jail!  You have just earned additional 10 minutes in jail!");
-		Settings.MessageInteractionNoPenalty = pf.getString("MessageInteractionNoPenalty", "Don't do that in Jail!");
-		pf.save();
 	}
     
     public void loadJailStickParameters()
     {
-    	for (String i : Settings.JailStickParameters.split(";"))
+    	for (String i : global.getString(Setting.JailStickParameters.getString()).split(";"))
     	{
     		jailStickParameters.put(Integer.parseInt(i.substring(0, i.indexOf(","))), i.split(","));
     	}
@@ -619,7 +544,7 @@ public class InputOutput {
         try {
             conn = InputOutput.getConnection();//            {
             	st = conn.createStatement();
-            	if (Settings.UseMySql)
+            	if (global.getBoolean(Setting.UseMySQL.getString(), false))
                 {
                 	st.executeUpdate("CREATE TABLE IF NOT EXISTS `jail_prisoners` ( `PlayerName` varchar(250) NOT NULL, `RemainTime` int(11) DEFAULT NULL, `JailName` varchar(250) DEFAULT NULL, `Offline` varchar(250) DEFAULT NULL, `TransferDest` varchar(250) DEFAULT NULL , `reason` varchar(250) DEFAULT NULL, `muted` boolean DEFAULT false, Inventory TEXT DEFAULT NULL, Jailer VARCHAR(250) DEFAULT NULL, PRIMARY KEY (`PlayerName`) ) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
                 	st.executeUpdate("CREATE TABLE IF NOT EXISTS `jail_zones` ( `name` varchar(250) NOT NULL DEFAULT '', `X1` double DEFAULT NULL, `Y1` double DEFAULT NULL, `Z1` double DEFAULT NULL, `X2` double DEFAULT NULL, `Y2` double DEFAULT NULL, `Z2` double DEFAULT NULL, `teleX` double DEFAULT NULL, `teleY` double DEFAULT NULL, `teleZ` double DEFAULT NULL, `freeX` double DEFAULT NULL, `freeY` double DEFAULT NULL, `FreeZ` double DEFAULT NULL, `teleWorld` varchar(250) DEFAULT NULL, `freeWorld` varchar(250) DEFAULT NULL , PRIMARY KEY (`name`) ) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
@@ -670,7 +595,7 @@ public class InputOutput {
     		Jail.log.log(Level.INFO, "[Jail] Updating database");
     		try {
     			String[] query;
-    			if (Settings.UseMySql)
+    			if (global.getBoolean(Setting.UseMySQL.getString(), false))
     				query = mysql.split(";");
     			else
     				query = sqlite.split(";");
@@ -697,7 +622,7 @@ public class InputOutput {
     {
     	try
     	{
-    		if (!Settings.UseMySql) return;
+    		if (!global.getBoolean(Setting.UseMySQL.getString(), false)) return;
     		Connection conn = getConnection();
     		DatabaseMetaData meta = conn.getMetaData();
     	    ResultSet rsColumns = null;

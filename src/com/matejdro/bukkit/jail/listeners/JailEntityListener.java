@@ -14,7 +14,9 @@ import org.bukkit.event.entity.EntityListener;
 
 import com.matejdro.bukkit.jail.Jail;
 import com.matejdro.bukkit.jail.JailPrisoner;
+import com.matejdro.bukkit.jail.JailZone;
 import com.matejdro.bukkit.jail.JailZoneManager;
+import com.matejdro.bukkit.jail.Setting;
 import com.matejdro.bukkit.jail.Settings;
 
 public class JailEntityListener extends EntityListener {
@@ -53,7 +55,7 @@ public class JailEntityListener extends EntityListener {
 				Player player = plugin.getServer().getPlayer(prisoner.getName());
 				if (player == null) return;
 				
-				if (Settings.RespawnGuards)
+				if (prisoner.getJail().getSettings().getBoolean(Setting.RespawnGuards))
 					prisoner.spawnGuards(1, player.getLocation(), player);
 				else if (prisoner.getGuards().size() == 0)
 				{
@@ -72,7 +74,9 @@ public class JailEntityListener extends EntityListener {
 		if (event.isCancelled()) return;
 		Entity victim = event.getEntity();
 		// Apply Wolf Armor or Invincibiliy
-		if (Jail.guards.containsKey(victim) && Settings.Guardinvincibility)
+		JailPrisoner prisoner = Jail.guards.get(victim);
+		JailZone jail = prisoner != null ? prisoner.getJail() : null;
+		if (prisoner != null && jail.getSettings().getBoolean(Setting.GuardInvincibility) )
 		{
 				event.setCancelled(true);
 				return;
@@ -80,19 +84,22 @@ public class JailEntityListener extends EntityListener {
 		if (!(event instanceof EntityDamageByEntityEvent)) return;
 		EntityDamageByEntityEvent newevent = (EntityDamageByEntityEvent) event;
 		Entity damager = newevent.getDamager();
+		
+		prisoner = Jail.guards.get(damager);
+		jail = prisoner != null ? prisoner.getJail() : null;
 
 		//Apply Wolf damage and damage speed change
-		if (Jail.guards.containsKey(damager))
+		if (prisoner != null)
 		{
-			if (new Random().nextInt(100) > Settings.GuardAttackSpeedPercent) 
+			if (new Random().nextInt(100) > jail.getSettings().getInt(Setting.GuardAttackSpeedPercent)) 
 			{
 				event.setCancelled(true);
 				return;
 			}
-			event.setDamage(Settings.GuardDamage);
+			event.setDamage(jail.getSettings().getInt(Setting.GuardDamage));
 		}
-		
-		if (Settings.PreventPvPInJail && victim instanceof Player && damager instanceof Player && JailZoneManager.isInsideJail(victim.getLocation()))
+		jail = JailZoneManager.getJail(victim.getLocation());
+		if (jail != null && jail.getSettings().getBoolean(Setting.EnablePVPProtection) && victim instanceof Player && damager instanceof Player)
 		{
 			event.setCancelled(true);
 			return;

@@ -21,6 +21,7 @@ import com.matejdro.bukkit.jail.JailCell;
 import com.matejdro.bukkit.jail.JailPrisoner;
 import com.matejdro.bukkit.jail.JailZone;
 import com.matejdro.bukkit.jail.JailZoneManager;
+import com.matejdro.bukkit.jail.Setting;
 import com.matejdro.bukkit.jail.Settings;
 import com.matejdro.bukkit.jail.Util;
 
@@ -38,30 +39,33 @@ public class JailPlayerProtectionListener extends PlayerListener {
 		JailPrisoner prisoner = Jail.prisoners.get(event.getPlayer().getName().toLowerCase());
 		if (prisoner != null && prisoner.isMuted())
 		{
-			Util.Message(Settings.MessageMute, event.getPlayer());
+			Util.Message(prisoner.getJail().getSettings().getString(Setting.MessageMute), event.getPlayer());
 			event.setCancelled(true);
 		}
 	}
 	
 	public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
 		if (event.isCancelled()) return;
-		if (Jail.prisoners.containsKey(event.getPlayer().getName().toLowerCase()))
+		JailPrisoner prisoner = Jail.prisoners.get(event.getPlayer().getName().toLowerCase());
+		JailZone jail = prisoner != null ? prisoner.getJail() : null;
+
+		if (prisoner != null)
 		{
-			for (String i : Settings.PreventCommands)
+			for (Object o : jail.getSettings().getList(Setting.PreventCommands))
 			{
+				String i = (String) o;
 				if (event.getMessage().startsWith(i))
 				{
-					JailPrisoner prisoner = Jail.prisoners.get(event.getPlayer().getName().toLowerCase());
-					if (Settings.CommandPenalty > 0 && prisoner.getRemainingTime() > 0)
+					if (jail.getSettings().getInt(Setting.CommandProtectionPenalty) > 0 && prisoner.getRemainingTime() > 0)
 					{
 						
-						Util.Message(Settings.MessageCommandPenalty, event.getPlayer());
-						prisoner.setRemainingTime(prisoner.getRemainingTime() + Settings.CommandPenalty * 6);
+						Util.Message(jail.getSettings().getString(Setting.MessageForbiddenCommandNoPenalty), event.getPlayer());
+						prisoner.setRemainingTime(prisoner.getRemainingTime() + jail.getSettings().getInt(Setting.CommandProtectionPenalty) * 6);
 						InputOutput.UpdatePrisoner(prisoner);
 					}
 				else
 					{
-						Util.Message(Settings.MessageCommandNoPenalty, event.getPlayer());
+						Util.Message(jail.getSettings().getString(Setting.MessageForbiddenCommandPenalty), event.getPlayer());
 					}
 					event.setCancelled(true);
 					return;
@@ -81,7 +85,7 @@ public class JailPlayerProtectionListener extends PlayerListener {
 				JailZone jail = prisoner.getJail();
 				if (!jail.isInside(event.getTo()))
 				{
-					if (Settings.PlayerMoveProtectionAction.equals("guards"))
+					if (jail.getSettings().getString(Setting.PlayerMoveProtectionAction).equals("guards"))
 					{
 						if (prisoner.getGuards().size() > 0)
 						{
@@ -94,16 +98,16 @@ public class JailPlayerProtectionListener extends PlayerListener {
 									continue;
 								}
 								if (w.getTarget() == null) w.setTarget(event.getPlayer());
-								if (Settings.GuardTeleportDistance > 0 && w.getLocation().distanceSquared(w.getTarget().getLocation()) > Settings.GuardTeleportDistance)
+								if (jail.getSettings().getInt(Setting.GuardTeleportDistance) > 0 && (w.getWorld() != w.getTarget().getWorld() || w.getLocation().distanceSquared(w.getTarget().getLocation()) > jail.getSettings().getInt(Setting.GuardTeleportDistance)))
 									w.teleport(w.getTarget().getLocation());
 							}
 						}
 						else
-							prisoner.spawnGuards(Settings.NumberOfGuards, event.getTo(), event.getPlayer());
+							prisoner.spawnGuards(jail.getSettings().getInt(Setting.NumbefOfGuards), event.getTo(), event.getPlayer());
 
 					}
 					
-					else if (Settings.PlayerMoveProtectionAction.equals("escape"))
+					else if (jail.getSettings().getString(Setting.PlayerMoveProtectionAction).equals("escape"))
 					{
 						prisoner.delete();
 						plugin.getServer().broadcastMessage(event.getPlayer().getName() + " have escaped from jail!");
@@ -111,27 +115,24 @@ public class JailPlayerProtectionListener extends PlayerListener {
 					}
 					else 
 					{
-						if (Settings.PlayerMovePenalty > 0  && prisoner.getRemainingTime() > 0)
+						if (jail.getSettings().getInt(Setting.PlayerMoveProtectionPenalty) > 0  && prisoner.getRemainingTime() > 0)
 						{
 							
-							Util.Message(Settings.MessageMovePenalty, event.getPlayer());
-							prisoner.setRemainingTime(prisoner.getRemainingTime() + Settings.PlayerMovePenalty * 6);
+							Util.Message(jail.getSettings().getString(Setting.MessageEscapePenalty), event.getPlayer());
+							prisoner.setRemainingTime(prisoner.getRemainingTime() + jail.getSettings().getInt(Setting.PlayerMoveProtectionPenalty) * 6);
 							InputOutput.UpdatePrisoner(prisoner);
 						}
 					else
 						{
-							Util.Message(Settings.MessageMoveNoPenalty, event.getPlayer());
+							Util.Message(jail.getSettings().getString(Setting.MessageEscapeNoPenalty), event.getPlayer());
 						}	
 					
 					Location teleport;
-					if (!Settings.AlwaysTeleportIntoJailCenter && jail.isInside(event.getFrom()))
-						teleport = event.getFrom();
-					else
-						teleport = prisoner.getTeleportLocation();
+					teleport = prisoner.getTeleportLocation();
 					event.setTo(teleport);
 					}					
 				}
-				else if (Settings.PlayerMoveProtectionAction.equals("guards"))
+				else if (jail.getSettings().getString(Setting.PlayerMoveProtectionAction).equals("guards"))
 				{
 						for (Object o : prisoner.getGuards().toArray())
 						{
@@ -151,34 +152,14 @@ public class JailPlayerProtectionListener extends PlayerListener {
 		 if (event.isCancelled()) return;
 		 onPlayerMove((PlayerMoveEvent) event);
 		      }
-	 
-	 
-	 public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event) {
-		 if (event.isCancelled()) return;
-		 if (JailZoneManager.isInsideJail(event.getBlockClicked().getLocation()) || JailZoneManager.isInsideJail(event.getBlockClicked().getRelative(event.getBlockFace()).getLocation()))
-		 {
-			 if (Settings.BucketPenalty > 0 && Jail.prisoners.containsKey(event.getPlayer().getName().toLowerCase()) && Jail.prisoners.get(event.getPlayer().getName().toLowerCase()).getRemainingTime() > 0)
-				{
-					JailPrisoner prisoner = Jail.prisoners.get(event.getPlayer().getName().toLowerCase());
-					Util.Message(Settings.MessageBucketPenalty, event.getPlayer());
-					prisoner.setRemainingTime(prisoner.getRemainingTime() + Settings.BucketPenalty * 6);
-					InputOutput.UpdatePrisoner(prisoner);
-				}
-			else
-				{
-					Util.Message(Settings.MessageBucketNoPenalty, event.getPlayer());
-				}
-			 event.setCancelled(true);
-		 }
-	 }
-	 
+		 
 	 public void onPlayerInteract(PlayerInteractEvent event) {
 			if (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getClickedBlock().getType() == Material.CHEST && (Jail.prisoners.containsKey(event.getPlayer().getName().toLowerCase()) || !Util.permission(event.getPlayer(), "jail.openchest", PermissionDefault.OP)))
 				{
 				for (JailZone jail : Jail.zones.values())
 					for (JailCell cell : jail.getCellList())
 					{
-						if ((!Settings.CanPrisonerOpenHisChest || !cell.getPlayerName().equals(event.getPlayer().getName().toLowerCase())) && ((cell.getChest() != null && event.getClickedBlock() == cell.getChest().getBlock()) || (cell.getSecondChest() != null && event.getClickedBlock() == cell.getSecondChest().getBlock())))
+						if ((!jail.getSettings().getBoolean(Setting.CanPrisonerOpenHisChest) || !cell.getPlayerName().equals(event.getPlayer().getName().toLowerCase())) && ((cell.getChest() != null && event.getClickedBlock() == cell.getChest().getBlock()) || (cell.getSecondChest() != null && event.getClickedBlock() == cell.getSecondChest().getBlock())))
 								{
 							event.setCancelled(true);
 							return;
@@ -189,21 +170,22 @@ public class JailPlayerProtectionListener extends PlayerListener {
 			JailPrisoner prisoner = Jail.prisoners.get(event.getPlayer().getName().toLowerCase());
 			if (prisoner != null)
 			{
+				JailZone jail = prisoner.getJail();
 				if (event.getClickedBlock() != null)
 				{
 					int id = event.getClickedBlock().getTypeId();
-					if (Settings.PreventInteractionBlocks.contains(String.valueOf(id)))
+					if (jail.getSettings().getList(Setting.PreventInteractionBlocks).contains(String.valueOf(id)))
 					{
-						if (event.getAction() != Action.PHYSICAL && Settings.InteractionPenalty > 0  && prisoner.getRemainingTime() > 0)
+						if (event.getAction() != Action.PHYSICAL && jail.getSettings().getInt(Setting.InteractionPenalty) > 0  && prisoner.getRemainingTime() > 0)
 						{
 							
-							Util.Message(Settings.MessageInteractionPenalty, event.getPlayer());
-							prisoner.setRemainingTime(prisoner.getRemainingTime() + Settings.InteractionPenalty * 6);
+							Util.Message(jail.getSettings().getString(Setting.MessagePreventedInteractionPenalty), event.getPlayer());
+							prisoner.setRemainingTime(prisoner.getRemainingTime() + jail.getSettings().getInt(Setting.InteractionPenalty) * 6);
 							InputOutput.UpdatePrisoner(prisoner);
 						}
 						else if (event.getAction() != Action.PHYSICAL)
 						{
-							Util.Message(Settings.MessageInteractionNoPenalty, event.getPlayer());
+							Util.Message(jail.getSettings().getString(Setting.MessagePreventedInteractionNoPenalty), event.getPlayer());
 						}
 						
 						event.setCancelled(true);
@@ -213,18 +195,18 @@ public class JailPlayerProtectionListener extends PlayerListener {
 				if (event.getPlayer().getItemInHand() != null)
 				{
 					int id = event.getPlayer().getItemInHand().getTypeId();
-					if (Settings.PreventInteractionItems.contains(String.valueOf(id)))
+					if (jail.getSettings().getList(Setting.PreventInteractionItems).contains(String.valueOf(id)))
 					{
-						if (event.getAction() != Action.PHYSICAL && Settings.InteractionPenalty > 0  && prisoner.getRemainingTime() > 0)
+						if (event.getAction() != Action.PHYSICAL && jail.getSettings().getInt(Setting.InteractionPenalty) > 0  && prisoner.getRemainingTime() > 0)
 						{
 							
-							Util.Message(Settings.MessageInteractionPenalty, event.getPlayer());
-							prisoner.setRemainingTime(prisoner.getRemainingTime() + Settings.InteractionPenalty * 6);
+							Util.Message(jail.getSettings().getString(Setting.MessagePreventedInteractionPenalty), event.getPlayer());
+							prisoner.setRemainingTime(prisoner.getRemainingTime() + jail.getSettings().getInt(Setting.InteractionPenalty) * 6);
 							InputOutput.UpdatePrisoner(prisoner);
 						}
 						else if (event.getAction() != Action.PHYSICAL)
 						{
-							Util.Message(Settings.MessageInteractionNoPenalty, event.getPlayer());
+							Util.Message(jail.getSettings().getString(Setting.MessagePreventedInteractionNoPenalty), event.getPlayer());
 						}
 						
 						event.setCancelled(true);
@@ -243,16 +225,16 @@ public class JailPlayerProtectionListener extends PlayerListener {
 				JailZone jail = prisoner.getJail();
 				if (!jail.isInside(event.getRespawnLocation()))
 				{
-					if (Settings.PlayerMovePenalty > 0  && prisoner.getRemainingTime() > 0)
+					if (jail.getSettings().getInt(Setting.PlayerMoveProtectionPenalty) > 0  && prisoner.getRemainingTime() > 0)
 						{
 							
-							Util.Message(Settings.MessageMovePenalty, event.getPlayer());
-							prisoner.setRemainingTime(prisoner.getRemainingTime() + Settings.PlayerMovePenalty * 6);
+							Util.Message(jail.getSettings().getString(Setting.MessageEscapePenalty), event.getPlayer());
+							prisoner.setRemainingTime(prisoner.getRemainingTime() + jail.getSettings().getInt(Setting.PlayerMoveProtectionPenalty) * 6);
 							InputOutput.UpdatePrisoner(prisoner);
 						}
 					else
 						{
-							Util.Message(Settings.MessageMoveNoPenalty, event.getPlayer());
+							Util.Message(jail.getSettings().getString(Setting.MessageEscapeNoPenalty), event.getPlayer());
 						}
 					final Location teleloc = prisoner.getTeleportLocation();
 					final Player player = event.getPlayer();

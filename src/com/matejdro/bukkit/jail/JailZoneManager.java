@@ -68,4 +68,19 @@ public class JailZoneManager {
 		}
 		return false;
 	}
+	
+	/**
+	 * Return jail that contains location. Returns null if there is no such jail.
+	 */
+	public static JailZone getJail(Location loc)
+	{
+		for (JailZone zone : Jail.zones.values())
+		{
+			if (zone.isInside(loc))
+			{
+				return zone;
+			}
+		}
+		return null;
+	}
 }

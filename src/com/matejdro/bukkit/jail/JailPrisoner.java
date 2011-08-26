@@ -349,7 +349,7 @@ public class JailPrisoner {
 			
 									
 			Wolf guard = (Wolf) location.getWorld().spawnCreature(spawn, CreatureType.WOLF);
-			guard.setHealth(Settings.GuardHealth);
+			guard.setHealth(getJail().getSettings().getInt(Setting.GuardHealth));
 			guard.setAngry(true);
 			guard.setSitting(false);
 			guard.setTarget(player);
@@ -410,7 +410,7 @@ public class JailPrisoner {
 		if (cell != null && cell.getSign() != null) 
 		{
 			Sign sign = cell.getSign();
-			String[] lines = Settings.SignText.split("\\[NEWLINE\\]");
+			String[] lines = getJail().getSettings().getString(Setting.SignText).split("\\[NEWLINE\\]");
 			int max = lines.length;
 			if (max > 4) max = 4;
 			

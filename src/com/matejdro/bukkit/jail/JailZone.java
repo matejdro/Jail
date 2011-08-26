@@ -21,6 +21,7 @@ public class JailZone {
 	private String teleWorldname;
 	private String freeWorldname;
 	private HashSet<JailCell> cells = new HashSet<JailCell>();
+	private Settings settings;
 	
 	/**
 	 * @param pname name of new jail zone
@@ -56,6 +57,7 @@ public class JailZone {
 		freeZ = pfreeZ;
 		teleWorldname = pteleWorld;
 		freeWorldname = pfreeWorld;
+		settings = new Settings(this);
 	}
 	
 	/**
@@ -226,6 +228,11 @@ public class JailZone {
 		}
 		return jailprisoners;
 
+	}
+	
+	public Settings getSettings()
+	{
+		return settings;
 	}
 	
 	/**

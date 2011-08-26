@@ -2,8 +2,10 @@ package com.matejdro.bukkit.jail.commands;
 
 import org.bukkit.command.CommandSender;
 
+import com.matejdro.bukkit.jail.InputOutput;
 import com.matejdro.bukkit.jail.Jail;
 import com.matejdro.bukkit.jail.JailPrisoner;
+import com.matejdro.bukkit.jail.Setting;
 import com.matejdro.bukkit.jail.Settings;
 import com.matejdro.bukkit.jail.Util;
 
@@ -35,7 +37,7 @@ public class JailTransferCommand extends BaseCommand {
 		}
 		String playername = args[0].toLowerCase();
 		String newjail;
-		if (args.length < 2 || args[1].equals(Settings.NearestJailCode)) 
+		if (args.length < 2 || args[1].equals(InputOutput.global.getString(Setting.NearestJailCode.getString()))) 
 			newjail = null;
 		else
 			newjail = args[1].toLowerCase();

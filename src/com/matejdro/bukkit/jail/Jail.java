@@ -103,33 +103,15 @@ public class Jail extends JavaPlugin {
 		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_COMMAND_PREPROCESS, PlayerPreventListener, Event.Priority.Low, this);
 		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_JOIN, PlayerListener, Event.Priority.Monitor, this);
 		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_INTERACT, PlayerListener, Event.Priority.High, this);
-		
-		if (Settings.BlockDestroyProtection)
-			getServer().getPluginManager().registerEvent(Event.Type.BLOCK_BREAK, BlockListener, Event.Priority.Low, this);
-		if (Settings.PlayerMoveProtection)
-		{
-			getServer().getPluginManager().registerEvent(Event.Type.PLAYER_MOVE, PlayerPreventListener, Event.Priority.Low, this);
-			getServer().getPluginManager().registerEvent(Event.Type.PLAYER_TELEPORT, PlayerPreventListener, Event.Priority.Low, this);
-		}
-			
-		if (Settings.BlockPlaceProtection)
-			getServer().getPluginManager().registerEvent(Event.Type.BLOCK_PLACE, BlockListener, Event.Priority.High, this);
-		if (Settings.FireProtection)
-			getServer().getPluginManager().registerEvent(Event.Type.BLOCK_IGNITE, BlockListener, Event.Priority.High, this);
-		if (Settings.BucketProtection)
-			getServer().getPluginManager().registerEvent(Event.Type.PLAYER_BUCKET_EMPTY, PlayerPreventListener, Event.Priority.High, this);
-		if (Settings.PlayerMoveProtectionAction.equals("guards"))
-		{
-			getServer().getPluginManager().registerEvent(Event.Type.PLAYER_RESPAWN, PlayerPreventListener, Event.Priority.Low, this);
-			getServer().getPluginManager().registerEvent(Event.Type.PLAYER_QUIT, PlayerListener, Event.Priority.Monitor, this);
-			getServer().getPluginManager().registerEvent(Event.Type.ENTITY_DEATH, EntityListener, Event.Priority.Monitor, this);
-		}	
-		if (Settings.PreventPvPInJail || Settings.PlayerMoveProtectionAction.equals("guards"))
-			getServer().getPluginManager().registerEvent(Event.Type.ENTITY_DAMAGE, EntityListener, Event.Priority.Low, this);
-	
-		if (Settings.ExplosionProtection)
-			getServer().getPluginManager().registerEvent(Event.Type.ENTITY_EXPLODE, EntityListener, Event.Priority.High, this);
-		
+		getServer().getPluginManager().registerEvent(Event.Type.BLOCK_BREAK, BlockListener, Event.Priority.Low, this);
+		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_MOVE, PlayerPreventListener, Event.Priority.Low, this);
+		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_TELEPORT, PlayerPreventListener, Event.Priority.Low, this);
+		getServer().getPluginManager().registerEvent(Event.Type.BLOCK_PLACE, BlockListener, Event.Priority.High, this);
+		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_RESPAWN, PlayerPreventListener, Event.Priority.Low, this);
+		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_QUIT, PlayerListener, Event.Priority.Monitor, this);
+		getServer().getPluginManager().registerEvent(Event.Type.ENTITY_DEATH, EntityListener, Event.Priority.Monitor, this);
+		getServer().getPluginManager().registerEvent(Event.Type.ENTITY_DAMAGE, EntityListener, Event.Priority.Low, this);
+		getServer().getPluginManager().registerEvent(Event.Type.ENTITY_EXPLODE, EntityListener, Event.Priority.High, this);
 		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_CHAT, PlayerListener, Event.Priority.Lowest, this);
 		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_CHAT, PlayerPreventListener, Event.Priority.High, this);
 		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_INTERACT, PlayerPreventListener, Event.Priority.High, this);		

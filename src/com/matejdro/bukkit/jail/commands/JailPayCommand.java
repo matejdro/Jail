@@ -9,6 +9,8 @@ import com.iConomy.system.Account;
 import com.iConomy.system.Holdings;
 import com.matejdro.bukkit.jail.Jail;
 import com.matejdro.bukkit.jail.JailPrisoner;
+import com.matejdro.bukkit.jail.JailZone;
+import com.matejdro.bukkit.jail.Setting;
 import com.matejdro.bukkit.jail.Settings;
 import com.matejdro.bukkit.jail.Util;
 
@@ -23,8 +25,6 @@ public class JailPayCommand extends BaseCommand {
 
 
 	public Boolean run(CommandSender sender, String[] args) {		
-		if (!Settings.EnablePaying) return false;
-		
 		Player player = (Player) sender;
 		
 		iConomy iConomy = null;
@@ -40,19 +40,20 @@ public class JailPayCommand extends BaseCommand {
 		if (args.length < 1)
 		{
 			JailPrisoner prisoner = Jail.prisoners.get(((Player) sender).getName().toLowerCase());
+			JailZone jail = prisoner.getJail();
 			if (prisoner == null) 
 			{
 				Util.Message("You are not jailed!", sender);
 				return true;
 			}
-			if (Settings.PriceForInfiniteJail > 0  && prisoner.getRemainingTime() < 0)
-				Util.Message("To get out of this mess, you will have to pay " + iConomy.format(Settings.PriceForInfiniteJail) +".", sender);
-			else if (prisoner.getRemainingTime() < 0 || Settings.PriceForInfiniteJail == 0)
+			if (jail.getSettings().getBoolean(Setting.EnablePaying) && jail.getSettings().getDouble(Setting.PriceForInfiniteJail) > 0  && prisoner.getRemainingTime() < 0)
+				Util.Message("To get out of this mess, you will have to pay " + iConomy.format(jail.getSettings().getDouble(Setting.PriceForInfiniteJail)) +".", sender);
+			else if (!jail.getSettings().getBoolean(Setting.EnablePaying) || prisoner.getRemainingTime() < 0 || jail.getSettings().getDouble(Setting.PriceForInfiniteJail) == 0)
 				Util.Message("Sorry, money won't help you this time.", sender);
 			else
 			{
-				String message = "1 minute of your sentence will cost you " + iConomy.format(Settings.PricePerMinute) +". ";
-				message += "That means that cost for releasing you out of the jail is " + iConomy.format(Settings.PricePerMinute * Math.round(prisoner.getRemainingTimeMinutes())) +".";
+				String message = "1 minute of your sentence will cost you " + iConomy.format(jail.getSettings().getDouble(Setting.PricePerMinute)) +". ";
+				message += "That means that cost for releasing you out of the jail is " + iConomy.format(jail.getSettings().getDouble(Setting.PricePerMinute) * Math.round(prisoner.getRemainingTimeMinutes())) +".";
 				Util.Message(message, sender);
 			}
 		}
@@ -78,8 +79,8 @@ public class JailPayCommand extends BaseCommand {
 					return true;
 				}
 			}
-			
-			if ((prisoner.getRemainingTime() < 0 && Settings.PriceForInfiniteJail == 0) || (prisoner.getRemainingTime() > 0 && Settings.PricePerMinute == 0))
+			JailZone jail = prisoner.getJail();
+			if ((prisoner.getRemainingTime() < 0 && jail.getSettings().getDouble(Setting.PriceForInfiniteJail) == 0) || (prisoner.getRemainingTime() > 0 && jail.getSettings().getDouble(Setting.PricePerMinute) == 0))
 			{
 				if (args.length > 1)
 					Util.Message("Sorry, money won't help him this time.", sender);
@@ -102,13 +103,13 @@ public class JailPayCommand extends BaseCommand {
 			
 			if (prisoner.getRemainingTime() < 0)
 			{
-				if (payment >= Settings.PriceForInfiniteJail)
+				if (payment >= jail.getSettings().getDouble(Setting.PriceForInfiniteJail))
 				{
 					if (args.length > 1)
-						Util.Message("You have just payed " + iConomy.format(Settings.PriceForInfiniteJail) + " and saved " + prisoner.getName() + " from the jail!", sender);
+						Util.Message("You have just payed " + iConomy.format(jail.getSettings().getDouble(Setting.PriceForInfiniteJail)) + " and saved " + prisoner.getName() + " from the jail!", sender);
 					else
-						Util.Message("You have just payed " + iConomy.format(Settings.PriceForInfiniteJail) + " and saved yourself from the jail!", sender);
-					holdings.subtract(Settings.PriceForInfiniteJail);
+						Util.Message("You have just payed " + iConomy.format(jail.getSettings().getDouble(Setting.PriceForInfiniteJail)) + " and saved yourself from the jail!", sender);
+					holdings.subtract(jail.getSettings().getDouble(Setting.PriceForInfiniteJail));
 					prisoner.release();
 				}
 				else
@@ -119,7 +120,7 @@ public class JailPayCommand extends BaseCommand {
 			}
 			else
 			{
-				double releasebill = Settings.PricePerMinute * Math.round(prisoner.getRemainingTimeMinutes());
+				double releasebill = jail.getSettings().getDouble(Setting.PricePerMinute) * Math.round(prisoner.getRemainingTimeMinutes());
 				if (payment >= releasebill)
 				{
 					if (args.length > 1)
@@ -131,8 +132,8 @@ public class JailPayCommand extends BaseCommand {
 				}
 				else
 				{
-					int minutes = (int) Math.round(payment / Settings.PricePerMinute);
-					double bill = minutes * Settings.PricePerMinute;
+					int minutes = (int) Math.round(payment / jail.getSettings().getDouble(Setting.PricePerMinute));
+					double bill = minutes * jail.getSettings().getDouble(Setting.PricePerMinute);
 					int remain = (int) (Math.round(prisoner.getRemainingTimeMinutes()) - minutes);
 					if (args.length > 1)
 						Util.Message("You have just payed " + iConomy.format(bill) + " and lowered " + prisoner.getName() + "'s sentence to " + String.valueOf(remain) + " minutes!", sender);
