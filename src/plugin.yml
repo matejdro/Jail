@@ -76,6 +76,9 @@ commands:
     jailstick:
         description: Toggle jailstick feature.
         permission: jail.command.jailstick
+    jailcreatewe:
+        description: Create a new jail zone based on existing world guard region.
+        permission: jail.command.jailcreatewe
 permissions:
     jail.*:
         children:

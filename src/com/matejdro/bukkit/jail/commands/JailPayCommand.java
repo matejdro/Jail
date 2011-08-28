@@ -11,7 +11,6 @@ import com.matejdro.bukkit.jail.Jail;
 import com.matejdro.bukkit.jail.JailPrisoner;
 import com.matejdro.bukkit.jail.JailZone;
 import com.matejdro.bukkit.jail.Setting;
-import com.matejdro.bukkit.jail.Settings;
 import com.matejdro.bukkit.jail.Util;
 
 public class JailPayCommand extends BaseCommand {
@@ -40,12 +39,12 @@ public class JailPayCommand extends BaseCommand {
 		if (args.length < 1)
 		{
 			JailPrisoner prisoner = Jail.prisoners.get(((Player) sender).getName().toLowerCase());
-			JailZone jail = prisoner.getJail();
 			if (prisoner == null) 
 			{
 				Util.Message("You are not jailed!", sender);
 				return true;
 			}
+			JailZone jail = prisoner.getJail();
 			if (jail.getSettings().getBoolean(Setting.EnablePaying) && jail.getSettings().getDouble(Setting.PriceForInfiniteJail) > 0  && prisoner.getRemainingTime() < 0)
 				Util.Message("To get out of this mess, you will have to pay " + iConomy.format(jail.getSettings().getDouble(Setting.PriceForInfiniteJail)) +".", sender);
 			else if (!jail.getSettings().getBoolean(Setting.EnablePaying) || prisoner.getRemainingTime() < 0 || jail.getSettings().getDouble(Setting.PriceForInfiniteJail) == 0)

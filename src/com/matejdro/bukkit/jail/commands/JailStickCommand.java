@@ -15,6 +15,7 @@ public class JailStickCommand extends BaseCommand {
 	}
 	
 	public Boolean run(CommandSender sender, String[] args) {		
+		
 		Player player = (Player) sender;
 		Boolean enabled = Jail.jailStickToggle.get(player);
 		

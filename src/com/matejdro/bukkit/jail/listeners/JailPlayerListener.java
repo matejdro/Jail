@@ -21,7 +21,6 @@ import com.matejdro.bukkit.jail.JailPrisoner;
 import com.matejdro.bukkit.jail.JailZoneCreation;
 import com.matejdro.bukkit.jail.PrisonerManager;
 import com.matejdro.bukkit.jail.Setting;
-import com.matejdro.bukkit.jail.Settings;
 import com.matejdro.bukkit.jail.Util;
 import com.matejdro.bukkit.jail.commands.JailSetCommand;
 

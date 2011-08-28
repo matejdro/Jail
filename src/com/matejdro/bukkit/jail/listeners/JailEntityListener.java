@@ -17,7 +17,6 @@ import com.matejdro.bukkit.jail.JailPrisoner;
 import com.matejdro.bukkit.jail.JailZone;
 import com.matejdro.bukkit.jail.JailZoneManager;
 import com.matejdro.bukkit.jail.Setting;
-import com.matejdro.bukkit.jail.Settings;
 
 public class JailEntityListener extends EntityListener {
 	private Jail plugin;
