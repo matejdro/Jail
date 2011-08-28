@@ -214,7 +214,7 @@ public class PrisonerManager {
 			String s = (String) o;
 			CraftServer cs = (CraftServer) Jail.instance.getServer();
 			CommandSender coms = new ConsoleCommandSender(Jail.instance.getServer());
-			cs.dispatchCommand(coms,s.replace("<Player>", player.getName()));
+			cs.dispatchCommand(coms,prisoner.parseTags(s));
 		}
 		
 	}
@@ -287,7 +287,7 @@ public class PrisonerManager {
 			String s = (String) o;
 			CraftServer cs = (CraftServer) Jail.instance.getServer();
 			CommandSender coms = new ConsoleCommandSender(Jail.instance.getServer());
-			cs.dispatchCommand(coms,s.replace("<Player>", player.getName()));
+			cs.dispatchCommand(coms,prisoner.parseTags(s));
 		}
 	}
 	

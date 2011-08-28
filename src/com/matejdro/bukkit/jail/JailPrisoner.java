@@ -413,30 +413,42 @@ public class JailPrisoner {
 			String[] lines = getJail().getSettings().getString(Setting.SignText).split("\\[NEWLINE\\]");
 			int max = lines.length;
 			if (max > 4) max = 4;
-			
-			double time = getRemainingTimeMinutes();
-			String tim;
-			if (time >= 1.0 || time < 0.0)
-				tim = String.valueOf((int) Math.round( time ) * 1);
-			else
-				tim = String.valueOf(Math.round( time * 10.0d ) / 10.0d);
 				
 			for (int i = 0;i<max;i++)
 			{
-				String str = lines[i];
-				str = str.replace("<Player>", getName());
-				str = str.replace("<Time>", tim);
-				str = str.replace("<Reason>", getReason());
-				str = str.replace("<Jailer>", getJailer());
-				if (getCell() == null || getCell().getName() == null)
-					str = str.replace("<Cell>", "");
-				else
-					str = str.replace("<Cell>", getCell().getName());
-				sign.setLine(i, str);
+				sign.setLine(i, parseTags(lines[i]));
+				
 			}
 			sign.update();
 		}
 
+	}
+	
+	/**
+	 * Parse <Player>, <Reason>, <Jailer>, <Jail>, <Time>, <Cell> for actual values
+	 * @param str input string
+	 * @return parsed string
+	 */
+	public String parseTags(String str)
+	{
+		str = str.replace("<Player>", getName());
+		str = str.replace("<Reason>", getReason());
+		str = str.replace("<Jailer>", getJailer());
+		str = str.replace("<Jail>", getJail().getName());
+		
+		double time = getRemainingTimeMinutes();
+		String tim;
+		if (time >= 1.0 || time < 0.0)
+			tim = String.valueOf((int) Math.round( time ) * 1);
+		else
+			tim = String.valueOf(Math.round( time * 10.0d ) / 10.0d);
+		str = str.replace("<Time>", tim);
+				
+		if (getCell() == null || getCell().getName() == null)
+			str = str.replace("<Cell>", "");
+		else
+			str = str.replace("<Cell>", getCell().getName());
+		return str;
 	}
 
 	/**

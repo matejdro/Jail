@@ -1,12 +1,13 @@
 package com.matejdro.bukkit.jail;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public enum Setting {
 	
 	SelectionTool("SelectionTool", 268),
-	ExecutedCommandsOnJail("ExecutedCommandsOnJail", Arrays.asList(new String[0])),
-	ExecutedCommandsOnRelease("ExecutedCommandsOnRelease", Arrays.asList(new String[0])),
+	ExecutedCommandsOnJail("ExecutedCommandsOnJail", new ArrayList<String>()),
+	ExecutedCommandsOnRelease("ExecutedCommandsOnRelease", new ArrayList<String>()),
 	DeleteInventoryOnJail("DeleteInventoryOnJail", true),
 	AutomaticMute("AutomaticMute", false),
 	NearestJailCode("NearestJailCode", "nearest"),
