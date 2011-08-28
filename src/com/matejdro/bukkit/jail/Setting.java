@@ -13,6 +13,7 @@ public enum Setting {
 	StoreInventory("StoreInventory", true),
 	SignText("SignText", "<Player>[NEWLINE]<Time> minutes[NEWLINE]for[NEWLINE]<Reason>"),
 	CanPrisonerOpenHisChest("CanPrisonerOpenHisChest", true),
+	LogJailingIntoConsole("LogJailingIntoConsole", false),
 	
 	//JailStick
 	EnableJailStick("EnableJailStick", false),

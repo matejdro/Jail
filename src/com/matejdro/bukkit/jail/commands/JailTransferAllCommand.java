@@ -1,6 +1,7 @@
 package com.matejdro.bukkit.jail.commands;
 
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import com.matejdro.bukkit.jail.InputOutput;
 import com.matejdro.bukkit.jail.Jail;
@@ -40,7 +41,23 @@ public class JailTransferAllCommand extends BaseCommand {
 		else
 			PrisonerManager.PrepareTransferAll(Jail.zones.get(args[0].toLowerCase()));
 		Util.Message("Transfer command sent!", sender);
+		
+		//Log transfer into console
+		if (InputOutput.global.getBoolean(Setting.LogJailingIntoConsole.getString(), false))
+		{
+			String jailer;
+			if (sender instanceof Player)
+				jailer = ((Player) sender).getName();
+			else if (sender == null)
+				jailer = "other plugin";
+			else
+				jailer = "console";
+			
+			Jail.log.info("Everyone in jail " + args[0] + " was transferred by " + jailer);
+		}
+		
 		return true;
+
 	}
 
 }

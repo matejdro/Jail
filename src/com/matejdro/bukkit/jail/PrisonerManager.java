@@ -80,6 +80,8 @@ public class PrisonerManager {
 		String jailer;
 		if (sender instanceof Player)
 			jailer = ((Player) sender).getName();
+		else if (sender == null)
+			jailer = "other plugin";
 		else
 			jailer = "console";
 			
@@ -102,7 +104,6 @@ public class PrisonerManager {
 			Jail.prisoners.put(prisoner.getName(), prisoner);
 			
 			
-			
 			Util.Message("Player is offline. He will be automatically jailed when he connnects.", sender);
 			
 		}
@@ -113,6 +114,15 @@ public class PrisonerManager {
 			Jail(prisoner, player);
 			Util.Message("Player jailed.", sender);
 			
+		}
+		
+		//Log jailing into console
+		if (InputOutput.global.getBoolean(Setting.LogJailingIntoConsole.getString(), false))
+		{
+			String times;
+			if (time < 0) times = "forever"; else times = "for " + String.valueOf(time) + "minutes";
+			
+			Jail.log.info("Player " + playername + " was jailed by " + jailer + " " + times);
 		}
 	}
 	
