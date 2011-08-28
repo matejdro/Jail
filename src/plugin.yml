@@ -73,6 +73,9 @@ commands:
     jaillistcells:
         description: List all named cells from specified jail.
         permission: jail.command.jaillistcells
+    jailstick:
+        description: Toggle jailstick feature.
+        permission: jail.command.jailstick
 permissions:
     jail.*:
         children:
@@ -103,6 +106,7 @@ permissions:
             jail.command.jailclearforce: true
             jail.command.jailmute: true
             jail.command.jailstop: true
+            jail.command.jailstick: true
     jail.usercmd.*:
         description: access to all user commands
         children:
@@ -143,6 +147,8 @@ permissions:
     jail.command.jailmute:
         default: op
     jail.command.jailstop:
+        default: op
+    jail.command.jailstick:
         default: op
     jail.usercmd.jailstatus:
         default: true

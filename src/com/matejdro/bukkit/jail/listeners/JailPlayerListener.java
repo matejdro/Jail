@@ -53,19 +53,21 @@ public class JailPlayerListener extends PlayerListener {
 			}
 		}
 		Player player = event.getPlayer();
+		Boolean enabled = Jail.jailStickToggle.get(player);
+		if (enabled == null || !enabled) return;
 
 		if (!InputOutput.global.getBoolean(Setting.EnableJailStick.getString(), false) || !InputOutput.jailStickParameters.containsKey(player.getItemInHand().getTypeId())) return;
 		if (!Util.permission(player, "jail.usejailstick" + String.valueOf(player.getItemInHand().getTypeId()), PermissionDefault.OP)) return;
 		String[] param = InputOutput.jailStickParameters.get(player.getItemInHand().getTypeId());
-		
+
 		List<Block> targets = player.getLineOfSight(null, Integer.parseInt(param[1]));
-		targets.remove(0);
 		for (Block b : targets)
 		{
 			for (Player p : plugin.getServer().getOnlinePlayers())
 			{
 				if ((b == p.getLocation().getBlock() || b == p.getEyeLocation().getBlock()) && Util.permission(player, "jail.canbestickjailed", PermissionDefault.TRUE))
 				{
+					if (p == player) continue;
 					String args[] = new String[4];
 					args[0] = p.getName();
 					args[1] = param[2];

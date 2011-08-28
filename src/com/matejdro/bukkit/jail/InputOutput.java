@@ -88,6 +88,7 @@ public class InputOutput {
     	{
     		if (global.getProperty(s.getString()) == null) global.setProperty(s.getString(), s.getDefault());
     	}
+    	loadJailStickParameters();
     	global.save();
 	}
     
