@@ -5,8 +5,8 @@ import java.util.Arrays;
 public enum Setting {
 	
 	SelectionTool("SelectionTool", 268),
-	ExecutedCommandsOnJail("ExecutedCommandsOnJail", Arrays.asList(new String[] {""})),
-	ExecutedCommandsOnRelease("ExecutedCommandsOnRelease", Arrays.asList(new String[] {""})),
+	ExecutedCommandsOnJail("ExecutedCommandsOnJail", Arrays.asList(new String[0])),
+	ExecutedCommandsOnRelease("ExecutedCommandsOnRelease", Arrays.asList(new String[0])),
 	DeleteInventoryOnJail("DeleteInventoryOnJail", true),
 	AutomaticMute("AutomaticMute", false),
 	NearestJailCode("NearestJailCode", "nearest"),
@@ -14,6 +14,7 @@ public enum Setting {
 	SignText("SignText", "<Player>[NEWLINE]<Time> minutes[NEWLINE]for[NEWLINE]<Reason>"),
 	CanPrisonerOpenHisChest("CanPrisonerOpenHisChest", true),
 	LogJailingIntoConsole("LogJailingIntoConsole", false),
+	CountdownTimeWhenOffline("CountdownTimeWhenOffline", false),
 	
 	//JailStick
 	EnableJailStick("EnableJailStick", false),

@@ -1,6 +1,5 @@
 package com.matejdro.bukkit.jail.commands;
 
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

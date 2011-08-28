@@ -165,20 +165,16 @@ public class Jail extends JavaPlugin {
     	    	    	  {
     	    	    		  JailPrisoner prisoner = Jail.prisoners.get(prisonername.toString());
     	    	    		  Player player = getServer().getPlayer(prisoner.getName());
-    	    	    		  if (prisoner.getRemainingTime() > 0 && player != null)
+    	    	    		  if (prisoner.getRemainingTime() > 0 && (player != null || prisoner.getJail().getSettings().getBoolean(Setting.CountdownTimeWhenOffline)))
     	    	    		  {
-    	    	    			  prisoner.setRemainingTime(prisoner.getRemainingTime() - 1);
-    	    	    			  if (prisoner.getRemainingTime() == 0 && prisoner.offlinePending() == false)
-    	    	        		  {
-    	    	        					PrisonerManager.UnJail(prisoner, player);
-    	    	        		  }
-    	    	    			  else
-    	    	    			  {
-    	    	        			  //Jail.prisoners.put(prisoner.name, prisoner);
+    	    	    			  	  prisoner.setRemainingTime(prisoner.getRemainingTime() - 1);
     	    	        			  InputOutput.UpdatePrisoner(prisoner);   				  
-    	    	    			  }
     	    	
     	    	    		  }
+    	    	    		  else if (player != null && prisoner.getRemainingTime() == 0 && prisoner.offlinePending() == false)
+	    	        		  {
+  	        					PrisonerManager.UnJail(prisoner, player);
+	    	        		  }
     			    }
     	    	    	Jail.timeUpdateRunning = false;
     			    }
