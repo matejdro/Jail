@@ -146,6 +146,8 @@ public class Jail extends JavaPlugin {
 		commands.put("jaillistcells", new JailListCellsCommand());
 		commands.put("jailstick", new JailStickCommand());
 		commands.put("jailcreatewe", new JailCreateWeCommand());
+		
+		log.info("[Jail] " + getDescription().getFullName() + " loaded!");
 	}
 	
 	ActionListener action = new ActionListener ()
