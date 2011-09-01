@@ -9,6 +9,9 @@ import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
+import org.getspout.spoutapi.SpoutManager;
+import org.getspout.spoutapi.player.SpoutPlayer;
 
 public class PrisonerManager {
 	/**
@@ -202,6 +205,9 @@ public class PrisonerManager {
 			
 		}
 		
+		if (jail.getSettings().getBoolean(Setting.SpoutChangeSkin))
+			changeSkin(player, jail.getSettings().getString(Setting.SpoutSkinChangeURL));
+		
 		if (Jail.prisoners.containsKey(prisoner.getName()))
 			InputOutput.UpdatePrisoner(prisoner);
 		else
@@ -233,6 +239,8 @@ public class PrisonerManager {
 		Util.Message(jail.getSettings().getString(Setting.MessageUnJail), player);
 		player.teleport(jail.getReleaseTeleportLocation());
 		prisoner.SetBeingReleased(false);
+		
+		changeSkin(player, "");
 		
 		JailCell cell = prisoner.getCell();
 		if (cell != null)
@@ -423,5 +431,17 @@ public class PrisonerManager {
 		player.teleport(prisoner.getTeleportLocation());
 		prisoner.SetBeingReleased(false);
 		InputOutput.UpdatePrisoner(prisoner);
+	}
+	
+	public static void changeSkin(Player player, String skin)
+	{
+		Plugin plugin = Jail.instance.getServer().getPluginManager().getPlugin("Spout");
+		if (plugin != null)
+		{			
+			if (!skin.trim().isEmpty())
+				SpoutManager.getAppearanceManager().setGlobalSkin(player, "http://drotar.zapto.org/168701.png");
+			else
+				SpoutManager.getAppearanceManager().resetGlobalSkin(player);
+		}
 	}
 }

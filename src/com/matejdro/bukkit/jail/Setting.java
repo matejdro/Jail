@@ -16,6 +16,8 @@ public enum Setting {
 	CanPrisonerOpenHisChest("CanPrisonerOpenHisChest", true),
 	LogJailingIntoConsole("LogJailingIntoConsole", false),
 	CountdownTimeWhenOffline("CountdownTimeWhenOffline", false),
+	SpoutChangeSkin("SpoutChangeSkin", false),
+	SpoutSkinChangeURL("SpoutSkinChangeURL", "http://www.minecraftskins.com/view/168701.png"),
 	
 	//JailStick
 	EnableJailStick("EnableJailStick", false),

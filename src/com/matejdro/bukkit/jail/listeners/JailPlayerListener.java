@@ -112,6 +112,10 @@ public class JailPlayerListener extends PlayerListener {
 				 }
 				 
 			 }
+			 			 
+			if (prisoner.getJail().getSettings().getBoolean(Setting.SpoutChangeSkin))
+				PrisonerManager.changeSkin(event.getPlayer(), prisoner.getJail().getSettings().getString(Setting.SpoutSkinChangeURL));
+
 		 }
 	 }
 	 

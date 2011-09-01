@@ -218,7 +218,7 @@ public class JailPlayerProtectionListener extends PlayerListener {
 	 public void onPlayerRespawn(PlayerRespawnEvent event) {
 		 if (Jail.prisoners.containsKey(event.getPlayer().getName().toLowerCase()) && !Jail.prisoners.get(event.getPlayer().getName().toLowerCase()).isBeingReleased())
 			{
-				JailPrisoner prisoner = Jail.prisoners.get(event.getPlayer().getName().toLowerCase());
+				final JailPrisoner prisoner = Jail.prisoners.get(event.getPlayer().getName().toLowerCase());
 				
 				JailZone jail = prisoner.getJail();
 				if (!jail.isInside(event.getRespawnLocation()))
@@ -234,6 +234,7 @@ public class JailPlayerProtectionListener extends PlayerListener {
 						{
 							Util.Message(jail.getSettings().getString(Setting.MessageEscapeNoPenalty), event.getPlayer());
 						}
+					prisoner.SetBeingReleased(true);
 					final Location teleloc = prisoner.getTeleportLocation();
 					final Player player = event.getPlayer();
 					Jail.instance.getServer().getScheduler().scheduleSyncDelayedTask(Jail.instance, new Runnable() {
@@ -241,6 +242,7 @@ public class JailPlayerProtectionListener extends PlayerListener {
 					    public void run() {
 					        if (player != null)
 					        	player.teleport(teleloc);
+					        prisoner.SetBeingReleased(false);
 					    }
 					}, 1);
 				}
