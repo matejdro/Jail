@@ -160,6 +160,7 @@ public class JailZone {
 	{
 		for (JailCell c : cells)
 		{
+			if (c.getName() != null && getSettings().getList(Setting.ManualCells).contains(c.getName())) continue;
 			if (c.getPlayerName() == null || c.getPlayerName().trim().equals("") || !Jail.prisoners.containsKey(c.getPlayerName().toLowerCase()))
 			{
 				return c;

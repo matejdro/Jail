@@ -18,6 +18,7 @@ public enum Setting {
 	CountdownTimeWhenOffline("CountdownTimeWhenOffline", false),
 	SpoutChangeSkin("SpoutChangeSkin", false),
 	SpoutSkinChangeURL("SpoutSkinChangeURL", "http://www.minecraftskins.com/view/168701.png"),
+	ManualCells("ManualCells", new ArrayList<String>()),
 	
 	//JailStick
 	EnableJailStick("EnableJailStick", false),

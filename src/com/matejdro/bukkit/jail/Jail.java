@@ -162,10 +162,8 @@ public class Jail extends JavaPlugin {
 
     			    public void run() {
     			    	
-    			    	Object[] names = Jail.prisoners.keySet().toArray();
-    	    	    	  for (Object prisonername : names)
+    	    	    	  for (JailPrisoner prisoner : prisoners.values())
     	    	    	  {
-    	    	    		  JailPrisoner prisoner = Jail.prisoners.get(prisonername.toString());
     	    	    		  Player player = getServer().getPlayer(prisoner.getName());
     	    	    		  if (prisoner.getRemainingTime() > 0 && (player != null || prisoner.getJail().getSettings().getBoolean(Setting.CountdownTimeWhenOffline)))
     	    	    		  {
