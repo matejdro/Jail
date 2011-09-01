@@ -1,5 +1,7 @@
 package com.matejdro.bukkit.jail;
 
+import java.util.ArrayList;
+
 import org.bukkit.Material;
 import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
@@ -91,7 +93,7 @@ public class PrisonerManager {
 		Player player = Jail.instance.getServer().getPlayer(playername);		
 		if (player == null)
 		{
-			JailPrisoner prisoner = new JailPrisoner(playername, time * 6, jailname, cellname, true, "", reason, InputOutput.global.getBoolean(Setting.AutomaticMute.getString(), false),  "" ,jailer);
+			JailPrisoner prisoner = new JailPrisoner(playername, time * 6, jailname, cellname, true, "", reason, InputOutput.global.getBoolean(Setting.AutomaticMute.getString(), false),  "" ,jailer, "");
 
 			if (prisoner.getJail() != null)
 			{
@@ -113,7 +115,7 @@ public class PrisonerManager {
 		else
 		{
 			playername = player.getName().toLowerCase();
-			JailPrisoner prisoner = new JailPrisoner(playername, time * 6, jailname, cellname, false, "", reason, InputOutput.global.getBoolean(Setting.AutomaticMute.getString(), false),  "", jailer);
+			JailPrisoner prisoner = new JailPrisoner(playername, time * 6, jailname, cellname, false, "", reason, InputOutput.global.getBoolean(Setting.AutomaticMute.getString(), false),  "", jailer, "");
 			Jail(prisoner, player);
 			Util.Message("Player jailed.", sender);
 			
@@ -206,7 +208,13 @@ public class PrisonerManager {
 		}
 		
 		if (jail.getSettings().getBoolean(Setting.SpoutChangeSkin))
-			changeSkin(player, jail.getSettings().getString(Setting.SpoutSkinChangeURL));
+			Util.changeSkin(player, jail.getSettings().getString(Setting.SpoutSkinChangeURL));
+		
+		if (jail.getSettings().getBoolean(Setting.EnableChangingPermissions))
+		{
+			prisoner.setOldPermissions(Util.getPermissionsGroups(player.getName()));
+			Util.setPermissionsGroups(player.getName(), (ArrayList<String>) jail.getSettings().getList(Setting.PrisonersPermissionsGroups));
+		}
 		
 		if (Jail.prisoners.containsKey(prisoner.getName()))
 			InputOutput.UpdatePrisoner(prisoner);
@@ -240,7 +248,12 @@ public class PrisonerManager {
 		player.teleport(jail.getReleaseTeleportLocation());
 		prisoner.SetBeingReleased(false);
 		
-		changeSkin(player, "");
+		Util.changeSkin(player, "");
+		
+		if (jail.getSettings().getBoolean(Setting.EnableChangingPermissions) && !jail.getSettings().getBoolean(Setting.RestorePermissionsToEscapedPrisoners))
+		{
+			Util.setPermissionsGroups(player.getName(), prisoner.getOldPermissionsString());
+		}
 		
 		JailCell cell = prisoner.getCell();
 		if (cell != null)
@@ -431,17 +444,5 @@ public class PrisonerManager {
 		player.teleport(prisoner.getTeleportLocation());
 		prisoner.SetBeingReleased(false);
 		InputOutput.UpdatePrisoner(prisoner);
-	}
-	
-	public static void changeSkin(Player player, String skin)
-	{
-		Plugin plugin = Jail.instance.getServer().getPluginManager().getPlugin("Spout");
-		if (plugin != null)
-		{			
-			if (!skin.trim().isEmpty())
-				SpoutManager.getAppearanceManager().setGlobalSkin(player, "http://drotar.zapto.org/168701.png");
-			else
-				SpoutManager.getAppearanceManager().resetGlobalSkin(player);
-		}
 	}
 }

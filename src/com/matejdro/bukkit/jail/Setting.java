@@ -40,6 +40,9 @@ public enum Setting {
 	InteractionPenalty("Protections.InteractionPenalty", 10),
 	EnableExplosionProtection("Protections.EnableExplosivesProection", true),
 	EnablePVPProtection("Protections.EnablePVPProtection", true),
+	EnableChangingPermissions("Protections.EnableChangingPermissions", false),
+	PrisonersPermissionsGroups("Protections.PrisonersPermissionsGroups", Arrays.asList("prisoners")),
+	RestorePermissionsToEscapedPrisoners("Protections.RestorePermissionsToEsacpedPrisoners", true),
 	
 	//JailPay
 	EnablePaying("JailPay.EnableJailPay", false),

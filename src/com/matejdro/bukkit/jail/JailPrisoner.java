@@ -1,6 +1,7 @@
 package com.matejdro.bukkit.jail;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
@@ -16,6 +17,8 @@ import org.bukkit.entity.Wolf;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
+
+import com.platymuus.bukkit.permissions.Group;
 
 
 /**
@@ -35,6 +38,7 @@ public class JailPrisoner {
 	private String jailer = "";
 	private HashSet<Wolf> guards = new HashSet<Wolf>();
 	private String requestedCell;
+	private List<String> oldPermissions = new ArrayList<String>();
 	
 	public JailPrisoner()
 	{
@@ -55,7 +59,7 @@ public class JailPrisoner {
 	 * @param Inventory Inventory string for this prisoner
 	 * @param Jailer Who jailed this prisoner
 	 */
-	public JailPrisoner(String Name, int Remaintime, String Jail, String Cell,  Boolean Offline, String TransferDest, String Reason, Boolean Muted, String Inventory, String Jailer)
+	public JailPrisoner(String Name, int Remaintime, String Jail, String Cell,  Boolean Offline, String TransferDest, String Reason, Boolean Muted, String Inventory, String Jailer, String Permissions)
 	{
 		name = Name.toLowerCase();
 		remaintime = Remaintime;
@@ -67,6 +71,7 @@ public class JailPrisoner {
 		inventory = Inventory;
 		jailer = Jailer;
 		requestedCell = Cell;
+		setOldPermissions(Permissions);
 	}
 		
 	/**
@@ -288,6 +293,50 @@ public class JailPrisoner {
 	public void setJailer(String input)
 	{
 		jailer = input;
+	}
+	
+	/**
+	 * @return Editable list of permission groups that will be given to the player after he is released
+	 */
+	public List<String> getOldPermissions()
+	{
+		return oldPermissions;
+	}
+	
+	/**
+	 * @return List of permission groups that will be given to the player after he is released in String, separated by commas (,)
+	 */
+	public String getOldPermissionsString()
+	{
+		String perms = "";
+		for (String s : oldPermissions)
+			perms += s + ",";
+		Jail.log.info(perms);
+		return perms;
+	}
+	
+	/**
+	 * Sets list of permission groups that will be given to the player after he is released
+	 * @param permissions String in format "group,group2,group3"
+	 */
+	public void setOldPermissions(String permissions)
+	{
+		if (permissions == null) 
+			oldPermissions = new ArrayList<String>();
+		else
+			oldPermissions = Arrays.asList(permissions.split(","));
+	}
+	
+	/**
+	 * Sets list of permission groups that will be given to the player after he is released
+	 * @param permissions List of com.platymuus.bukkit.permissions.Group
+	 */
+	public void setOldPermissions(List<Group> permissions)
+	{
+		Jail.log.info(permissions.toString());
+		oldPermissions = new ArrayList<String>();
+		for (Group g : permissions)
+			oldPermissions.add(g.getName());
 	}
 	
 	/**
@@ -554,7 +603,11 @@ public class JailPrisoner {
 			Jail.guards.remove(e);
 		}
 			
-		
+		if (jail.getSettings().getBoolean(Setting.EnableChangingPermissions) && jail.getSettings().getBoolean(Setting.RestorePermissionsToEscapedPrisoners))
+		{
+			Util.setPermissionsGroups(getName(), getOldPermissionsString());
+		}
+
 	}
 	
 	}

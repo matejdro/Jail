@@ -7,15 +7,22 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
+import org.bukkit.plugin.Plugin;
+import org.getspout.spoutapi.SpoutManager;
 
 import com.nijikokun.bukkit.Permissions.Permissions;
+import com.platymuus.bukkit.permissions.Group;
+import com.platymuus.bukkit.permissions.PermissionsPlugin;
 
 
 public class Util {
@@ -106,5 +113,53 @@ public class Util {
 		}
     	 
     }
+    
+    public static void changeSkin(Player player, String skin)
+	{
+		Plugin plugin = Jail.instance.getServer().getPluginManager().getPlugin("Spout");
+		if (plugin != null)
+		{			
+			if (!skin.trim().isEmpty())
+				SpoutManager.getAppearanceManager().setGlobalSkin(player, "http://drotar.zapto.org/168701.png");
+			else
+				SpoutManager.getAppearanceManager().resetGlobalSkin(player);
+		}
+	}
+    
+    public static void setPermissionsGroups(String playerName, ArrayList<String> groups)
+    {			
+		String gstring = "";
+		for (String s : groups)
+			gstring += s + ",";
+		
+		setPermissionsGroups(playerName, gstring);
+    }
+    
+    public static void setPermissionsGroups(String playerName, String groups)
+    {
+    	Plugin plugin = Jail.instance.getServer().getPluginManager().getPlugin("PermissionsBukkit");
+		if (plugin == null) 
+		{
+			Jail.log.info("[Jail]You cannot use permission changing feature without PermissionsBukkit plugin!");
+			return;
+		}
+		
+		CraftServer cs = (CraftServer) Jail.instance.getServer();
+		CommandSender coms = new ConsoleCommandSender(Jail.instance.getServer());
+		cs.dispatchCommand(coms,"permissions player setgroup " + playerName + " " + groups );
+		
+    }
+    
+    public static List<Group> getPermissionsGroups(String playerName)
+    {
+    	Plugin plugin = Jail.instance.getServer().getPluginManager().getPlugin("PermissionsBukkit");
+		if (plugin == null) return new ArrayList<Group>();
+			
+		PermissionsPlugin pb = (PermissionsPlugin) plugin;
+    	Jail.log.info(pb.getPlayerInfo(playerName).getGroups().toString());
+
+		return pb.getPlayerInfo(playerName).getGroups();
+    }
+    
 
 }
