@@ -265,9 +265,8 @@ public class PrisonerManager {
 
 				}
 			}
-			if (cell.getSign() != null)
+			for (Sign sign : cell.getSigns())
 			{
-				Sign sign = cell.getSign();
 				sign.setLine(0, "");
 				sign.setLine(1, "");
 				sign.setLine(2, "");
@@ -342,9 +341,8 @@ public class PrisonerManager {
 			Inventory inventory = player.getInventory();
 			JailCell cell = prisoner.getCell();
 			cell.setPlayerName("");
-			if (cell.getSign() != null)
+			for (Sign sign : cell.getSigns())
 			{
-				Sign sign = cell.getSign();
 				sign.setLine(0, "");
 				sign.setLine(1, "");
 				sign.setLine(2, "");

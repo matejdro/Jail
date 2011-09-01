@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.logging.Level;
 
 import org.bukkit.Location;
+import org.bukkit.block.Sign;
 import org.bukkit.util.config.Configuration;
 public class InputOutput {
     private static Connection connection;
@@ -223,7 +224,9 @@ public class InputOutput {
 				cell.setChest(chest);
 				cell.setSecondChest(secondchest);
 				cell.setTeleportLocation(teleport);
-				cell.setSign(sign);
+
+				for (String s : sign.split(";"))
+					cell.addSign(s);
 				
 				cell.getJail().getCellList().add(cell);
 				
@@ -373,10 +376,12 @@ public class InputOutput {
 			ps.setString(1, c.getJail().getName());
 			
 			ps.setString(2, String.valueOf(c.getTeleportLocation().getX()) + "," + String.valueOf(c.getTeleportLocation().getY()) + "," + String.valueOf(c.getTeleportLocation().getZ()));
-			if (c.getSign() != null)
-				ps.setString(3, String.valueOf(c.getSign().getX()) + "," + String.valueOf(c.getSign().getY()) + "," + String.valueOf(c.getSign().getZ()));
-			else
-				ps.setString(3, "");
+			
+			String signs = "";
+			for (Sign s : c.getSigns())
+				signs += String.valueOf(s.getBlock().getLocation().getBlockX()) + "," + String.valueOf(s.getBlock().getLocation().getBlockY()) + "," + String.valueOf(s.getBlock().getLocation().getBlockZ()) + ";";
+			ps.setString(3, signs);
+			
 			if (c.getChest() != null)
 				ps.setString(4, String.valueOf(c.getChest().getX()) + "," + String.valueOf(c.getChest().getY()) + "," + String.valueOf(c.getChest().getZ()));
 			else
@@ -414,10 +419,12 @@ public class InputOutput {
 			ps.setString(1, c.getJail().getName());
 			
 			ps.setString(2, String.valueOf(c.getTeleportLocation().getX()) + "," + String.valueOf(c.getTeleportLocation().getY()) + "," + String.valueOf(c.getTeleportLocation().getZ()));
-			if (c.getSign() != null)
-				ps.setString(3, String.valueOf(c.getSign().getX()) + "," + String.valueOf(c.getSign().getY()) + "," + String.valueOf(c.getSign().getZ()));
-			else
-				ps.setString(3, "");
+
+			String signs = "";
+			for (Sign s : c.getSigns())
+				signs += String.valueOf(s.getBlock().getLocation().getBlockX()) + "," + String.valueOf(s.getBlock().getLocation().getBlockY()) + "," + String.valueOf(s.getBlock().getLocation().getBlockZ()) + ";";
+			ps.setString(3, signs);
+			
 			if (c.getChest() != null)
 				ps.setString(4, String.valueOf(c.getChest().getX()) + "," + String.valueOf(c.getChest().getY()) + "," + String.valueOf(c.getChest().getZ()));
 			else
@@ -559,13 +566,13 @@ public class InputOutput {
                 {
                 	st.executeUpdate("CREATE TABLE IF NOT EXISTS `jail_prisoners` ( `PlayerName` varchar(250) NOT NULL, `RemainTime` int(11) DEFAULT NULL, `JailName` varchar(250) DEFAULT NULL, `Offline` varchar(250) DEFAULT NULL, `TransferDest` varchar(250) DEFAULT NULL , `reason` varchar(250) DEFAULT NULL, `muted` boolean DEFAULT false, Inventory TEXT DEFAULT NULL, Jailer VARCHAR(250) DEFAULT NULL, PRIMARY KEY (`PlayerName`) ) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
                 	st.executeUpdate("CREATE TABLE IF NOT EXISTS `jail_zones` ( `name` varchar(250) NOT NULL DEFAULT '', `X1` double DEFAULT NULL, `Y1` double DEFAULT NULL, `Z1` double DEFAULT NULL, `X2` double DEFAULT NULL, `Y2` double DEFAULT NULL, `Z2` double DEFAULT NULL, `teleX` double DEFAULT NULL, `teleY` double DEFAULT NULL, `teleZ` double DEFAULT NULL, `freeX` double DEFAULT NULL, `freeY` double DEFAULT NULL, `FreeZ` double DEFAULT NULL, `teleWorld` varchar(250) DEFAULT NULL, `freeWorld` varchar(250) DEFAULT NULL , PRIMARY KEY (`name`) ) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
-                	st.executeUpdate("CREATE TABLE IF NOT EXISTS `jail_cells` ( `JailName` varchar(250) NOT NULL, `Teleport` varchar(250) NOT NULL, `Sign` varchar(250) DEFAULT NULL , `Chest` varchar(250) DEFAULT NULL, `SecondChest` varchar(250) DEFAULT NULL, Player varchar(250) DEFAULT NULL, Name varchar(20) DEFAULT NULL, PRIMARY KEY (Teleport) ) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
+                	st.executeUpdate("CREATE TABLE IF NOT EXISTS `jail_cells` ( `JailName` varchar(250) NOT NULL, `Teleport` varchar(250) NOT NULL, `Sign` TEXT DEFAULT NULL , `Chest` varchar(250) DEFAULT NULL, `SecondChest` varchar(250) DEFAULT NULL, Player varchar(250) DEFAULT NULL, Name varchar(20) DEFAULT NULL, PRIMARY KEY (Teleport) ) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
                 }
                 else
                 {
                 	st.executeUpdate("CREATE TABLE IF NOT EXISTS \"jail_prisoners\" (\"PlayerName\" VARCHAR PRIMARY KEY  NOT NULL , \"RemainTime\" INTEGER, \"JailName\" VARCHAR, \"Offline\" BOOLEAN, \"TransferDest\" VARCHAR, `reason` VARCHAR, `muted` BOOLEAN, Inventory STRING, Jailer VARCHAR)");
                     st.executeUpdate("CREATE TABLE IF NOT EXISTS \"jail_zones\" (\"name\" VARCHAR PRIMARY KEY  NOT NULL , \"X1\" DOUBLE, \"Y1\" DOUBLE, \"Z1\" DOUBLE, \"X2\" DOUBLE, \"Y2\" DOUBLE, \"Z2\" DOUBLE, \"teleX\" DOUBLE, \"teleY\" DOUBLE, \"teleZ\" DOUBLE, \"freeX\" DOUBLE, \"freeY\" DOUBLE, \"FreeZ\" DOUBLE, \"teleWorld\" VARCHAR, \"freeWorld\" STRING)");
-                    st.executeUpdate("CREATE TABLE IF NOT EXISTS `jail_cells` ( `JailName` VARCHAR NOT NULL,  `Teleport` VARCHAR  PRIMARY_KEY NOT NULL, `Sign` VARCHAR DEFAULT NULL , `Chest` VARCHAR DEFAULT NULL, `SecondChest` VARCHAR DEFAULT NULL, Player VARCHAR DEFAULT NULL, Name VARCHAR DEFAULT NULL);");
+                    st.executeUpdate("CREATE TABLE IF NOT EXISTS `jail_cells` ( `JailName` VARCHAR NOT NULL,  `Teleport` VARCHAR  PRIMARY_KEY NOT NULL, `Sign` STRING DEFAULT NULL , `Chest` VARCHAR DEFAULT NULL, `SecondChest` VARCHAR DEFAULT NULL, Player VARCHAR DEFAULT NULL, Name VARCHAR DEFAULT NULL);");
                 }
                 conn.commit();
                 st.close();
@@ -586,6 +593,7 @@ public class InputOutput {
     	Update("SELECT Jailer FROM jail_prisoners", "ALTER TABLE jail_prisoners ADD Jailer VARCHAR;", "ALTER TABLE jail_prisoners ADD Jailer varchar(250);" ); //Jailer log - 0.7   
     	UpdateType("jail_prisoners", "Inventory", "TEXT");
     	Update("SELECT Name FROM jail_cells", "ALTER TABLE jail_cells ADD Name VARCHAR", "ALTER TABLE jail_cells ADD Name varchar(20);"); //Select specific cell when jailing - 1.2
+    	UpdateType("jail_cells", "Sign", "TEXT");
     }
     
     public void Update(String check, String sql)

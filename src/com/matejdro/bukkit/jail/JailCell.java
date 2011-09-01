@@ -1,5 +1,8 @@
 package com.matejdro.bukkit.jail;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Chest;
@@ -10,7 +13,7 @@ public class JailCell {
 	private String jailname;
 	private String player;
 	private Location teleport;
-	private Location sign;
+	private HashSet<Location> signs = new HashSet<Location>();
 	private Location chest;
 	private Location chest2;
 	Location oldteleport = null;
@@ -163,36 +166,52 @@ public class JailCell {
 	}
 	
 	/**
-	 * @return sign that belongs to this cell. Returns null if there is no such sign.
+	 * @return a list of signs that belongs to this cell.
 	 */
-	public Sign getSign()
+	public ArrayList<Sign> getSigns()
 	{
-		if (sign == null ) return null;
-		if (sign.getWorld() == null) sign.setWorld(getJail().getTeleportLocation().getWorld());
-		if (sign.getBlock() == null || (sign.getBlock().getType() != Material.SIGN_POST && sign.getBlock().getType() != Material.WALL_SIGN)) return null;
-		return (Sign) sign.getBlock().getState();
+		ArrayList<Sign> list = new ArrayList<Sign>();
+		for (Location sign : signs)
+		{
+			if (sign == null ) continue;
+			if (sign.getWorld() == null) sign.setWorld(getJail().getTeleportLocation().getWorld());
+			if (sign.getBlock() == null || (sign.getBlock().getType() != Material.SIGN_POST && sign.getBlock().getType() != Material.WALL_SIGN)) continue;
+			list.add((Sign) sign.getBlock().getState());
+		}
+		
+		return list;
+		
 	}
 	
 	/**
-	 * Set sign that belongs to this chest
+	 * Add sign to this cell
 	 * @param input location of the sign
 	 */
-	public void setSign(Location input)
+	public void addSign(Location input)
 	{
-		sign = input;
+		signs.add(input);
 	}
 
 	
 	/**
-	 * Set sign that belongs to this chest
+	 * Add sign to this cell
 	 * @param input location of the sign in string. Format: "x,y,z"
 	 */
-	public void setSign(String input)
+	public void addSign(String input)
 	{
 		if (input == null || input.trim().equals("")) return;
 		String[] str = input.split(",");
 		Location loc = new Location(getJail().getTeleportLocation().getWorld(), Double.parseDouble(str[0]), Double.parseDouble(str[1]),Double.parseDouble(str[2]));
-		sign = loc;
+		signs.add(loc);
+	}
+	
+	/**
+	 * Remove sign from this cell
+	 * @param input location of the sign
+	 */
+	public void removeSign(Location input)
+	{
+		signs.remove(input);
 	}
 	
 	/**

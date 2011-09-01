@@ -27,9 +27,16 @@ public class JailCreateWeCommand extends BaseCommand {
 	
 	public Boolean run(CommandSender sender, String[] args) {
 		if (args.length < 1)
+		{
 			Util.Message("Usage: /jailcreatewe [Name]",sender);
+			return true;
+		}	
 		else if (Jail.zones.containsKey(args[0].toLowerCase()))
+		{
 			Util.Message("Jail with that name already exist!", sender);
+			return true;
+		}
+			
 
 		
 		Plugin plugin = Jail.instance.getServer().getPluginManager().getPlugin("WorldEdit");

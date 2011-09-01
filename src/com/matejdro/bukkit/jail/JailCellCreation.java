@@ -58,7 +58,7 @@ public static HashMap<String,CreationPlayer> players = new HashMap<String,Creati
 	
 	private static void telepoint(Player player, Block block)
 	{
-		Util.Message("Teleport point selected. Now select sign, associated with this cell. If there is no such sign, click on any non-sign block.", player);
+		Util.Message("Teleport point selected. Now select signs, associated with this cell. You may select multiple signs. After you are done with sign selection, right click on any non-sign block.", player);
 		CreationPlayer cr = players.get(player.getName());
 		cr.cell.setTeleportLocation(player.getLocation());
 		cr.state++;
@@ -67,11 +67,18 @@ public static HashMap<String,CreationPlayer> players = new HashMap<String,Creati
 
 	private static void sign(Player player, Block block)
 	{
-		Util.Message("Sign selected. Now select chest, associated with this cell. If there is no such chest, click on any non-chest block.", player);
 		CreationPlayer cr = players.get(player.getName());
 		if (block.getType() == Material.SIGN_POST || block.getType() == Material.WALL_SIGN)
-			cr.cell.setSign(block.getLocation());
-		cr.state++;
+		{
+			cr.cell.addSign(block.getLocation());
+			Util.Message("Sign selected.", player);
+		}
+		else
+		{
+			Util.Message("Sign selection completed. Now select chest, associated with this cell. If there is no such chest, click on any non-chest block.", player);
+			cr.state++;
+		}
+		
 		
 	}
 	

@@ -407,21 +407,22 @@ public class JailPrisoner {
 	 */
 	public void updateSign()
 	{
-		if (cell != null && cell.getSign() != null) 
+		if (cell != null) 
 		{
-			Sign sign = cell.getSign();
-			String[] lines = getJail().getSettings().getString(Setting.SignText).split("\\[NEWLINE\\]");
-			int max = lines.length;
-			if (max > 4) max = 4;
-				
-			for (int i = 0;i<max;i++)
+			for (Sign sign : cell.getSigns())
 			{
-				sign.setLine(i, parseTags(lines[i]));
-				
-			}
-			sign.update();
+				String[] lines = getJail().getSettings().getString(Setting.SignText).split("\\[NEWLINE\\]");
+				int max = lines.length;
+				if (max > 4) max = 4;
+					
+				for (int i = 0;i<max;i++)
+				{
+					sign.setLine(i, parseTags(lines[i]));
+					
+				}
+				sign.update();
+			}			
 		}
-
 	}
 	
 	/**
@@ -533,9 +534,8 @@ public class JailPrisoner {
 		Jail.prisoners.remove(getName());
 		if (cell != null) 
 		{
-			if (cell.getSign() != null)
+			for (Sign sign : cell.getSigns())
 			{
-				Sign sign = cell.getSign();
 				sign.setLine(0, "");
 				sign.setLine(1, "");
 				sign.setLine(2, "");
