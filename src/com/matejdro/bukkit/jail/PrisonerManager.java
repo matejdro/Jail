@@ -11,9 +11,6 @@ import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
-import org.getspout.spoutapi.SpoutManager;
-import org.getspout.spoutapi.player.SpoutPlayer;
 
 public class PrisonerManager {
 	/**
@@ -393,14 +390,27 @@ public class PrisonerManager {
 		}
 						
 		prisoner.SetBeingReleased(true);
-		JailZone jail = Jail.zones.get(prisoner.getTransferDestination());
+		
+		String targetJail = prisoner.getTransferDestination();
+		if (targetJail.contains(":"))
+		{
+			prisoner.setRequestedCell(targetJail.split(":")[1]);
+			targetJail = targetJail.split(":")[0];			
+		}
+		
+		JailZone jail = Jail.zones.get(targetJail);
 		prisoner.setJail(jail);
 		prisoner.setTransferDestination("");
 		prisoner.setOfflinePending(false);
 		Util.Message(jail.getSettings().getString(Setting.MessageTransfer), player);
 		Jail.prisoners.put(prisoner.getName(),prisoner);
 		
-		JailCell cell = jail.getEmptyCell();
+		JailCell cell = jail.getRequestedCell(prisoner);
+		if (cell == null || (cell.getPlayerName() != null && !cell.getPlayerName().equals("") && !cell.getPlayerName().equals(prisoner.getName()))) 
+		{
+			cell = null;
+			cell = jail.getEmptyCell();
+		}
 		if (cell != null)
 		{
 			cell.setPlayerName(player.getName());

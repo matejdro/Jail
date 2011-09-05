@@ -170,16 +170,15 @@ public class JailZone {
 	}
 	
 	/**
-	 * If jailer selected cell for prisoner, it will be
 	 * @param prisoner
-	 * @return
+	 * @return cell that jailer chosen for this prisoner. Will be null if there is no such cell.
 	 */
 	public JailCell getRequestedCell(JailPrisoner prisoner)
 	{
 		for (JailCell cell : getCellList())
 		{
 			if (cell.getName() != null && cell.getName().equals(prisoner.getRequestedCell())) return cell;
-			if (cell.getPlayerName() != null && cell.equals(prisoner.getName())) return cell;
+			if (cell.getPlayerName() != null && cell.getPlayerName().equals(prisoner.getName())) return cell;
 		}
 		return null;
 	}

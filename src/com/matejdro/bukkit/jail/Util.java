@@ -156,8 +156,6 @@ public class Util {
 		if (plugin == null) return new ArrayList<Group>();
 			
 		PermissionsPlugin pb = (PermissionsPlugin) plugin;
-    	Jail.log.info(pb.getPlayerInfo(playerName).getGroups().toString());
-
 		return pb.getPlayerInfo(playerName).getGroups();
     }
     

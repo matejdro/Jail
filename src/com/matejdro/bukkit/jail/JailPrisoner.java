@@ -261,6 +261,15 @@ public class JailPrisoner {
 	}
 	
 	/**
+	 * Sets the name of the cell where prisoner will be jailed.
+	 * @param input name of the cell.
+	 */
+	public void setRequestedCell(String input)
+	{
+		requestedCell = input;
+	}
+	
+	/**
 	 * @return Inventory string of this prisoner. Format is: id,amount,durability,data;
 	 */
 	public String getInventory()
@@ -311,7 +320,6 @@ public class JailPrisoner {
 		String perms = "";
 		for (String s : oldPermissions)
 			perms += s + ",";
-		Jail.log.info(perms);
 		return perms;
 	}
 	
@@ -333,7 +341,6 @@ public class JailPrisoner {
 	 */
 	public void setOldPermissions(List<Group> permissions)
 	{
-		Jail.log.info(permissions.toString());
 		oldPermissions = new ArrayList<String>();
 		for (Group g : permissions)
 			oldPermissions.add(g.getName());
@@ -547,7 +554,7 @@ public class JailPrisoner {
 	{
 		if (targetjail == null) 
 			targetjail = "find nearest";
-		
+				
 		setTransferDestination(targetjail);
 		Player player = Jail.instance.getServer().getPlayer(getName());
 		

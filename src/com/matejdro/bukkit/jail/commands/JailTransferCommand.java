@@ -22,7 +22,7 @@ public class JailTransferCommand extends BaseCommand {
 	public Boolean run(CommandSender sender, String[] args) {		
 		if (args.length < 1)
 		{
-			Util.Message("Usage: /jailtransfer [Player Name] (New Jail Name)", sender);
+			Util.Message("Usage: /jailtransfer [Player Name] (New Jail Name:New Cell Name)", sender);
 			return true;
 		}
 		if (!Jail.prisoners.containsKey(args[0].toLowerCase()))
@@ -30,11 +30,16 @@ public class JailTransferCommand extends BaseCommand {
 			Util.Message("That player is not jailed!", sender);
 			return true;
 		}
-		if (args.length > 1 && !Jail.zones.containsKey(args[1].toLowerCase()))
+		
+		String jailname = args[1].toLowerCase();
+		if (jailname.contains(":")) jailname = jailname.split(":")[0];		
+		
+		if (args.length > 1 && !Jail.zones.containsKey(jailname))
 		{
 			Util.Message("Target jail does not exist!", sender);
 			return true;
 		}
+		
 		String playername = args[0].toLowerCase();
 		String newjail;
 		if (args.length < 2 || args[1].equals(InputOutput.global.getString(Setting.NearestJailCode.getString()))) 
