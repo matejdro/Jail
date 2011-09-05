@@ -43,6 +43,7 @@ import com.matejdro.bukkit.jail.listeners.JailBlockListener;
 import com.matejdro.bukkit.jail.listeners.JailEntityListener;
 import com.matejdro.bukkit.jail.listeners.JailPlayerListener;
 import com.matejdro.bukkit.jail.listeners.JailPlayerProtectionListener;
+import com.matejdro.bukkit.jail.listeners.JailSpoutListener;
 
 public class Jail extends JavaPlugin {
 	public static Logger log = Logger.getLogger("Minecraft");
@@ -51,6 +52,7 @@ public class Jail extends JavaPlugin {
 	private JailBlockListener BlockListener;
 	private JailPlayerProtectionListener PlayerPreventListener;
 	private JailEntityListener EntityListener;
+	private JailSpoutListener SpoutListener;
 	public JailAPI API;
 	private InputOutput IO;
 	public static HashMap<String,JailZone> zones = new HashMap<String,JailZone>();
@@ -117,7 +119,15 @@ public class Jail extends JavaPlugin {
 		getServer().getPluginManager().registerEvent(Event.Type.ENTITY_EXPLODE, EntityListener, Event.Priority.High, this);
 		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_CHAT, PlayerListener, Event.Priority.Lowest, this);
 		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_CHAT, PlayerPreventListener, Event.Priority.High, this);
-		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_INTERACT, PlayerPreventListener, Event.Priority.High, this);		
+		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_INTERACT, PlayerPreventListener, Event.Priority.High, this);	
+		
+		Plugin plugin = Jail.instance.getServer().getPluginManager().getPlugin("Spout");
+		if (plugin != null)
+		{
+			SpoutListener = new JailSpoutListener();
+			getServer().getPluginManager().registerEvent(Event.Type.CUSTOM_EVENT, SpoutListener, Event.Priority.Normal, this);	
+		}
+		
 		timer = new Timer(1000,action);
 		timer.start();
 		

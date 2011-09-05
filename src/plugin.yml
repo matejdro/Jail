@@ -5,7 +5,7 @@ description: Ban too harsh? Kick/mute/whatever not enough? Jail bad players!
 author: matejdro
 website: http://forums.bukkit.org/threads/admn-rpg-jail-v1-2-2-jail-bad-players-1060.1912/
 database: true
-softdepend: [PermissionsBukkut]
+softdepend: [PermissionsBukkut, Spout]
 commands:
     jailcreate:
         description: Creates a new jail zone.

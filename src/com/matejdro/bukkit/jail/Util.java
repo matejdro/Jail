@@ -120,7 +120,7 @@ public class Util {
 		if (plugin != null)
 		{			
 			if (!skin.trim().isEmpty())
-				SpoutManager.getAppearanceManager().setGlobalSkin(player, "http://drotar.zapto.org/168701.png");
+				SpoutManager.getAppearanceManager().setGlobalSkin(player, skin);
 			else
 				SpoutManager.getAppearanceManager().resetGlobalSkin(player);
 		}
