@@ -79,6 +79,9 @@ commands:
     jailcreatewe:
         description: Create a new jail zone based on existing world guard region.
         permission: jail.command.jailcreatewe
+    jaildeletecell:
+        description: Delete one cell.
+        permission: jail.command.jaildeletecell
 permissions:
     jail.*:
         children:
