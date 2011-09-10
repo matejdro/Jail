@@ -215,6 +215,10 @@ public class PrisonerManager {
 			Util.setPermissionsGroups(player.getName(), (ArrayList<String>) jail.getSettings().getList(Setting.PrisonersPermissionsGroups));
 		}
 		
+		 if (prisoner.getJail().getSettings().getBoolean(Setting.IgnorePrisonersSleepingState))
+			 player.setSleepingIgnored(true);
+
+		
 		if (Jail.prisoners.containsKey(prisoner.getName()))
 			InputOutput.UpdatePrisoner(prisoner);
 		else
@@ -251,6 +255,8 @@ public class PrisonerManager {
 		{
 			Util.setPermissionsGroups(player.getName(), prisoner.getOldPermissionsString());
 		}
+		
+		player.setSleepingIgnored(false);
 		
 		JailCell cell = prisoner.getCell();
 		if (cell != null)

@@ -112,7 +112,9 @@ public class JailPlayerListener extends PlayerListener {
 				 }
 				 
 			 }
-			 			 
+			 
+			 if (prisoner.getJail().getSettings().getBoolean(Setting.IgnorePrisonersSleepingState))
+				 event.getPlayer().setSleepingIgnored(true);
 		 }
 	 }
 	 
