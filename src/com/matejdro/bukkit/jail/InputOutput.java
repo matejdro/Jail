@@ -177,8 +177,10 @@ public class InputOutput {
 				String inventory = set.getString("Inventory");
 				String jailer = set.getString("Jailer");
 				String permissions = set.getString("Permissions");
+				String previousPosition = set.getString("PreviousPosition");
 				
 				JailPrisoner p = new JailPrisoner(name, remaintime, jailname, null, offline, transferDest, reason, false,  inventory, jailer, permissions);
+				p.setPreviousPosition(previousPosition);
 				
 				Jail.prisoners.put(p.getName(), p);
 			}
@@ -341,7 +343,7 @@ public class InputOutput {
     {
     	try {
 			Connection conn = InputOutput.getConnection();
-			PreparedStatement ps = conn.prepareStatement("INSERT INTO jail_prisoners  (PlayerName, RemainTime, JailName, Offline, TransferDest, reason, muted, Inventory, Jailer, Permissions) VALUES (?,?,?,?,?,?,?,?,?,?)");
+			PreparedStatement ps = conn.prepareStatement("INSERT INTO jail_prisoners  (PlayerName, RemainTime, JailName, Offline, TransferDest, reason, muted, Inventory, Jailer, Permissions, PreviousPosition) VALUES (?,?,?,?,?,?,?,?,?,?,?)");
 			ps.setString(1, p.getName());
 			ps.setInt(2, p.getRemainingTime());
 			if (p.getJail() == null)
@@ -358,7 +360,9 @@ public class InputOutput {
 			ps.setBoolean(7, p.isMuted());
 			ps.setString(8, p.getInventory());
 			ps.setString(9, p.getJailer());
-			ps.setString(9, p.getOldPermissionsString());
+			ps.setString(10, p.getOldPermissionsString());
+			ps.setString(11, p.getPreviousPosition().getWorld().getName() + "," + String.valueOf(p.getPreviousPosition().getBlockX()) + "," + String.valueOf(p.getPreviousPosition().getBlockY()) + "," + String.valueOf(p.getPreviousPosition().getBlockZ()));
+
 			ps.executeUpdate();
 			conn.commit();
 			
@@ -478,7 +482,7 @@ public class InputOutput {
     	try {
 			Connection conn = InputOutput.getConnection();
 			if (conn == null || conn.isClosed()) return;
-			PreparedStatement ps = conn.prepareStatement("UPDATE jail_prisoners SET RemainTime = ?, JailName = ?, Offline = ?, TransferDest = ?, muted = ?, Inventory = ?, Permissions = ? WHERE PlayerName = ?");
+			PreparedStatement ps = conn.prepareStatement("UPDATE jail_prisoners SET RemainTime = ?, JailName = ?, Offline = ?, TransferDest = ?, muted = ?, Inventory = ?, Permissions = ?, PreviousPosition = ? WHERE PlayerName = ?");
 			ps.setInt(1, Math.round(p.getRemainingTime()));
 			if (p.getJail() == null)
 			{
@@ -493,8 +497,9 @@ public class InputOutput {
 			ps.setBoolean(5, p.isMuted());
 			ps.setString(6, p.getInventory());
 			ps.setString(7, p.getOldPermissionsString());
+			ps.setString(8, p.getPreviousPosition().getWorld().getName() + "," + String.valueOf(p.getPreviousPosition().getBlockX()) + "," + String.valueOf(p.getPreviousPosition().getBlockY()) + "," + String.valueOf(p.getPreviousPosition().getBlockZ()));
 
-			ps.setString(8, p.getName());
+			ps.setString(9, p.getName());
 			ps.executeUpdate();
 			conn.commit();
 			
@@ -530,7 +535,7 @@ public class InputOutput {
     	try {
 			Connection conn = InputOutput.getConnection();
 			if (conn == null || conn.isClosed()) return;
-			PreparedStatement ps = conn.prepareStatement("UPDATE jail_prisoners SET RemainTime = ?, JailName = ?, Offline = ?, TransferDest = ?, muted = ?, Inventory = ?, Permissions = ? WHERE PlayerName = ?");
+			PreparedStatement ps = conn.prepareStatement("UPDATE jail_prisoners SET RemainTime = ?, JailName = ?, Offline = ?, TransferDest = ?, muted = ?, Inventory = ?, Permissions = ?, PreviousLocation = ? WHERE PlayerName = ?");
 			for (JailPrisoner p : Jail.prisoners.values())
 			{
 				ps.setInt(1, p.getRemainingTime());
@@ -540,8 +545,10 @@ public class InputOutput {
 				ps.setBoolean(5, p.isMuted());
 				ps.setString(6, p.getInventory());
 				ps.setString(7, p.getOldPermissionsString());
+				ps.setString(8, p.getPreviousPosition().getWorld().getName() + "," + String.valueOf(p.getPreviousPosition().getBlockX()) + "," + String.valueOf(p.getPreviousPosition().getBlockY()) + "," + String.valueOf(p.getPreviousPosition().getBlockZ()));
+
 				
-				ps.setString(8, p.getName());
+				ps.setString(9, p.getName());
 				ps.addBatch();
 			}
 			ps.executeBatch();
@@ -568,13 +575,13 @@ public class InputOutput {
             	st = conn.createStatement();
             	if (global.getBoolean(Setting.UseMySQL.getString(), false))
                 {
-                	st.executeUpdate("CREATE TABLE IF NOT EXISTS `jail_prisoners` ( `PlayerName` varchar(250) NOT NULL, `RemainTime` int(11) DEFAULT NULL, `JailName` varchar(250) DEFAULT NULL, `Offline` varchar(250) DEFAULT NULL, `TransferDest` varchar(250) DEFAULT NULL , `reason` varchar(250) DEFAULT NULL, `muted` boolean DEFAULT false, Inventory TEXT DEFAULT NULL, Jailer VARCHAR(250) DEFAULT NULL, Permissions VARCHAR(250) DEFAULT NULL, PRIMARY KEY (`PlayerName`) ) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
+                	st.executeUpdate("CREATE TABLE IF NOT EXISTS `jail_prisoners` ( `PlayerName` varchar(250) NOT NULL, `RemainTime` int(11) DEFAULT NULL, `JailName` varchar(250) DEFAULT NULL, `Offline` varchar(250) DEFAULT NULL, `TransferDest` varchar(250) DEFAULT NULL , `reason` varchar(250) DEFAULT NULL, `muted` boolean DEFAULT false, Inventory TEXT DEFAULT NULL, Jailer VARCHAR(250) DEFAULT NULL, Permissions VARCHAR(250) DEFAULT NULL, PreviousPosition VARCHAR(250) DEFAULT NULL, PRIMARY KEY (`PlayerName`) ) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
                 	st.executeUpdate("CREATE TABLE IF NOT EXISTS `jail_zones` ( `name` varchar(250) NOT NULL DEFAULT '', `X1` double DEFAULT NULL, `Y1` double DEFAULT NULL, `Z1` double DEFAULT NULL, `X2` double DEFAULT NULL, `Y2` double DEFAULT NULL, `Z2` double DEFAULT NULL, `teleX` double DEFAULT NULL, `teleY` double DEFAULT NULL, `teleZ` double DEFAULT NULL, `freeX` double DEFAULT NULL, `freeY` double DEFAULT NULL, `FreeZ` double DEFAULT NULL, `teleWorld` varchar(250) DEFAULT NULL, `freeWorld` varchar(250) DEFAULT NULL , PRIMARY KEY (`name`) ) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
                 	st.executeUpdate("CREATE TABLE IF NOT EXISTS `jail_cells` ( `JailName` varchar(250) NOT NULL, `Teleport` varchar(250) NOT NULL, `Sign` TEXT DEFAULT NULL , `Chest` varchar(250) DEFAULT NULL, `SecondChest` varchar(250) DEFAULT NULL, Player varchar(250) DEFAULT NULL, Name varchar(20) DEFAULT NULL, PRIMARY KEY (Teleport) ) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
                 }
                 else
                 {
-                	st.executeUpdate("CREATE TABLE IF NOT EXISTS \"jail_prisoners\" (\"PlayerName\" VARCHAR PRIMARY KEY  NOT NULL , \"RemainTime\" INTEGER, \"JailName\" VARCHAR, \"Offline\" BOOLEAN, \"TransferDest\" VARCHAR, `reason` VARCHAR, `muted` BOOLEAN, Inventory STRING, Jailer VARCHAR, Permissions VARCHAR)");
+                	st.executeUpdate("CREATE TABLE IF NOT EXISTS \"jail_prisoners\" (\"PlayerName\" VARCHAR PRIMARY KEY  NOT NULL , \"RemainTime\" INTEGER, \"JailName\" VARCHAR, \"Offline\" BOOLEAN, \"TransferDest\" VARCHAR, `reason` VARCHAR, `muted` BOOLEAN, Inventory STRING, Jailer VARCHAR, Permissions VARCHAR, PreviousPosition VARCHAR)");
                     st.executeUpdate("CREATE TABLE IF NOT EXISTS \"jail_zones\" (\"name\" VARCHAR PRIMARY KEY  NOT NULL , \"X1\" DOUBLE, \"Y1\" DOUBLE, \"Z1\" DOUBLE, \"X2\" DOUBLE, \"Y2\" DOUBLE, \"Z2\" DOUBLE, \"teleX\" DOUBLE, \"teleY\" DOUBLE, \"teleZ\" DOUBLE, \"freeX\" DOUBLE, \"freeY\" DOUBLE, \"FreeZ\" DOUBLE, \"teleWorld\" VARCHAR, \"freeWorld\" STRING)");
                     st.executeUpdate("CREATE TABLE IF NOT EXISTS `jail_cells` ( `JailName` VARCHAR NOT NULL,  `Teleport` VARCHAR  PRIMARY_KEY NOT NULL, `Sign` STRING DEFAULT NULL , `Chest` VARCHAR DEFAULT NULL, `SecondChest` VARCHAR DEFAULT NULL, Player VARCHAR DEFAULT NULL, Name VARCHAR DEFAULT NULL);");
                 }
@@ -597,8 +604,10 @@ public class InputOutput {
     	Update("SELECT Jailer FROM jail_prisoners", "ALTER TABLE jail_prisoners ADD Jailer VARCHAR;", "ALTER TABLE jail_prisoners ADD Jailer varchar(250);" ); //Jailer log - 0.7   
     	UpdateType("jail_prisoners", "Inventory", "TEXT");
     	Update("SELECT Name FROM jail_cells", "ALTER TABLE jail_cells ADD Name VARCHAR", "ALTER TABLE jail_cells ADD Name varchar(20);"); //Select specific cell when jailing - 1.2
-    	UpdateType("jail_cells", "Sign", "TEXT"); // Multiple signs - 1.3
-    	Update("SELECT Permissions FROM jail_prisoners", "ALTER TABLE jail_prisoners ADD Permissions VARCHAR;", "ALTER TABLE jail_prisoners ADD Permissions varchar(250);" ); //Store permissions - 1.3
+    	UpdateType("jail_cells", "Sign", "TEXT"); // Multiple signs - 2.0
+    	Update("SELECT Permissions FROM jail_prisoners", "ALTER TABLE jail_prisoners ADD Permissions VARCHAR;", "ALTER TABLE jail_prisoners ADD Permissions varchar(250);" ); //Store permissions - 3.0
+    	Update("SELECT PreviousPosition FROM jail_prisoners", "ALTER TABLE jail_prisoners ADD PreviousPosition VARCHAR;", "ALTER TABLE jail_prisoners ADD PreviousPosition varchar(250);" ); //Store position - 2.0
+
     }
     
     public void Update(String check, String sql)

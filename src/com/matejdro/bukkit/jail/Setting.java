@@ -19,6 +19,7 @@ public enum Setting {
 	SpoutChangeSkin("SpoutChangeSkin", false),
 	SpoutSkinChangeURL("SpoutSkinChangeURL", "http://www.minecraftskins.com/view/168701.png"),
 	ManualCells("ManualCells", new ArrayList<String>()),
+	ReleaseBackToPreviousPosition("ReleaseBackToPreviousPosition", false),
 	
 	//JailStick
 	EnableJailStick("EnableJailStick", false),

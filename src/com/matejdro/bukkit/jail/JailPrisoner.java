@@ -39,6 +39,8 @@ public class JailPrisoner {
 	private HashSet<Wolf> guards = new HashSet<Wolf>();
 	private String requestedCell;
 	private List<String> oldPermissions = new ArrayList<String>();
+	private String previousPositionWorld;
+	private Location previousPosition;
 	
 	public JailPrisoner()
 	{
@@ -347,7 +349,8 @@ public class JailPrisoner {
 	}
 	
 	/**
-	 * @return Location, where player will be teleported after triggering move protection (teleport location of player's jail zone or his cell if he have one) 
+	 * @return Location, where player will be teleported after triggering move protection
+	 * (teleport location of player's jail zone or his cell if he have one) 
 	 */
 	public Location getTeleportLocation()
 	{
@@ -358,12 +361,58 @@ public class JailPrisoner {
 	}
 	
 	/**
+	 * @return Location, where player will be teleported after releasing 
+	 * (release location of player's jail zone or his before-jailing location if config is set so) 
+	 */
+	public Location getReleaseTeleportLocation()
+	{
+		if (getJail().getSettings().getBoolean(Setting.ReleaseBackToPreviousPosition) && previousPosition != null)
+			return getPreviousPosition();
+		else
+			return getJail().getReleaseTeleportLocation();
+	}
+
+	
+	/**
 	 * @return 
 	 */
 	public HashSet<Wolf> getGuards()
 	{
 		return guards;
 	}
+	
+	/**
+	 * @return Position, where player was before he got jailed.
+	 */
+	public Location getPreviousPosition()
+	{
+		if (previousPosition == null) return null;
+		if (previousPosition.getWorld() == null) previousPosition.setWorld(Jail.instance.getServer().getWorld(previousPositionWorld));
+		return previousPosition;
+	}
+	
+	/**
+	 * Sets position, where player was before he got jailed.
+	 */
+	public void setPreviousPosition(Location pos)
+	{
+		previousPosition = pos;
+	}
+	
+	/**
+	 * Sets position, where player was before he got jailed.
+	 * @param input string in format "world,x,y,z"
+	 */
+	public void setPreviousPosition(String input)
+	{
+		if (input == null || input.trim().equals("")) return;
+		String[] str = input.split(",");
+		Location loc = new Location(null , Double.parseDouble(str[1]), Double.parseDouble(str[2]),Double.parseDouble(str[3]));
+		previousPositionWorld = str[0];
+		previousPosition = loc;
+	}
+	
+	
 	
 	/**
 	 * Spawn guard wolves to this prisoner to kill him
