@@ -27,6 +27,7 @@ import com.platymuus.bukkit.permissions.Group;
 public class JailPrisoner {
 	private String name;
 	private int remaintime;
+	private int afktime;
 	private JailZone jail;
 	private Boolean offline;
 	private String transferDest = "";
@@ -73,6 +74,7 @@ public class JailPrisoner {
 		inventory = Inventory;
 		jailer = Jailer;
 		requestedCell = Cell;
+		afktime = 0;
 		setOldPermissions(Permissions);
 	}
 		
@@ -370,6 +372,40 @@ public class JailPrisoner {
 			return getPreviousPosition();
 		else
 			return getJail().getReleaseTeleportLocation();
+	}
+	
+	/**
+	 * @return time, for how much was prisoner AFK of this prisoner in ten of seconds (1 means 10 seconds)
+	 */
+	public int getAFKTime()
+	{
+		return afktime;
+	}
+	
+	/**
+	 * Sets the time, for how much was prisoner AFK.
+	 * @param input new time in tens of seconds (1 means 10 seconds)
+	 */
+	public void setAFKTime(int input)
+	{
+		afktime = input ;
+	}
+	
+	/*
+	 * @return time, for how much was prisoner AFK of this prisoner in minutes
+	 */
+	public double getAFKTimeMinutes()
+	{
+		return afktime / 6.0;
+	}
+	
+	/**
+	 * Sets the time, for how much was prisoner AFK.
+	 * @param time in minutes
+	 */
+	public void setAFKTimeMinutes(double input)
+	{
+		setAFKTime((int) Math.round(input * 6.0));
 	}
 
 	

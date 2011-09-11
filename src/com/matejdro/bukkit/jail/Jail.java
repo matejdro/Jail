@@ -187,6 +187,16 @@ public class Jail extends JavaPlugin {
 	    	        		  {
   	        					PrisonerManager.UnJail(prisoner, player);
 	    	        		  }
+    	    	    		  
+    	    	    		  if (player != null && prisoner.getJail().getSettings().getDouble(Setting.MaximumAFKTime) > 0.0)
+    	    	    		  {
+    	    	    			  prisoner.setAFKTime(prisoner.getAFKTime() + 1);
+    	    	    			  if (prisoner.getAFKTimeMinutes() > prisoner.getJail().getSettings().getDouble(Setting.MaximumAFKTime))
+    	    	    			  {
+    	    	    				  prisoner.setAFKTime(0);
+    	    	    				  player.kickPlayer(prisoner.getJail().getSettings().getString(Setting.MessageAFKKick));
+    	    	    			  }
+    	    	    		  }
     			    }
     	    	    	Jail.timeUpdateRunning = false;
     			    }

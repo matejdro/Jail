@@ -45,6 +45,8 @@ public enum Setting {
 	EnableChangingPermissions("Protections.EnableChangingPermissions", false),
 	PrisonersPermissionsGroups("Protections.PrisonersPermissionsGroups", Arrays.asList("prisoners")),
 	RestorePermissionsToEscapedPrisoners("Protections.RestorePermissionsToEsacpedPrisoners", true),
+	MaximumAFKTime("Protections.MaximumAFKTime", 5.0),
+
 	
 	//JailPay
 	EnablePaying("JailPay.EnableJailPay", false),
@@ -81,8 +83,8 @@ public enum Setting {
 	MessageTransfer("Messages.ForbiddenTransfer", "§9You have been transferred to another jail!"),
 	MessageMute("Messages.MessageMuted", "Stop chatting and quietly wait for the end of your sentence!"),
 	MessagePreventedInteractionNoPenalty("Messages.PreventedInteractionNoPenalty", "Don't do that in Jail!"),
-	MessagePreventedInteractionPenalty("Messages.PreventedInteractionPenalty", "Don't do that in Jail!  You have just earned additional 10 minutes in jail!");
-	
+	MessagePreventedInteractionPenalty("Messages.PreventedInteractionPenalty", "Don't do that in Jail!  You have just earned additional 10 minutes in jail!"),
+	MessageAFKKick("Messages.MessageAFKKick", "Do not be AFK in jail!");
 	
 	private String name;
 	private Object def;
