@@ -1,5 +1,7 @@
 package com.matejdro.bukkit.jail;
 
+import java.util.List;
+
 import org.bukkit.Location;
 
 public class JailZoneManager {
@@ -14,6 +16,8 @@ public class JailZoneManager {
 		
 		for (JailZone i : Jail.zones.values())
 		{
+			if (((List<String>)InputOutput.global.getProperty(Setting.ManualJails.getString())).contains(i.getName())) continue;
+			
 			double clen = i.getDistance(loc);
 			
 			if (clen < len || len == -1)
@@ -40,6 +44,8 @@ public class JailZoneManager {
 		for (JailZone i : Jail.zones.values())
 		{
 			if (i.getName().equalsIgnoreCase(ignore)) continue;
+			if (((List<String>)InputOutput.global.getProperty(Setting.ManualJails.getString())).contains(i.getName())) continue;
+
 			double clen = i.getDistance(loc);
 			
 			if (clen < len || len == -1)

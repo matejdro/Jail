@@ -78,7 +78,6 @@ public class PrisonerManager {
 			cellname = jailname.split(":")[1];
 			jailname = jailname.split(":")[0];			
 		}
-			
 		String jailer;
 		if (sender instanceof Player)
 			jailer = ((Player) sender).getName();
@@ -91,11 +90,10 @@ public class PrisonerManager {
 		if (player == null)
 		{
 			JailPrisoner prisoner = new JailPrisoner(playername, time * 6, jailname, cellname, true, "", reason, InputOutput.global.getBoolean(Setting.AutomaticMute.getString(), false),  "" ,jailer, "");
-
 			if (prisoner.getJail() != null)
 			{
 				JailCell cell = prisoner.getJail().getRequestedCell(prisoner);
-				if (cell != null && (cell.getPlayerName() == null || !cell.getPlayerName().trim().equals("")))
+				if (cell != null && (cell.getPlayerName() == null || cell.getPlayerName().trim().equals("")))
 				{
 					cell.setPlayerName(prisoner.getName());
 					cell.update();
@@ -145,6 +143,12 @@ public class PrisonerManager {
 			jail = JailZoneManager.findNearestJail(player.getLocation());
 			prisoner.setJail(jail);
 		}
+		if (jail == null)
+		{
+			Util.Message("You are lucky! Server admin was too lazy to set up jail. Go now!", player);
+			Jail.log.info("[Jail] There is no jail to pick! Make sure, you have build at least one jail and at least one jail is set to automatic!");
+			return;
+		}
 		prisoner.setOfflinePending(false);
 		if (prisoner.getReason().isEmpty())
 			Util.Message(jail.getSettings().getString(Setting.MessageJail), player);
@@ -154,7 +158,6 @@ public class PrisonerManager {
 		if (jail.getSettings().getBoolean(Setting.DeleteInventoryOnJail)) player.getInventory().clear();
 		
 		prisoner.setPreviousPosition(player.getLocation());
-		player.teleport(prisoner.getTeleportLocation());
 		
 		JailCell cell = jail.getRequestedCell(prisoner);
 		if (cell == null || (cell.getPlayerName() != null && !cell.getPlayerName().equals("") && !cell.getPlayerName().equals(prisoner.getName()))) 
@@ -166,6 +169,7 @@ public class PrisonerManager {
 		{
 			cell.setPlayerName(player.getName());
 			prisoner.setCell(cell);
+			player.teleport(prisoner.getTeleportLocation());
 			prisoner.updateSign();
 			if (jail.getSettings().getBoolean(Setting.StoreInventory) && cell.getChest() != null)
 			{
@@ -195,7 +199,11 @@ public class PrisonerManager {
 			}
 			cell.update();
 		}
-
+		else
+		{
+			player.teleport(prisoner.getTeleportLocation());
+		}
+		
 		if (jail.getSettings().getBoolean(Setting.StoreInventory)) 
 		{
 			prisoner.storeInventory(player.getInventory());
@@ -300,10 +308,10 @@ public class PrisonerManager {
 			}
 			cell.setPlayerName("");
 			cell.update();
-			
-			player.teleport(prisoner.getReleaseTeleportLocation());
 
 		}
+		
+		player.teleport(prisoner.getReleaseTeleportLocation());
 		
 		prisoner.restoreInventory(player);
 		prisoner.delete();
@@ -413,7 +421,6 @@ public class PrisonerManager {
 		prisoner.setOfflinePending(false);
 		Util.Message(jail.getSettings().getString(Setting.MessageTransfer), player);
 		Jail.prisoners.put(prisoner.getName(),prisoner);
-		player.teleport(prisoner.getTeleportLocation());
 
 		JailCell cell = jail.getRequestedCell(prisoner);
 		if (cell == null || (cell.getPlayerName() != null && !cell.getPlayerName().equals("") && !cell.getPlayerName().equals(prisoner.getName()))) 
@@ -425,6 +432,7 @@ public class PrisonerManager {
 		{
 			cell.setPlayerName(player.getName());
 			prisoner.setCell(cell);
+			player.teleport(prisoner.getTeleportLocation());
 			prisoner.updateSign();
 			if (jail.getSettings().getBoolean(Setting.StoreInventory) && cell.getChest() != null)
 			{
@@ -453,6 +461,10 @@ public class PrisonerManager {
 				}
 			}
 			cell.update();
+		}
+		else
+		{
+			player.teleport(prisoner.getTeleportLocation());
 		}
 		
 		if (jail.getSettings().getBoolean(Setting.StoreInventory)) 

@@ -361,9 +361,12 @@ public class InputOutput {
 			ps.setString(8, p.getInventory());
 			ps.setString(9, p.getJailer());
 			ps.setString(10, p.getOldPermissionsString());
-			ps.setString(11, p.getPreviousPosition().getWorld().getName() + "," + String.valueOf(p.getPreviousPosition().getBlockX()) + "," + String.valueOf(p.getPreviousPosition().getBlockY()) + "," + String.valueOf(p.getPreviousPosition().getBlockZ()));
-
+			if (p.getPreviousPosition() == null)
+				ps.setString(11, "");
+			else
+				ps.setString(11, p.getPreviousPosition().getWorld().getName() + "," + String.valueOf(p.getPreviousPosition().getBlockX()) + "," + String.valueOf(p.getPreviousPosition().getBlockY()) + "," + String.valueOf(p.getPreviousPosition().getBlockZ()));
 			ps.executeUpdate();
+			
 			conn.commit();
 			
 			ps.close();
@@ -497,7 +500,10 @@ public class InputOutput {
 			ps.setBoolean(5, p.isMuted());
 			ps.setString(6, p.getInventory());
 			ps.setString(7, p.getOldPermissionsString());
-			ps.setString(8, p.getPreviousPosition().getWorld().getName() + "," + String.valueOf(p.getPreviousPosition().getBlockX()) + "," + String.valueOf(p.getPreviousPosition().getBlockY()) + "," + String.valueOf(p.getPreviousPosition().getBlockZ()));
+			if (p.getPreviousPosition() == null)
+				ps.setString(8, "");
+			else
+				ps.setString(8, p.getPreviousPosition().getWorld().getName() + "," + String.valueOf(p.getPreviousPosition().getBlockX()) + "," + String.valueOf(p.getPreviousPosition().getBlockY()) + "," + String.valueOf(p.getPreviousPosition().getBlockZ()));
 
 			ps.setString(9, p.getName());
 			ps.executeUpdate();
@@ -545,7 +551,12 @@ public class InputOutput {
 				ps.setBoolean(5, p.isMuted());
 				ps.setString(6, p.getInventory());
 				ps.setString(7, p.getOldPermissionsString());
-				ps.setString(8, p.getPreviousPosition().getWorld().getName() + "," + String.valueOf(p.getPreviousPosition().getBlockX()) + "," + String.valueOf(p.getPreviousPosition().getBlockY()) + "," + String.valueOf(p.getPreviousPosition().getBlockZ()));
+				if (p.getPreviousPosition() == null)
+					ps.setString(8, "");
+				else
+					ps.setString(8, p.getPreviousPosition().getWorld().getName() + "," + String.valueOf(p.getPreviousPosition().getBlockX()) + "," + String.valueOf(p.getPreviousPosition().getBlockY()) + "," + String.valueOf(p.getPreviousPosition().getBlockZ()));
+				ps.executeUpdate();
+
 
 				
 				ps.setString(9, p.getName());

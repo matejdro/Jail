@@ -184,6 +184,44 @@ public class JailZone {
 	}
 	
 	/**
+	 * @return nearest cell to the specified location. Measured using teleport location.
+	 */
+	public JailCell getNearestCell(Location loc)
+	{
+		JailCell cell = null;
+		double distance = -1;
+	
+		for (JailCell c : getCellList())
+		{				
+			double dist = c.getTeleportLocation().distance(loc);
+			if (dist < distance || distance < 0)
+			{
+				cell = c;
+				distance = dist;
+			}
+		}
+		
+		return cell;
+	}
+	
+	/**
+	 * @return cell with specified name
+	 */
+	public JailCell getCell(String name)
+	{
+		JailCell cell = null;
+		for (JailCell c : getCellList())
+		{
+			if (c.getName() != null && c.getName().equals(name)) 
+			{
+				cell = c;
+				break;
+			}
+		}
+		return cell;
+	}
+	
+	/**
 	 * Checks if location is inside this jail zone
 	 * 
 	 * @param loc Location to check

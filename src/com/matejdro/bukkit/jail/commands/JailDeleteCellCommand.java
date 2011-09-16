@@ -37,19 +37,10 @@ public class JailDeleteCellCommand extends BaseCommand {
 		JailCell cell = null;
 		
 		if (cellname != null)
-		{
-			Boolean exist = false;
-			for (JailCell c : jail.getCellList())
-			{
-				if (c.getName() != null && c.getName().equals(cellname)) 
-				{
-					cell = c;
-					exist = true;
-					break;
-				}
-			}
+		{	
+			cell = jail.getCell(cellname);
 			
-			if (!exist)
+			if (cell == null)
 			{
 				Util.Message("There is no such cell!", sender);
 				return true;
@@ -59,16 +50,7 @@ public class JailDeleteCellCommand extends BaseCommand {
 		//Find closest cell
 		if (cell == null)
 		{
-			double distance = -1;
-			for (JailCell c : jail.getCellList())
-			{
-				double dist = c.getTeleportLocation().distance(((Player) sender).getLocation());
-				if (dist < distance || distance < 0)
-				{
-					cell = c;
-					distance = dist;
-				}
-			}
+			cell = jail.getNearestCell(((Player) sender).getLocation());
 		}
 		
 		if (cell == null)

@@ -58,4 +58,10 @@ public class Settings {
 		return (List<?>) property;
 
 	}
+	
+	public void setProperty(Setting setting, Object object)
+	{
+		InputOutput.jails.setProperty(jail.getName() + "." + setting.getString(), object);
+		InputOutput.jails.save();
+	}
 }

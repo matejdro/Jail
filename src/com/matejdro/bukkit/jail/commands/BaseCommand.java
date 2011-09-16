@@ -16,7 +16,11 @@ public abstract class BaseCommand {
 	
 	public Boolean execute(CommandSender sender, String[] args)
 	{
-		if (!(sender instanceof Player) && needPlayer) return false;
+		if (!(sender instanceof Player) && needPlayer) 
+		{
+			sender.sendMessage("Sorry, but you need to execute this command as player.");
+			return false;
+		}
 		if (sender instanceof Player && !Util.permission((Player) sender, permission, adminCommand ? PermissionDefault.OP : PermissionDefault.TRUE)) return false;
 		
 		return run(sender, args);
