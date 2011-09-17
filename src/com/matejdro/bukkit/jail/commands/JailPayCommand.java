@@ -4,21 +4,16 @@ import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
 
-import com.iConomy.iConomy;
 import com.matejdro.bukkit.jail.InputOutput;
 import com.matejdro.bukkit.jail.Jail;
 import com.matejdro.bukkit.jail.JailPrisoner;
 import com.matejdro.bukkit.jail.JailZone;
 import com.matejdro.bukkit.jail.Setting;
 import com.matejdro.bukkit.jail.Util;
-
-import cosine.boseconomy.BOSEconomy;
+import com.matejdro.register.payment.Methods;
 
 public class JailPayCommand extends BaseCommand {
-	private iConomy iconomy;
-	private BOSEconomy beconomy;
 	
 	public JailPayCommand()
 	{
@@ -30,14 +25,7 @@ public class JailPayCommand extends BaseCommand {
 
 	public Boolean run(CommandSender sender, String[] args) {		
 		Player player = (Player) sender;
-		
-		Plugin plugin = Jail.instance.getServer().getPluginManager().getPlugin("iConomy");
-		if (plugin != null) iconomy = (iConomy) plugin;
-		plugin = null;
-		
-		plugin = Jail.instance.getServer().getPluginManager().getPlugin("BOSEconomy");
-		if (plugin != null) beconomy = (BOSEconomy) plugin;
-		
+				
 		if (args.length < 1)
 		{
 			JailPrisoner prisoner = Jail.prisoners.get(((Player) sender).getName().toLowerCase());
@@ -163,17 +151,13 @@ public class JailPayCommand extends BaseCommand {
 		int currency = prisoner.getJail().getSettings().getInt(Setting.JailPayCurrency);
 		if (currency == 0)
 		{
-			if (iconomy != null)
+			if (Methods.getMethod() != null)
 			{
-				return iConomy.format(amount);
-			}
-			else if (beconomy != null)
-			{
-				return beconomy.getMoneyFormatted(amount) + " " + beconomy.getMoneyNameProper(amount);
+				return Methods.getMethod().format(amount);
 			}
 			else
 			{
-				Jail.log.info("[Jail] You must have either iConomy or BOSEconomy installed to use JailPayCurrency = 0!");
+				Jail.log.info("[Jail] You must have economy plugin installed to use JailPayCurrency = 0!");
 				return String.valueOf(amount);
 			}
 		}
@@ -188,17 +172,13 @@ public class JailPayCommand extends BaseCommand {
 		int currency = prisoner.getJail().getSettings().getInt(Setting.JailPayCurrency);
 		if (currency == 0)
 		{
-			if (iconomy != null)
+			if (Methods.getMethod().getPlugin() != null)
 			{
-				return iConomy.getAccount(player.getName()).getHoldings().hasEnough(amount);
-			}
-			else if (beconomy != null)
-			{
-				return beconomy.getPlayerMoneyDouble(player.getName()) >= amount;
+				return Methods.getMethod().getAccount(player.getName()).hasEnough(amount);
 			}
 			else
 			{
-				Jail.log.info("[Jail] You must have either iConomy or BOSEconomy installed to use JailPayCurrency = 0!");
+				Jail.log.info("[Jail] You must have economy plugin installed to use JailPayCurrency = 0!");
 				return false;
 			}
 		}
@@ -219,18 +199,13 @@ public class JailPayCommand extends BaseCommand {
 		int currency = prisoner.getJail().getSettings().getInt(Setting.JailPayCurrency);
 		if (currency == 0)
 		{
-			if (iconomy != null)
+			if (Methods.getMethod().getPlugin() != null)
 			{
-				iConomy.getAccount(player.getName()).getHoldings().subtract(amount);
-			}
-			else if (beconomy != null)
-			{
-				double money = beconomy.getPlayerMoneyDouble(player.getName());
-				beconomy.setPlayerMoney(player.getName(), money - amount, false);
+				Methods.getMethod().getAccount(player.getName()).subtract(amount);
 			}
 			else
 			{
-				Jail.log.info("[Jail] You must have either iConomy or BOSEconomy installed to use JailPayCurrency = 0!");
+				Jail.log.info("[Jail] You must have economy plugin installed to use JailPayCurrency = 0!");
 			}
 		}
 		else

@@ -159,5 +159,12 @@ public class Util {
 		return pb.getPlayerInfo(playerName).getGroups();
     }
     
+    public static Boolean isServer18()
+    {
+    	String ver = Jail.instance.getServer().getVersion();
+    	ver = ver.substring(ver.indexOf("(MC: ") + 5, ver.indexOf("(MC: ") + 8);
+    	return ver.equals("1.8");
+    }
+    
 
 }
