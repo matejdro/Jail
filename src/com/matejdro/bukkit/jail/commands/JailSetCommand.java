@@ -33,7 +33,7 @@ public class JailSetCommand extends BaseCommand {
 	public static HashMap<String,SelectionPlayer> players = new HashMap<String,SelectionPlayer>();
 	public JailSetCommand()
 	{
-		needPlayer = true;
+		needPlayer = false;
 		adminCommand = true;
 		permission = "jail.command.jailset";
 	}
@@ -195,6 +195,11 @@ public class JailSetCommand extends BaseCommand {
 		if (args[0].split(":").length > 1)
 			cellname = args[0].split(":")[1];
 		
+		if (!(sender instanceof Player))
+		{
+			Util.Message("You cannot do that via console!", sender);
+			return;
+		}
 		JailZone jail = Jail.zones.get(jailname);
 		if (jail == null)
 		{

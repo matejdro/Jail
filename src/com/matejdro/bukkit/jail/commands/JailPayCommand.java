@@ -43,7 +43,7 @@ public class JailPayCommand extends BaseCommand {
 			JailPrisoner prisoner = Jail.prisoners.get(((Player) sender).getName().toLowerCase());
 			if (prisoner == null) 
 			{
-				Util.Message("You are not jailed!", sender);
+				Util.Message(InputOutput.global.getString(Setting.MessageYouNotJailed.getString()), sender);
 				return true;
 			}
 			JailZone jail = prisoner.getJail();

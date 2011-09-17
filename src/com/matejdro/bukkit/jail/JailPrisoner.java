@@ -498,6 +498,7 @@ public class JailPrisoner {
 			getGuards().add(guard);
 			Jail.guards.put(guard, this);
 		}
+
 	}
 	
 	/**
@@ -567,7 +568,7 @@ public class JailPrisoner {
 	}
 	
 	/**
-	 * Parse <Player>, <Reason>, <Jailer>, <Jail>, <Time>, <Cell> for actual values
+	 * Parse <Player>, <Reason>, <Jailer>, <Jail>, <Time>, <TimeS>, <Cell> for actual values
 	 * @param str input string
 	 * @return parsed string
 	 */
@@ -590,6 +591,15 @@ public class JailPrisoner {
 			str = str.replace("<Cell>", "");
 		else
 			str = str.replace("<Cell>", getCell().getName());
+		
+		if (str.contains("<TimeS>"))
+		{
+			if (time > -1)
+				str = str.replace("<TimeS>", parseTags(getJail().getSettings().getString(Setting.MessageMinutes).replace("<TimeS>", "")));
+			else
+				str = str.replace("<TimeS>", parseTags(getJail().getSettings().getString(Setting.MessageForever).replace("<TimeS>", "")));		
+		}
+			
 		return str;
 	}
 

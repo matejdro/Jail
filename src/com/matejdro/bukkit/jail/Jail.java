@@ -91,7 +91,6 @@ public class Jail extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		instance = this;
-		
 		PlayerListener = new JailPlayerListener(this);
 		BlockListener = new JailBlockListener();
 		PlayerPreventListener = new JailPlayerProtectionListener(this);
