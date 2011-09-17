@@ -26,6 +26,7 @@ public class Settings {
 		property = InputOutput.jails.getProperty(jail.getName() + "." + setting.getString());
 		if (property == null)
 			property = InputOutput.global.getProperty(setting.getString());
+		if (!(property instanceof Double)) property = Double.parseDouble(property.toString());
 		return (Double) property;
 	}
 	

@@ -1,19 +1,26 @@
 package com.matejdro.bukkit.jail.commands;
 
+import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
 import com.iConomy.iConomy;
 import com.iConomy.system.Account;
 import com.iConomy.system.Holdings;
+import com.matejdro.bukkit.jail.InputOutput;
 import com.matejdro.bukkit.jail.Jail;
 import com.matejdro.bukkit.jail.JailPrisoner;
 import com.matejdro.bukkit.jail.JailZone;
 import com.matejdro.bukkit.jail.Setting;
 import com.matejdro.bukkit.jail.Util;
 
+import cosine.boseconomy.BOSEconomy;
+
 public class JailPayCommand extends BaseCommand {
+	private iConomy iconomy;
+	private BOSEconomy beconomy;
 	
 	public JailPayCommand()
 	{
@@ -26,16 +33,13 @@ public class JailPayCommand extends BaseCommand {
 	public Boolean run(CommandSender sender, String[] args) {		
 		Player player = (Player) sender;
 		
-		iConomy iConomy = null;
-		Plugin iCoplugin = Jail.instance.getServer().getPluginManager().getPlugin("iConomy");
+		Plugin plugin = Jail.instance.getServer().getPluginManager().getPlugin("iConomy");
+		if (plugin != null) iconomy = (iConomy) plugin;
+		plugin = null;
 		
-		if (iCoplugin == null)
-		{
-			Util.Message("iConomy error! Please contact the administrator of your server.", sender);
-			return true;
-		}
+		plugin = Jail.instance.getServer().getPluginManager().getPlugin("BOSEconomy");
+		if (plugin != null) beconomy = (BOSEconomy) plugin;
 		
-		iConomy = (iConomy) iCoplugin;		
 		if (args.length < 1)
 		{
 			JailPrisoner prisoner = Jail.prisoners.get(((Player) sender).getName().toLowerCase());
@@ -46,13 +50,14 @@ public class JailPayCommand extends BaseCommand {
 			}
 			JailZone jail = prisoner.getJail();
 			if (jail.getSettings().getBoolean(Setting.EnablePaying) && jail.getSettings().getDouble(Setting.PriceForInfiniteJail) > 0  && prisoner.getRemainingTime() < 0)
-				Util.Message("To get out of this mess, you will have to pay " + iConomy.format(jail.getSettings().getDouble(Setting.PriceForInfiniteJail)) +".", sender);
+				Util.Message(jail.getSettings().getString(Setting.MessageJailPayAmountForever).replace("<Amount>", format(jail.getSettings().getDouble(Setting.PriceForInfiniteJail), prisoner)), sender);
 			else if (!jail.getSettings().getBoolean(Setting.EnablePaying) || prisoner.getRemainingTime() < 0 || jail.getSettings().getDouble(Setting.PriceForInfiniteJail) == 0)
-				Util.Message("Sorry, money won't help you this time.", sender);
+				Util.Message(jail.getSettings().getString(Setting.MessageJailPayCannotPay), sender);
 			else
 			{
-				String message = "1 minute of your sentence will cost you " + iConomy.format(jail.getSettings().getDouble(Setting.PricePerMinute)) +". ";
-				message += "That means that cost for releasing you out of the jail is " + iConomy.format(jail.getSettings().getDouble(Setting.PricePerMinute) * Math.round(prisoner.getRemainingTimeMinutes())) +".";
+				String message = jail.getSettings().getString(Setting.MessageJailPayCost);
+				message = message.replace("<MinutePrice>", format(jail.getSettings().getDouble(Setting.PricePerMinute), prisoner));
+				message = message.replace("<WholePrice>", format(jail.getSettings().getDouble(Setting.PricePerMinute) * Math.floor(prisoner.getRemainingTimeMinutes()), prisoner));
 				Util.Message(message, sender);
 			}
 		}
@@ -65,7 +70,7 @@ public class JailPayCommand extends BaseCommand {
 				
 				if (prisoner == null)
 				{
-					Util.Message("This player is not jailed!", sender);
+					Util.Message(InputOutput.global.getString(Setting.MessagePlayerNotJailed.getString()), sender);
 					return true;
 				}	
 			}
@@ -74,7 +79,7 @@ public class JailPayCommand extends BaseCommand {
 				prisoner = Jail.prisoners.get(((Player) sender).getName().toLowerCase());
 				if (prisoner == null) 
 				{
-					Util.Message("You are not jailed!", sender);
+					Util.Message(InputOutput.global.getString(Setting.MessageYouNotJailed.getString()), sender);
 					return true;
 				}
 			}
@@ -82,21 +87,17 @@ public class JailPayCommand extends BaseCommand {
 			if ((prisoner.getRemainingTime() < 0 && jail.getSettings().getDouble(Setting.PriceForInfiniteJail) == 0) || (prisoner.getRemainingTime() > 0 && jail.getSettings().getDouble(Setting.PricePerMinute) == 0))
 			{
 				if (args.length > 1)
-					Util.Message("Sorry, money won't help him this time.", sender);
+					Util.Message(jail.getSettings().getString(Setting.MessageJailPayCannotPayHim), sender);
 				else
-					Util.Message("Sorry, money won't help you this time.", sender);
+					Util.Message(jail.getSettings().getString(Setting.MessageJailPayCannotPay), sender);
 				return true;
 			}
-			
-			
-			Account account = iConomy.getAccount(player.getName());
-			Holdings holdings = account.getHoldings();
-			
+						
 			double payment = Double.parseDouble(args[0]);
 			
-			if (holdings.hasUnder(payment))
+			if (!hasEnough(payment, prisoner, player))
 			{
-					Util.Message("You don't have that much money!", sender);
+					Util.Message(jail.getSettings().getString(Setting.MessageJailPayNotEnoughMoney) , sender);
 					return true;
 			}
 			
@@ -105,15 +106,15 @@ public class JailPayCommand extends BaseCommand {
 				if (payment >= jail.getSettings().getDouble(Setting.PriceForInfiniteJail))
 				{
 					if (args.length > 1)
-						Util.Message("You have just payed " + iConomy.format(jail.getSettings().getDouble(Setting.PriceForInfiniteJail)) + " and saved " + prisoner.getName() + " from the jail!", sender);
+						Util.Message(jail.getSettings().getString(Setting.MessageJailPayPaidReleasedHim).replace("<Amount>", format(jail.getSettings().getDouble(Setting.PriceForInfiniteJail), prisoner)).replace("<Prisoner>", prisoner.getName()), sender);
 					else
-						Util.Message("You have just payed " + iConomy.format(jail.getSettings().getDouble(Setting.PriceForInfiniteJail)) + " and saved yourself from the jail!", sender);
-					holdings.subtract(jail.getSettings().getDouble(Setting.PriceForInfiniteJail));
+						Util.Message(jail.getSettings().getString(Setting.MessageJailPayPaidReleased).replace("<Amount>", format(jail.getSettings().getDouble(Setting.PriceForInfiniteJail), prisoner)), sender);
+					pay(jail.getSettings().getDouble(Setting.PriceForInfiniteJail), prisoner, player);
 					prisoner.release();
 				}
 				else
 				{
-					Util.Message("That won't be enough!", sender);
+					Util.Message(jail.getSettings().getString(Setting.MessageJailPayNotEnoughMoneySelected), sender);
 					return true;
 				}
 			}
@@ -123,10 +124,10 @@ public class JailPayCommand extends BaseCommand {
 				if (payment >= releasebill)
 				{
 					if (args.length > 1)
-						Util.Message("You have just payed " + iConomy.format(releasebill) + " and saved " + prisoner.getName() + " from the jail!", sender);
+						Util.Message(jail.getSettings().getString(Setting.MessageJailPayPaidReleasedHim).replace("<Amount>", format(jail.getSettings().getDouble(Setting.PriceForInfiniteJail), prisoner)).replace("<Prisoner>", prisoner.getName()), sender);
 					else
-						Util.Message("You have just payed " + iConomy.format(releasebill) + " and saved yourself from the jail!", sender);
-					holdings.subtract(releasebill);
+						Util.Message(jail.getSettings().getString(Setting.MessageJailPayPaidReleased).replace("<Amount>", format(jail.getSettings().getDouble(Setting.PriceForInfiniteJail), prisoner)), sender);
+					pay(releasebill, prisoner, player);
 					prisoner.release();
 				}
 				else
@@ -135,10 +136,22 @@ public class JailPayCommand extends BaseCommand {
 					double bill = minutes * jail.getSettings().getDouble(Setting.PricePerMinute);
 					int remain = (int) (Math.round(prisoner.getRemainingTimeMinutes()) - minutes);
 					if (args.length > 1)
-						Util.Message("You have just payed " + iConomy.format(bill) + " and lowered " + prisoner.getName() + "'s sentence to " + String.valueOf(remain) + " minutes!", sender);
+					{
+						String message = jail.getSettings().getString(Setting.MessageJailPayPaidLoweredTimeHim);
+						message = message.replace("<Amount>", format(bill, prisoner));
+						message = message.replace("<Prisoner>", prisoner.getName());
+						message = message.replace("<NewTime>", String.valueOf(remain));
+						Util.Message(message, sender);
+					}
+						
 					else
-						Util.Message("You have just payed " + iConomy.format(bill) + " and lowered your sentence to " + String.valueOf(remain) + " minutes!", sender);
-					holdings.subtract(bill);
+					{
+						String message = jail.getSettings().getString(Setting.MessageJailPayPaidLoweredTime);
+						message = message.replace("<Amount>", format(bill, prisoner));
+						message = message.replace("<NewTime>", String.valueOf(remain));
+						Util.Message(message, sender);
+					}
+					pay(bill, prisoner, player);
 					prisoner.setRemainingTimeMinutes(remain);
 				}
 			}
@@ -146,5 +159,127 @@ public class JailPayCommand extends BaseCommand {
 		}
 		return true;
 	}
+	
+	private String format(double amount, JailPrisoner prisoner)
+	{
+		int currency = prisoner.getJail().getSettings().getInt(Setting.JailPayCurrency);
+		if (currency == 0)
+		{
+			if (iconomy != null)
+			{
+				return iConomy.format(amount);
+			}
+			else if (beconomy != null)
+			{
+				return beconomy.getMoneyFormatted(amount) + " " + beconomy.getMoneyNameProper(amount);
+			}
+			else
+			{
+				Jail.log.info("[Jail] You must have either iConomy or BOSEconomy installed to use JailPayCurrency = 0!");
+				return String.valueOf(amount);
+			}
+		}
+		else
+		{
+			return String.valueOf((int) Math.ceil( amount ) * 1) + "x " + getMaterialName(Material.getMaterial(currency));
+		}
+	}
+	
+	private Boolean hasEnough(double amount, JailPrisoner prisoner, Player player)
+	{
+		int currency = prisoner.getJail().getSettings().getInt(Setting.JailPayCurrency);
+		if (currency == 0)
+		{
+			if (iconomy != null)
+			{
+				return iConomy.getAccount(player.getName()).getHoldings().hasEnough(amount);
+			}
+			else if (beconomy != null)
+			{
+				return beconomy.getPlayerMoneyDouble(player.getName()) >= amount;
+			}
+			else
+			{
+				Jail.log.info("[Jail] You must have either iConomy or BOSEconomy installed to use JailPayCurrency = 0!");
+				return false;
+			}
+		}
+		else
+		{
+			int items = 0;
+			for (ItemStack i : player.getInventory().getContents())
+			{
+				if (i != null && i.getTypeId() == currency) items += i.getAmount();
+			}
+			
+			return items >= amount;
+		}
+	}
+	
+	private void pay(double amount, JailPrisoner prisoner, Player player)
+	{
+		int currency = prisoner.getJail().getSettings().getInt(Setting.JailPayCurrency);
+		if (currency == 0)
+		{
+			if (iconomy != null)
+			{
+				iConomy.getAccount(player.getName()).getHoldings().subtract(amount);
+			}
+			else if (beconomy != null)
+			{
+				double money = beconomy.getPlayerMoneyDouble(player.getName());
+				beconomy.setPlayerMoney(player.getName(), money - amount, false);
+			}
+			else
+			{
+				Jail.log.info("[Jail] You must have either iConomy or BOSEconomy installed to use JailPayCurrency = 0!");
+			}
+		}
+		else
+		{
+			int amountneeded = (int) Math.ceil(amount);
+			for (int i = 0; i < player.getInventory().getSize(); i++)
+			{
+				ItemStack item = player.getInventory().getItem(i);
+				if (item == null || item.getTypeId() != currency) return;
+				
+				if (amountneeded >= item.getAmount())
+				{
+					amountneeded -= item.getAmount();
+					player.getInventory().clear(i);
+					
+				}
+				else
+				{
+					item.setAmount(item.getAmount() - amountneeded);
+					player.getInventory().setItem(i, item);
+					amountneeded = 0;
+				}
+				
+				if (amountneeded == 0) break;
+			}
+			player.updateInventory();
+		}
 
+	}
+	
+	// Material name snippet by TechGuard
+	private String getMaterialName(Material material){
+        String name = material.toString();
+        name = name.replaceAll("_", " ");
+        if(name.contains(" ")){
+            String[] split = name.split(" ");
+            for(int i=0; i < split.length; i++){
+                split[i] = split[i].substring(0, 1).toUpperCase()+split[i].substring(1).toLowerCase();
+            }
+            name = "";
+            for(String s : split){
+                name += " "+s;
+            }
+            name = name.substring(1);
+        } else {
+            name = name.substring(0, 1).toUpperCase()+name.substring(1).toLowerCase();
+        }
+        return name;
+	}
 }

@@ -3,6 +3,8 @@ package com.matejdro.bukkit.jail;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import com.iConomy.iConomy;
+
 public enum Setting {
 	
 	SelectionTool("SelectionTool", 268),
@@ -53,6 +55,7 @@ public enum Setting {
 	EnablePaying("JailPay.EnableJailPay", false),
 	PricePerMinute("JailPay.PricePerMinute", 10),
 	PriceForInfiniteJail("JailPay.PriceForInfiniteJail", 9999),
+	JailPayCurrency("JailPay.Currency", 0),
 	
 	//Guards
 	GuardHealth("Guards.GuardHealth", 20),
@@ -73,6 +76,8 @@ public enum Setting {
 	MessageJail("Messages.MessageJail", "§cYou have been jailed!"),
 	MessageJailReason("Messages.MessageJailReason", "§cYou have been jailed! Reason: <Reason>"),
 	MessageUnJail("Messages.MessageUnJail", "§2You have been released! Please respect server rules."),
+	MessagePlayerNotJailed("Messages.PlayerNotJailed", "That player is not jailed!"),
+	MessageYouNotJailed("Messages.PlayerNotJailed", "You are not jailed!"),
 	MessageBlockDestroyedNoPenalty("Messages.BlockDestroyedNoPenalty", "§cDo not destroy The Jail!"),
 	MessageBlockDestroyedPenalty("Messages.BlockDestroyedPenalty", "§cDo not destroy The Jail! You have just earned additional 15 minutes in jail!"),
 	MessageEscapeNoPenalty("Messages.MessageEscapeNoPenalty", "§cDo not try to escape out of Jail!"),
@@ -85,8 +90,17 @@ public enum Setting {
 	MessageMute("Messages.MessageMuted", "Stop chatting and quietly wait for the end of your sentence!"),
 	MessagePreventedInteractionNoPenalty("Messages.PreventedInteractionNoPenalty", "Don't do that in Jail!"),
 	MessagePreventedInteractionPenalty("Messages.PreventedInteractionPenalty", "Don't do that in Jail!  You have just earned additional 10 minutes in jail!"),
-	MessageAFKKick("Messages.MessageAFKKick", "Do not be AFK in jail!");
-	
+	MessageAFKKick("Messages.MessageAFKKick", "Do not be AFK in jail!"),
+	MessageJailPayAmountForever("Message.MessageJailPayAmountForever", "To get out of this mess, you will have to pay <Amount>."),
+	MessageJailPayCannotPay("Mesasge.JailPayCannotPay", "Sorry, money won't help you this time."),
+	MessageJailPayCannotPayHim("Mesasge.JailPayCannotPayHim", "Sorry, money won't help him this time."),
+	MessageJailPayNotEnoughMoney("Message.JailPayNotEnoughMoney", "You don't have that much money!"),
+	MessageJailPayNotEnoughMoneySelected("Message.JailPayNotEnoughMoneySelected", "That won't be enough for your sentence!"),
+	MessageJailPayCost("Message.JailPayCost", "1 minute of your sentence will cost you <MinutePrice>. That means that cost for releasing you out of the jail is <WholePrice>."),
+	MessageJailPayPaidReleased("Message.JailPayPaidReleased", "You have just payed <Amount> and saved yourself from the jail!"),
+	MessageJailPayPaidReleasedHim("Message.JailPayPaidReleasedHim", "You have just payed <Amount> and saved <Prisoner> from the jail!"),
+	MessageJailPayPaidLoweredTime("Message.JailPayLoweredTime", "You have just payed <Amount> and lowered your sentence to <NewTime> minutes!"),
+	MessageJailPayPaidLoweredTimeHim("Message.JailPayLoweredTimeHim", "You have just payed <Amount> and lowered <Prisoner>'s sentence to <NewTime> minutes!");
 	private String name;
 	private Object def;
 	

@@ -61,7 +61,7 @@ public class Jail extends JavaPlugin {
 	public static HashMap<Wolf, JailPrisoner> guards = new HashMap<Wolf, JailPrisoner>();
 	public static HashMap<Player, Boolean> jailStickToggle = new HashMap<Player, Boolean>();
 	private Timer timer;
-	private int UpdateTime;
+	private int UpdateTime = 1;
 	
 	public static Jail instance;
 	
