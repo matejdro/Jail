@@ -3,8 +3,6 @@ package com.matejdro.bukkit.jail;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import com.iConomy.iConomy;
-
 public enum Setting {
 	
 	SelectionTool("SelectionTool", 268),

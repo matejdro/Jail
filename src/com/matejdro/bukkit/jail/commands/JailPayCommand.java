@@ -7,8 +7,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
 import com.iConomy.iConomy;
-import com.iConomy.system.Account;
-import com.iConomy.system.Holdings;
 import com.matejdro.bukkit.jail.InputOutput;
 import com.matejdro.bukkit.jail.Jail;
 import com.matejdro.bukkit.jail.JailPrisoner;
@@ -258,7 +256,6 @@ public class JailPayCommand extends BaseCommand {
 				
 				if (amountneeded == 0) break;
 			}
-			player.updateInventory();
 		}
 
 	}
