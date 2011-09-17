@@ -165,7 +165,6 @@ public class Jail extends JavaPlugin {
 
 		
 		log.info("[Jail] " + getDescription().getFullName() + " loaded!");
-		log.info("[Jail]" + Util.isServer18());
 	}
 	
 	ActionListener action = new ActionListener ()
@@ -173,9 +172,9 @@ public class Jail extends JavaPlugin {
       public void actionPerformed (ActionEvent event)
       {
     	  if (Jail.timeUpdateRunning) return; 
+		  Jail.timeUpdateRunning = true;
     	  if (UpdateTime == 0)
     	  {
-    		  Jail.timeUpdateRunning = true;
     		  getServer().getScheduler().scheduleSyncDelayedTask(Jail.instance, new Runnable() {
 
     			    public void run() {
@@ -194,17 +193,19 @@ public class Jail extends JavaPlugin {
   	        					PrisonerManager.UnJail(prisoner, player);
 	    	        		  }
     	    	    		  
-    	    	    		  if (player != null && prisoner.getJail().getSettings().getDouble(Setting.MaximumAFKTime) > 0.0)
+    	    	    		  if (player != null)
     	    	    		  {
-    	    	    			  prisoner.setAFKTime(prisoner.getAFKTime() + 1);
-    	    	    			  if (prisoner.getAFKTimeMinutes() > prisoner.getJail().getSettings().getDouble(Setting.MaximumAFKTime))
+    	    	    			  if (prisoner.getJail().getSettings().getDouble(Setting.MaximumAFKTime) > 0.0)
     	    	    			  {
-    	    	    				  prisoner.setAFKTime(0);
-    	    	    				  player.kickPlayer(prisoner.getJail().getSettings().getString(Setting.MessageAFKKick));
+    	    	    				  prisoner.setAFKTime(prisoner.getAFKTime() + 1);
+        	    	    			  if (prisoner.getAFKTimeMinutes() > prisoner.getJail().getSettings().getDouble(Setting.MaximumAFKTime))
+        	    	    			  {
+        	    	    				  prisoner.setAFKTime(0);
+        	    	    				  player.kickPlayer(prisoner.getJail().getSettings().getString(Setting.MessageAFKKick));
+        	    	    			  }
     	    	    			  }
     	    	    		  }
     			    }
-    	    	    	Jail.timeUpdateRunning = false;
     			    }
     			    
     			}, 1L);
@@ -221,6 +222,25 @@ public class Jail extends JavaPlugin {
     			  UpdateTime = 0;
     		  }
     	  }
+    	  
+    	  if (Util.isServer18())
+		  {
+    		  for (JailPrisoner prisoner : prisoners.values())
+	    	  {
+    			  Player player = getServer().getPlayer(prisoner.getName());
+    			  if (player == null) continue;
+    			  if (!prisoner.getJail().getSettings().getBoolean(Setting.EnableFoodControl)) continue;
+	    		  int minfood = prisoner.getJail().getSettings().getInt(Setting.FoodControlMinimumFood);
+				  int maxfood = prisoner.getJail().getSettings().getInt(Setting.FoodControlMaximumFood);
+				  if (player.getFoodLevel() <  minfood || player.getFoodLevel() > maxfood)
+				  {
+					  player.setFoodLevel((minfood + maxfood) / 2);
+				  }
+		  	}
+		  }
+    	  
+    	Jail.timeUpdateRunning = false;
+
       }
     };
     

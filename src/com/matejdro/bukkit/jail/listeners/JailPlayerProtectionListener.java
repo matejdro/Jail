@@ -1,5 +1,6 @@
 package com.matejdro.bukkit.jail.listeners;
 
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -85,7 +86,7 @@ public class JailPlayerProtectionListener extends PlayerListener {
 				if (!jail.getSettings().getBoolean(Setting.EnablePlayerMoveProtection)) return;
 				if (!jail.isInside(event.getTo()))
 				{
-					if (jail.getSettings().getString(Setting.PlayerMoveProtectionAction).equals("guards"))
+					if (jail.getSettings().getString(Setting.PlayerMoveProtectionAction).equals("guards") && (!Util.isServer18() || event.getPlayer().getGameMode() == GameMode.SURVIVAL))
 					{
 						if (prisoner.getGuards().size() > 0)
 						{

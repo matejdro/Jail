@@ -47,6 +47,9 @@ public enum Setting {
 	PrisonersPermissionsGroups("Protections.PrisonersPermissionsGroups", Arrays.asList("prisoners")),
 	RestorePermissionsToEscapedPrisoners("Protections.RestorePermissionsToEsacpedPrisoners", true),
 	MaximumAFKTime("Protections.MaximumAFKTime", 5.0),
+	EnableFoodControl("Protections.EnableFoodControl", true),
+	FoodControlMinimumFood("Protections.FoodControlMinimumFood", 2),
+	FoodControlMaximumFood("Protections.FoodControlMaximumFood", 5),
 
 	
 	//JailPay
