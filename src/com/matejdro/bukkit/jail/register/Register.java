@@ -1,4 +1,4 @@
-package com.matejdro.register;
+package com.matejdro.bukkit.jail.register;
 
 import java.util.logging.Level;
 
@@ -6,7 +6,7 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.config.Configuration;
 
-import com.matejdro.register.payment.Methods;
+import com.matejdro.bukkit.jail.register.payment.Methods;
 
 public class Register extends JavaPlugin {
     

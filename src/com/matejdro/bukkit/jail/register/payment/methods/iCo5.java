@@ -1,11 +1,11 @@
-package com.matejdro.register.payment.methods;
+package com.matejdro.bukkit.jail.register.payment.methods;
 
 import com.iConomy.iConomy;
 import com.iConomy.system.Account;
 import com.iConomy.system.BankAccount;
 import com.iConomy.system.Holdings;
 import com.iConomy.util.Constants;
-import com.matejdro.register.payment.Method;
+import com.matejdro.bukkit.jail.register.payment.Method;
 
 
 import org.bukkit.plugin.Plugin;

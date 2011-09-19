@@ -11,7 +11,7 @@ import com.matejdro.bukkit.jail.JailPrisoner;
 import com.matejdro.bukkit.jail.JailZone;
 import com.matejdro.bukkit.jail.Setting;
 import com.matejdro.bukkit.jail.Util;
-import com.matejdro.register.payment.Methods;
+import com.matejdro.bukkit.jail.register.payment.Methods;
 
 public class JailPayCommand extends BaseCommand {
 	

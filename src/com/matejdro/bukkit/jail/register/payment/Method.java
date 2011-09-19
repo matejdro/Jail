@@ -1,4 +1,4 @@
-package com.matejdro.register.payment;
+package com.matejdro.bukkit.jail.register.payment;
 
 import org.bukkit.plugin.Plugin;
 

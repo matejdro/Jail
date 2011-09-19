@@ -1,6 +1,6 @@
-package com.matejdro.register.payment.methods;
+package com.matejdro.bukkit.jail.register.payment.methods;
 
-import com.matejdro.register.payment.Method;
+import com.matejdro.bukkit.jail.register.payment.Method;
 
 import me.ashtheking.currency.Currency;
 import me.ashtheking.currency.CurrencyList;

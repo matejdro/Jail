@@ -1,10 +1,11 @@
-package com.matejdro.register.payment;
+package com.matejdro.bukkit.jail.register.payment;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
+
 
 /**
  * The <code>Methods</code> initializes Methods that utilize the Method interface
@@ -39,13 +40,13 @@ public class Methods {
 	 * Implement all methods along with their respective name & class.
 	 */
 	private static void _init() {
-		addMethod("iConomy", new com.matejdro.register.payment.methods.iCo6());
-		addMethod("iConomy", new com.matejdro.register.payment.methods.iCo5());
-		addMethod("iConomy", new com.matejdro.register.payment.methods.iCo4());
-		addMethod("BOSEconomy", new com.matejdro.register.payment.methods.BOSE6());
-		addMethod("BOSEconomy", new com.matejdro.register.payment.methods.BOSE7());
-		addMethod("Essentials", new com.matejdro.register.payment.methods.EE17());
-		addMethod("Currency", new com.matejdro.register.payment.methods.MCUR());
+		addMethod("iConomy", new com.matejdro.bukkit.jail.register.payment.methods.iCo6());
+		addMethod("iConomy", new com.matejdro.bukkit.jail.register.payment.methods.iCo5());
+		addMethod("iConomy", new com.matejdro.bukkit.jail.register.payment.methods.iCo4());
+		addMethod("BOSEconomy", new com.matejdro.bukkit.jail.register.payment.methods.BOSE6());
+		addMethod("BOSEconomy", new com.matejdro.bukkit.jail.register.payment.methods.BOSE7());
+		addMethod("Essentials", new com.matejdro.bukkit.jail.register.payment.methods.EE17());
+		addMethod("Currency", new com.matejdro.bukkit.jail.register.payment.methods.MCUR());
 		Dependencies.add("MultiCurrency");
 	}
 	
