@@ -75,7 +75,7 @@ commands:
         permission: jail.command.jaillistcells
     jailstick:
         description: Toggle jailstick feature.
-        permission: jail.command.jailstick
+        permission: jail.usercmd.jailstick
     jailcreatewe:
         description: Create a new jail zone based on existing world guard region.
         permission: jail.command.jailcreatewe
@@ -114,11 +114,14 @@ permissions:
             jail.command.jailstop: true
             jail.command.jailstick: true
             jail.command.jailset: true
+            jail.command.jailcreatewe: true
+            jail.command.jaildeletecell: true
     jail.usercmd.*:
         description: access to all user commands
         children:
             jail.usercmd.jailstatus: true
             jail.usercmd.jailpay: true
+            jail.usercmd.jailstick
     jail.command.jail:
         default: op
     jail.command.jailcreate:
@@ -159,9 +162,15 @@ permissions:
         default: op
     jail.command.jailset:
         default: op
+    jail.command.jailcreatewe:
+        default: op
+    jail.command.jaildeletecell:
+        default: op
     jail.usercmd.jailstatus:
         default: true
     jail.usercmd.jailpay:
+        default: true
+    jail.usercmd.jailstick:
         default: true
     jail.modifyjail:
         default: op
