@@ -121,7 +121,7 @@ permissions:
         children:
             jail.usercmd.jailstatus: true
             jail.usercmd.jailpay: true
-            jail.usercmd.jailstick
+            jail.usercmd.jailstick: true
     jail.command.jail:
         default: op
     jail.command.jailcreate:
