@@ -705,7 +705,7 @@ public class JailPrisoner {
 			Jail.guards.remove(e);
 		}
 			
-		if (jail.getSettings().getBoolean(Setting.EnableChangingPermissions) && jail.getSettings().getBoolean(Setting.RestorePermissionsToEscapedPrisoners))
+		if (getJail() != null && jail.getSettings().getBoolean(Setting.EnableChangingPermissions) && jail.getSettings().getBoolean(Setting.RestorePermissionsToEscapedPrisoners))
 		{
 			Util.setPermissionsGroups(getName(), getOldPermissionsString());
 		}

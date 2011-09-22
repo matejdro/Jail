@@ -181,7 +181,7 @@ public class Jail extends JavaPlugin {
     	    	    	  for (JailPrisoner prisoner : prisoners.values())
     	    	    	  {
     	    	    		  Player player = getServer().getPlayer(prisoner.getName());
-    	    	    		  if (prisoner.getRemainingTime() > 0 && (player != null || prisoner.getJail().getSettings().getBoolean(Setting.CountdownTimeWhenOffline)))
+    	    	    		  if (prisoner.getRemainingTime() > 0 && (player != null || (prisoner.getJail() != null && prisoner.getJail().getSettings().getBoolean(Setting.CountdownTimeWhenOffline))))
     	    	    		  {
     	    	    			  	  prisoner.setRemainingTime(prisoner.getRemainingTime() - 1);
     	    	        			  InputOutput.UpdatePrisoner(prisoner);   				  
