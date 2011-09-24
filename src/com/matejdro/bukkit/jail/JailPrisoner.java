@@ -18,8 +18,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
 
-import com.platymuus.bukkit.permissions.Group;
-
 
 /**
  * JailPrisoner class stores data about specific prisoner and allows you to modify status of the specified prisoner.
@@ -343,11 +341,9 @@ public class JailPrisoner {
 	 * Sets list of permission groups that will be given to the player after he is released
 	 * @param permissions List of com.platymuus.bukkit.permissions.Group
 	 */
-	public void setOldPermissions(List<Group> permissions)
+	public void setOldPermissions(List<String> permissions)
 	{
-		oldPermissions = new ArrayList<String>();
-		for (Group g : permissions)
-			oldPermissions.add(g.getName());
+		oldPermissions = permissions;
 	}
 	
 	/**
@@ -707,7 +703,7 @@ public class JailPrisoner {
 			
 		if (getJail() != null && jail.getSettings().getBoolean(Setting.EnableChangingPermissions) && jail.getSettings().getBoolean(Setting.RestorePermissionsToEscapedPrisoners))
 		{
-			Util.setPermissionsGroups(getName(), getOldPermissionsString());
+			Util.setPermissionsGroups(getName(), getOldPermissions());
 		}
 
 	}

@@ -64,7 +64,7 @@ commands:
         usage: /jailset [player/jail/cell name] [property name] (property value)
     jailpay:
         description: Pay money to be released early.
-        permission: jail.usercmd.jail
+        permission: jail.usercmd.jailpay
         usage: /jailpay (amount) (prisoner name)
     jaildeletecells:
         description: Delete all cells from specified jail.

@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -19,6 +20,10 @@ import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.Plugin;
 import org.getspout.spoutapi.SpoutManager;
+
+import ru.tehkode.permissions.PermissionManager;
+import ru.tehkode.permissions.PermissionUser;
+import ru.tehkode.permissions.bukkit.PermissionsEx;
 
 import com.nijikokun.bukkit.Permissions.Permissions;
 import com.platymuus.bukkit.permissions.Group;
@@ -125,38 +130,58 @@ public class Util {
 				SpoutManager.getAppearanceManager().resetGlobalSkin(player);
 		}
 	}
-    
-    public static void setPermissionsGroups(String playerName, ArrayList<String> groups)
-    {			
+        
+    public static void setPermissionsGroups(String playerName, List<String> groups)
+    {
+    	Plugin plugin = Jail.instance.getServer().getPluginManager().getPlugin("PermissionsEx");
+    	if (plugin != null)
+    	{
+    		PermissionManager pex = PermissionsEx.getPermissionManager();
+    		PermissionUser user = pex.getUser(playerName);
+    		
+    		user.setGroups(groups.toArray(new String[0]));
+    		return;
+    	}
+    	
+    	plugin = Jail.instance.getServer().getPluginManager().getPlugin("PermissionsBukkit");
+		if (plugin == null) 
+		{
+			Jail.log.info("[Jail]You cannot use permission changing feature without PermissionsBukkit or PermissionsEx plugin!");
+			return;
+		}
+		
 		String gstring = "";
 		for (String s : groups)
 			gstring += s + ",";
 		
-		setPermissionsGroups(playerName, gstring);
-    }
-    
-    public static void setPermissionsGroups(String playerName, String groups)
-    {
-    	Plugin plugin = Jail.instance.getServer().getPluginManager().getPlugin("PermissionsBukkit");
-		if (plugin == null) 
-		{
-			Jail.log.info("[Jail]You cannot use permission changing feature without PermissionsBukkit plugin!");
-			return;
-		}
-		
 		CraftServer cs = (CraftServer) Jail.instance.getServer();
 		CommandSender coms = new ConsoleCommandSender(Jail.instance.getServer());
-		cs.dispatchCommand(coms,"permissions player setgroup " + playerName + " " + groups );
+		cs.dispatchCommand(coms,"permissions player setgroup " + playerName + " " + gstring );
 		
     }
     
-    public static List<Group> getPermissionsGroups(String playerName)
+    public static List<String> getPermissionsGroups(String playerName)
     {
-    	Plugin plugin = Jail.instance.getServer().getPluginManager().getPlugin("PermissionsBukkit");
-		if (plugin == null) return new ArrayList<Group>();
+    	Plugin plugin = Jail.instance.getServer().getPluginManager().getPlugin("PermissionsEx");
+    	if (plugin != null)
+    	{
+    		PermissionManager pex = PermissionsEx.getPermissionManager();
+    		PermissionUser user = pex.getUser(playerName);
+    		
+    		return Arrays.asList(user.getGroupsNames());
+    	}
+
+    	
+    	plugin = Jail.instance.getServer().getPluginManager().getPlugin("PermissionsBukkit");
+		if (plugin == null) return new ArrayList<String>();
 			
 		PermissionsPlugin pb = (PermissionsPlugin) plugin;
-		return pb.getPlayerInfo(playerName).getGroups();
+		
+		List<String> groups = new ArrayList<String>();
+		
+		for (Group g : pb.getPlayerInfo(playerName).getGroups())
+			groups.add(g.getName());
+		return groups;
     }
     
     public static Boolean isServer18()

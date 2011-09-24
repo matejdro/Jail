@@ -30,7 +30,7 @@ public enum Setting {
 	//Protections
 	EnableBlockDestroyProtection("Protections.EnableBlockDestroyProtection", true),
 	BlockDestroyPenalty("Protections.BlockDestroyPenalty", 15),
-	EnableBlockPlaceProtection("Protectionss.EnableBlockPlaceProtection", true),
+	EnableBlockPlaceProtection("Protections.EnableBlockPlaceProtection", true),
 	BlockPlacePenalty("Protections.BlockPlacePenalty", 10),
 	BlockProtectionExceptions("Protections.BlockProtectionExceptions", Arrays.asList(new String[]{"59"})),
 	EnablePlayerMoveProtection("Protections.EnablePlayerMoveProtection", true),

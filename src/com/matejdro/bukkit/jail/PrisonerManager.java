@@ -261,7 +261,7 @@ public class PrisonerManager {
 		
 		if (jail.getSettings().getBoolean(Setting.EnableChangingPermissions) && !jail.getSettings().getBoolean(Setting.RestorePermissionsToEscapedPrisoners))
 		{
-			Util.setPermissionsGroups(player.getName(), prisoner.getOldPermissionsString());
+			Util.setPermissionsGroups(player.getName(), prisoner.getOldPermissions());
 		}
 		
 		player.setSleepingIgnored(false);
