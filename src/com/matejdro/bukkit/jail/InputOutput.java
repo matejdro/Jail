@@ -210,7 +210,6 @@ public class InputOutput {
 			int count = 0;
 			while (set.next())
 			{
-				count++;
 				String jailname = set.getString("JailName");
 				String teleport = set.getString("Teleport");
 				String sign = set.getString("Sign");
@@ -224,15 +223,29 @@ public class InputOutput {
 					player = "";
 				
 				JailCell cell = new JailCell(jailname,  player, name);
+				cell.setTeleportLocation(teleport);
+
+				if (!Jail.zones.containsKey(jailname))
+				{
+					final JailCell fcell = cell;
+					Jail.instance.getServer().getScheduler().scheduleSyncDelayedTask(Jail.instance, new Runnable() {
+
+					    public void run() {
+					        fcell.delete();
+					    }
+					}, 1);
+					continue;
+				}
+				
 				cell.setChest(chest);
 				cell.setSecondChest(secondchest);
-				cell.setTeleportLocation(teleport);
 
 				for (String s : sign.split(";"))
 					cell.addSign(s);
 				
 				cell.getJail().getCellList().add(cell);
-				
+				count++;
+						
 				if (prisoner != null)
 					prisoner.setCell(cell);
 			}

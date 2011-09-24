@@ -69,7 +69,7 @@ public class JailCell {
 	 */
 	public Location getTeleportLocation()
 	{
-		if (teleport.getWorld() == null) teleport.setWorld(getJail().getTeleportLocation().getWorld());
+		if (teleport.getWorld() == null && getJail() != null) teleport.setWorld(getJail().getTeleportLocation().getWorld());
 		return teleport;
 	}
 	
@@ -92,7 +92,8 @@ public class JailCell {
 		if (input == null || input.trim().equals("")) return;
 		if (oldteleport == null) oldteleport = teleport;
 		String[] str = input.split(",");
-		Location loc = new Location(getJail().getTeleportLocation().getWorld(), Double.parseDouble(str[0]), Double.parseDouble(str[1]),Double.parseDouble(str[2]));
+		
+		Location loc = new Location(getJail() != null ? getJail().getTeleportLocation().getWorld() : null, Double.parseDouble(str[0]), Double.parseDouble(str[1]),Double.parseDouble(str[2]));
 		teleport = loc;
 	}
 		
