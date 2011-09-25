@@ -11,7 +11,7 @@ public class JailStickCommand extends BaseCommand {
 	{
 		needPlayer = true;
 		adminCommand = true;
-		permission = "jail.command.jailstick";
+		permission = "jail.usercmd.jailstick";
 	}
 	
 	public Boolean run(CommandSender sender, String[] args) {		

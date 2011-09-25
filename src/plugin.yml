@@ -1,6 +1,6 @@
 name: Jail
 main: com.matejdro.bukkit.jail.Jail
-version: 2.0.1
+version: 2.0.2
 description: Ban too harsh? Kick/mute/whatever not enough? Jail bad players!
 author: matejdro
 website: http://forums.bukkit.org/threads/admn-rpg-jail-v1-2-2-jail-bad-players-1060.1912/
@@ -156,8 +156,6 @@ permissions:
     jail.command.jailmute:
         default: op
     jail.command.jailstop:
-        default: op
-    jail.command.jailstick:
         default: op
     jail.command.jailset:
         default: op
