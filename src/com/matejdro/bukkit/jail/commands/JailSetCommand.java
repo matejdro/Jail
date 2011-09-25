@@ -11,7 +11,6 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 
 import com.matejdro.bukkit.jail.InputOutput;
 import com.matejdro.bukkit.jail.Jail;
@@ -20,14 +19,6 @@ import com.matejdro.bukkit.jail.JailPrisoner;
 import com.matejdro.bukkit.jail.JailZone;
 import com.matejdro.bukkit.jail.Setting;
 import com.matejdro.bukkit.jail.Util;
-import com.sk89q.worldedit.IncompleteRegionException;
-import com.sk89q.worldedit.LocalPlayer;
-import com.sk89q.worldedit.LocalSession;
-import com.sk89q.worldedit.Vector;
-import com.sk89q.worldedit.bukkit.BukkitPlayer;
-import com.sk89q.worldedit.bukkit.WorldEditPlugin;
-import com.sk89q.worldedit.regions.CuboidRegion;
-import com.sk89q.worldedit.regions.CuboidRegionSelector;
 
 public class JailSetCommand extends BaseCommand {
 	public static HashMap<String,SelectionPlayer> players = new HashMap<String,SelectionPlayer>();
@@ -37,7 +28,6 @@ public class JailSetCommand extends BaseCommand {
 		adminCommand = true;
 		permission = "jail.command.jailset";
 	}
-
 
 	public Boolean run(CommandSender sender, String[] args) {		
 		List<String> jailcommands = Arrays.asList(new String[]{"telepoint", "releasepoint", "corner1", "corner2", "manualjail", "worldedit"});
@@ -116,47 +106,15 @@ public class JailSetCommand extends BaseCommand {
 		}
 		else if (parameter.equals("worldedit"))
 		{
-			Plugin plugin = Jail.instance.getServer().getPluginManager().getPlugin("WorldEdit");
-			if (plugin != null)
-			{
-				WorldEditPlugin we = (WorldEditPlugin) plugin;
-				LocalPlayer player = new BukkitPlayer(we, we.getServerInterface(), (Player) sender);
-				LocalSession session = we.getWorldEdit().getSession(player);
-				if (!(session.getRegionSelector() instanceof CuboidRegionSelector))
-				{
-					Util.Message("Jail supports only cuboid regions!", sender);
-					return;
-				}
-				
-				CuboidRegionSelector selector = (CuboidRegionSelector) session.getRegionSelector();
-		
-				try {
-					CuboidRegion region = selector.getRegion();
+			
+			Block[] corners = Util.getWorldEditRegion((Player) sender);
+			if (corners == null) return;
+			
+			jail.setFirstCorner(corners[0].getLocation());
+			jail.setSecondCorner(corners[1].getLocation());
+			jail.update();
 
-					Vector v1 = region.getPos1();
-					Block b1 = ((Player) sender).getWorld().getBlockAt(v1.getBlockX(), v1.getBlockY(), v1.getBlockZ());
-					
-					Vector v2 = region.getPos2();
-					Block b2 = ((Player) sender).getWorld().getBlockAt(v2.getBlockX(), v2.getBlockY(), v2.getBlockZ());
-					
-					jail.setFirstCorner(b1.getLocation());
-					jail.setSecondCorner(b2.getLocation());
-					
-					jail.update();
-					
-					Util.Message("Jail cuboid changed!", sender);
-
-					
-
-				} catch (IncompleteRegionException e) {
-					Util.Message("WorldEdit region is not fully selected!", sender);
-					return;
-				}
-			}
-			else
-			{
-				Util.Message("WorldEdit is not installed!", sender);
-			}
+			Util.Message("Jail cuboid changed!", sender);
 		}
 	}
 	
