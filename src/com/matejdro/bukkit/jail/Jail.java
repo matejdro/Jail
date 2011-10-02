@@ -222,8 +222,6 @@ public class Jail extends JavaPlugin {
     		  }
     	  }
     	  
-    	  if (Util.isServer18())
-		  {
     		  for (JailPrisoner prisoner : prisoners.values())
 	    	  {
     			  Player player = getServer().getPlayer(prisoner.getName());
@@ -236,7 +234,6 @@ public class Jail extends JavaPlugin {
 					  player.setFoodLevel((minfood + maxfood) / 2);
 				  }
 		  	}
-		  }
     	  
     	Jail.timeUpdateRunning = false;
 

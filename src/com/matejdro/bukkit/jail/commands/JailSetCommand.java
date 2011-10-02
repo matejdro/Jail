@@ -11,6 +11,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 
 import com.matejdro.bukkit.jail.InputOutput;
 import com.matejdro.bukkit.jail.Jail;
@@ -19,6 +20,7 @@ import com.matejdro.bukkit.jail.JailPrisoner;
 import com.matejdro.bukkit.jail.JailZone;
 import com.matejdro.bukkit.jail.Setting;
 import com.matejdro.bukkit.jail.Util;
+import com.matejdro.bukkit.jail.WorldEditHandler;
 
 public class JailSetCommand extends BaseCommand {
 	public static HashMap<String,SelectionPlayer> players = new HashMap<String,SelectionPlayer>();
@@ -106,8 +108,13 @@ public class JailSetCommand extends BaseCommand {
 		}
 		else if (parameter.equals("worldedit"))
 		{
-			
-			Block[] corners = Util.getWorldEditRegion((Player) sender);
+			Plugin plugin = Jail.instance.getServer().getPluginManager().getPlugin("WorldEdit");
+			if (plugin == null)
+			{
+				Util.Message("WorldEdit is not installed!", sender);
+				return;
+			}
+			Block[] corners = WorldEditHandler.getWorldEditRegion((Player) sender);
 			if (corners == null) return;
 			
 			jail.setFirstCorner(corners[0].getLocation());

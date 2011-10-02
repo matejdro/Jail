@@ -3,10 +3,12 @@ package com.matejdro.bukkit.jail.commands;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 
 import com.matejdro.bukkit.jail.Jail;
 import com.matejdro.bukkit.jail.JailZoneCreation;
 import com.matejdro.bukkit.jail.Util;
+import com.matejdro.bukkit.jail.WorldEditHandler;
 
 public class JailCreateWeCommand extends BaseCommand {	
 	public JailCreateWeCommand()
@@ -28,8 +30,15 @@ public class JailCreateWeCommand extends BaseCommand {
 			return true;
 		}
 			
-		Block[] corners = Util.getWorldEditRegion((Player) sender);
+		Plugin plugin = Jail.instance.getServer().getPluginManager().getPlugin("WorldEdit");
+		if (plugin == null)
+		{
+			Util.Message("WorldEdit is not installed!", sender);
+			return true;
+		}
+		Block[] corners = WorldEditHandler.getWorldEditRegion((Player) sender);
 		if (corners == null) return true;
+
 		
 		JailZoneCreation.selectstart((Player) sender, args[0].toLowerCase());
 		JailZoneCreation.select((Player) sender, corners[0]);
