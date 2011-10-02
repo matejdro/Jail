@@ -45,7 +45,6 @@ import com.matejdro.bukkit.jail.listeners.JailEntityListener;
 import com.matejdro.bukkit.jail.listeners.JailPlayerListener;
 import com.matejdro.bukkit.jail.listeners.JailPlayerProtectionListener;
 import com.matejdro.bukkit.jail.listeners.JailSpoutListener;
-import com.matejdro.bukkit.jail.register.payment.Methods;
 
 public class Jail extends JavaPlugin {
 	public static Logger log = Logger.getLogger("Minecraft");
@@ -158,11 +157,7 @@ public class Jail extends JavaPlugin {
 		commands.put("jailstick", new JailStickCommand());
 		commands.put("jailcreatewe", new JailCreateWeCommand());
 		commands.put("jaildeletecell", new JailDeleteCellCommand());
-		
-		//Initialize register
-		Methods.setVersion(getDescription().getVersion());		
-		Methods.setMethod(getServer().getPluginManager());
-		
+				
 		log.info("[Jail] " + getDescription().getFullName() + " loaded!");
 	}
 	

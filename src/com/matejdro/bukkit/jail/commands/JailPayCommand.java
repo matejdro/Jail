@@ -4,6 +4,7 @@ import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
 
 import com.matejdro.bukkit.jail.InputOutput;
 import com.matejdro.bukkit.jail.Jail;
@@ -11,7 +12,8 @@ import com.matejdro.bukkit.jail.JailPrisoner;
 import com.matejdro.bukkit.jail.JailZone;
 import com.matejdro.bukkit.jail.Setting;
 import com.matejdro.bukkit.jail.Util;
-import com.matejdro.bukkit.jail.register.payment.Methods;
+import com.nijikokun.register.Register;
+import com.nijikokun.register.payment.Methods;
 
 public class JailPayCommand extends BaseCommand {
 	
@@ -25,19 +27,24 @@ public class JailPayCommand extends BaseCommand {
 
 	public Boolean run(CommandSender sender, String[] args) {		
 		Player player = (Player) sender;
-				
+		
+		JailPrisoner prisoner = Jail.prisoners.get(((Player) sender).getName().toLowerCase());
+		if (prisoner == null || !prisoner.getJail()..getSettings().getBoolean(Setting.EnablePaying)) 
+		{
+			return false;
+		}
+		
 		if (args.length < 1)
 		{
-			JailPrisoner prisoner = Jail.prisoners.get(((Player) sender).getName().toLowerCase());
 			if (prisoner == null) 
 			{
 				Util.Message(InputOutput.global.getString(Setting.MessageYouNotJailed.getString()), sender);
 				return true;
 			}
 			JailZone jail = prisoner.getJail();
-			if (jail.getSettings().getBoolean(Setting.EnablePaying) && jail.getSettings().getDouble(Setting.PriceForInfiniteJail) > 0  && prisoner.getRemainingTime() < 0)
+			if (jail.getSettings().getDouble(Setting.PriceForInfiniteJail) > 0  && prisoner.getRemainingTime() < 0)
 				Util.Message(jail.getSettings().getString(Setting.MessageJailPayAmountForever).replace("<Amount>", format(jail.getSettings().getDouble(Setting.PriceForInfiniteJail), prisoner)), sender);
-			else if (!jail.getSettings().getBoolean(Setting.EnablePaying) || prisoner.getRemainingTime() < 0 || jail.getSettings().getDouble(Setting.PriceForInfiniteJail) == 0)
+			else if (prisoner.getRemainingTime() < 0 || jail.getSettings().getDouble(Setting.PriceForInfiniteJail) == 0)
 				Util.Message(jail.getSettings().getString(Setting.MessageJailPayCannotPay), sender);
 			else
 			{
@@ -110,9 +117,9 @@ public class JailPayCommand extends BaseCommand {
 				if (payment >= releasebill)
 				{
 					if (args.length > 1)
-						Util.Message(jail.getSettings().getString(Setting.MessageJailPayPaidReleasedHim).replace("<Amount>", format(jail.getSettings().getDouble(Setting.PriceForInfiniteJail), prisoner)).replace("<Prisoner>", prisoner.getName()), sender);
+						Util.Message(jail.getSettings().getString(Setting.MessageJailPayPaidReleasedHim).replace("<Amount>", format(releasebill, prisoner)).replace("<Prisoner>", prisoner.getName()), sender);
 					else
-						Util.Message(jail.getSettings().getString(Setting.MessageJailPayPaidReleased).replace("<Amount>", format(jail.getSettings().getDouble(Setting.PriceForInfiniteJail), prisoner)), sender);
+						Util.Message(jail.getSettings().getString(Setting.MessageJailPayPaidReleased).replace("<Amount>",  format(releasebill, prisoner)), sender);
 					pay(releasebill, prisoner, player);
 					prisoner.release();
 				}
@@ -151,6 +158,13 @@ public class JailPayCommand extends BaseCommand {
 		int currency = prisoner.getJail().getSettings().getInt(Setting.JailPayCurrency);
 		if (currency == 0)
 		{
+			Plugin plugin = Jail.instance.getServer().getPluginManager().getPlugin("Register");
+			if (plugin == null)
+			{
+				Jail.log.info("[Jail] You must have Register plugin installed to use JailPayCurrency = 0! See http://dev.bukkit.org/server-mods/register/");
+				return String.valueOf(amount);
+			}
+			
 			if (Methods.getMethod() != null)
 			{
 				return Methods.getMethod().format(amount);
@@ -172,7 +186,15 @@ public class JailPayCommand extends BaseCommand {
 		int currency = prisoner.getJail().getSettings().getInt(Setting.JailPayCurrency);
 		if (currency == 0)
 		{
-			if (Methods.getMethod().getPlugin() != null)
+			Plugin plugin = Jail.instance.getServer().getPluginManager().getPlugin("Register");
+			if (plugin == null)
+			{
+				Jail.log.info("[Jail] You must have Register plugin installed to use JailPayCurrency = 0! See http://dev.bukkit.org/server-mods/register/");
+				return false;
+			}
+
+			
+			if (Methods.getMethod() != null)
 			{
 				return Methods.getMethod().getAccount(player.getName()).hasEnough(amount);
 			}
@@ -199,7 +221,15 @@ public class JailPayCommand extends BaseCommand {
 		int currency = prisoner.getJail().getSettings().getInt(Setting.JailPayCurrency);
 		if (currency == 0)
 		{
-			if (Methods.getMethod().getPlugin() != null)
+			Plugin plugin = Jail.instance.getServer().getPluginManager().getPlugin("Register");
+			if (plugin == null)
+			{
+				Jail.log.info("[Jail] You must have Register plugin installed to use JailPayCurrency = 0! See http://dev.bukkit.org/server-mods/register/");
+				return;
+			}
+
+			
+			if (Methods.getMethod() != null)
 			{
 				Methods.getMethod().getAccount(player.getName()).subtract(amount);
 			}
