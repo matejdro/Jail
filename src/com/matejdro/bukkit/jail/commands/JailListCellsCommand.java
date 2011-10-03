@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import com.matejdro.bukkit.jail.Jail;
 import com.matejdro.bukkit.jail.JailCell;
@@ -50,6 +51,16 @@ public class JailListCellsCommand extends BaseCommand {
 				}
 			}
 			Util.Message(message, sender);
+			
+			if (sender instanceof Player)
+			{
+				JailCell cell = jail.getNearestCell(((Player) sender).getLocation());
+				if (cell != null || cell.getName() != null || !cell.getName().trim().equals(""))
+				{
+					Util.Message("Nearest cell: " + cell.getName(), sender);
+				}
+				
+			}
 			return true;
 			
 			

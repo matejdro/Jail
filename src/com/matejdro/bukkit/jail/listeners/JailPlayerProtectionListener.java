@@ -86,7 +86,7 @@ public class JailPlayerProtectionListener extends PlayerListener {
 				if (!jail.getSettings().getBoolean(Setting.EnablePlayerMoveProtection)) return;
 				if (!jail.isInside(event.getTo()))
 				{
-					if (jail.getSettings().getString(Setting.PlayerMoveProtectionAction).equals("guards") && (!Util.isServer18() || event.getPlayer().getGameMode() == GameMode.SURVIVAL))
+					if (jail.getSettings().getString(Setting.PlayerMoveProtectionAction).equals("guards") && prisoner.canGuardsBeSpawned() && (!Util.isServer18() || event.getPlayer().getGameMode() == GameMode.SURVIVAL))
 					{
 						if (prisoner.getGuards().size() > 0)
 						{
@@ -116,6 +116,12 @@ public class JailPlayerProtectionListener extends PlayerListener {
 					}
 					else 
 					{
+						if (!prisoner.canGuardsBeSpawned()) 
+						{
+							Jail.log.warning("[Jail]Unable to spawn guards for prisoner " + prisoner.getName() + "! Is this area protected against mobs?");
+							prisoner.setGuardCanBeSpawned(true);
+						}
+						
 						if (jail.getSettings().getInt(Setting.PlayerMoveProtectionPenalty) > 0  && prisoner.getRemainingTime() > 0)
 						{
 							

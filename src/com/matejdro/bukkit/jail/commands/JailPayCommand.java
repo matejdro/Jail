@@ -29,7 +29,7 @@ public class JailPayCommand extends BaseCommand {
 		Player player = (Player) sender;
 		
 		JailPrisoner prisoner = Jail.prisoners.get(((Player) sender).getName().toLowerCase());
-		if (prisoner == null || !prisoner.getJail()..getSettings().getBoolean(Setting.EnablePaying)) 
+		if (prisoner == null || !prisoner.getJail().getSettings().getBoolean(Setting.EnablePaying)) 
 		{
 			return false;
 		}
@@ -56,7 +56,6 @@ public class JailPayCommand extends BaseCommand {
 		}
 		else
 		{
-			JailPrisoner prisoner;
 			if (args.length > 1)
 			{
 				prisoner = Jail.prisoners.get(args[1].toLowerCase());

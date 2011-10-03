@@ -40,6 +40,7 @@ public class JailPrisoner {
 	private List<String> oldPermissions = new ArrayList<String>();
 	private String previousPositionWorld;
 	private Location previousPosition;
+	private boolean canSpawnGuards = true;
 	
 	public JailPrisoner()
 	{
@@ -406,11 +407,27 @@ public class JailPrisoner {
 
 	
 	/**
-	 * @return 
+	 * @return List of guards that belong to this prisoner
 	 */
 	public HashSet<Wolf> getGuards()
 	{
 		return guards;
+	}
+	
+	/**
+	 * @return Can you spawn guards to this prisoner? This will be false, if server is unable to spawn guards for example due to protection.
+	 */
+	public Boolean canGuardsBeSpawned()
+	{
+		return canSpawnGuards;
+	}
+	
+	/**
+	 * @param input Set this to false to skip guard spawning for this player and teleport him instead.
+	 */
+	public void setGuardCanBeSpawned(Boolean input)
+	{
+		canSpawnGuards = input;
 	}
 	
 	/**
@@ -486,6 +503,13 @@ public class JailPrisoner {
 			
 									
 			Wolf guard = (Wolf) location.getWorld().spawnCreature(spawn, CreatureType.WOLF);
+						
+			if (!(guard.getWorld().getEntities().contains(guard)))
+			{
+				canSpawnGuards=false;
+				return;
+			}
+			
 			guard.setHealth(getJail().getSettings().getInt(Setting.GuardHealth));
 			guard.setAngry(true);
 			guard.setSitting(false);
@@ -494,7 +518,6 @@ public class JailPrisoner {
 			getGuards().add(guard);
 			Jail.guards.put(guard, this);
 		}
-
 	}
 	
 	/**
