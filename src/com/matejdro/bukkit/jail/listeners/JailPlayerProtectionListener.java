@@ -118,7 +118,7 @@ public class JailPlayerProtectionListener extends PlayerListener {
 					{
 						if (!prisoner.canGuardsBeSpawned()) 
 						{
-							Jail.log.warning("[Jail]Unable to spawn guards for prisoner " + prisoner.getName() + "! Is this area protected against mobs?");
+							Jail.log.warning("[Jail] Unable to spawn guards for prisoner " + prisoner.getName() + "! Is this area protected against mobs?");
 							prisoner.setGuardCanBeSpawned(true);
 						}
 						
