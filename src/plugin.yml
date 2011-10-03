@@ -4,7 +4,7 @@ version: 2.0.2
 description: Ban too harsh? Kick/mute/whatever not enough? Jail bad players!
 author: matejdro
 website: http://forums.bukkit.org/threads/admn-rpg-jail-v1-2-2-jail-bad-players-1060.1912/
-softdepend: [PermissionsBukkit, PermissionsEx, Spout, WorldEdit, iConomy, BOSEconomy, Essentials, MultiCurrency]
+softdepend: [PermissionsBukkit, PermissionsEx, Spout, WorldEdit, Register]
 commands:
     jailcreate:
         description: Creates a new jail zone.
