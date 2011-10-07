@@ -21,7 +21,11 @@ public abstract class BaseCommand {
 			sender.sendMessage("Sorry, but you need to execute this command as player.");
 			return false;
 		}
-		if (sender instanceof Player && !Util.permission((Player) sender, permission, adminCommand ? PermissionDefault.OP : PermissionDefault.TRUE)) return false;
+		if (!Util.permission((Player) sender, permission, adminCommand ? PermissionDefault.OP : PermissionDefault.TRUE)) 
+		{
+			Util.Message("Sorry, you are not allowed to do that!", sender);
+			return false;
+		}
 		
 		return run(sender, args);
 	}
