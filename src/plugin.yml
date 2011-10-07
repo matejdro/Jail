@@ -1,6 +1,6 @@
 name: Jail
 main: com.matejdro.bukkit.jail.Jail
-version: 2.0.2
+version: 2.0.3
 description: Ban too harsh? Kick/mute/whatever not enough? Jail bad players!
 author: matejdro
 website: http://forums.bukkit.org/threads/admn-rpg-jail-v1-2-2-jail-bad-players-1060.1912/
@@ -8,79 +8,55 @@ softdepend: [PermissionsBukkit, PermissionsEx, Spout, WorldEdit, Register]
 commands:
     jailcreate:
         description: Creates a new jail zone.
-        permission: jail.command.jailcreate
     jailcreatecells:
         description: Creates cells in existing jail zone.
-        permission: jail.command.jailcreatecells
     jaildelete:
         description: Delete existing jail zone
-        permission: jail.command.jaildelete
     jail:
         description: Jail specified player for specified amount of time.
-        permission: jail.command.jail
         usage: /jail [player name] (time) (jail name):(cell name) (reason)
     unjail:
         description: Release a player from jail.
-        permission: jail.command.unjail
     unjailforce:
         description: Remove player from the database.
-        permission: jail.command.unjailforce
     jailclear:
         description: Unjail every player on the server. Use with caution!
-        permission: jail.command.jailclear
     jailclearforce:
         description: Delete every player from the jail database.
-        permission: jail.command.jailclearforce
     jailtransfer:
         description: Transfer player from current jail to another
-        permission: jail.command.jailtransfer
     jailtransferall:
         description: Transfer all players in one jail to another jail
-        permission: jail.command.jailtransferall
     jailcheck:
         description: Check the status of the specified player
-        permission: jail.command.jailcheck
     jailtelein:
         description: Teleport inside jail
-        permission: jail.command.jailtelein
     jailteleout:
         description: Teleport outside of the jail.
-        permission: jail.command.jailteleout
     jaillist:
         description: List all created jails
-        permission: jail.command.jaillist
     jailstatus:
         description: Check your current jail status
-        permission: jail.usercmd.jailstatus
     jailmute:
         description: Toggle mute of the specified prisoner
-        permission: jail.command.jailmute
     jailstop:
         description: Stop any creation process.
-        permission: jail.command.jailstop
     jailset:
         description: modify existing jail or prisoner.
-        permission: jail.command.jailset
         usage: /jailset [player/jail/cell name] [property name] (property value)
     jailpay:
         description: Pay money to be released early.
-        permission: jail.usercmd.jailpay
         usage: /jailpay (amount) (prisoner name)
     jaildeletecells:
         description: Delete all cells from specified jail.
-        permission: jail.command.jaildeletecells
     jaillistcells:
         description: List all named cells from specified jail.
-        permission: jail.command.jaillistcells
     jailstick:
         description: Toggle jailstick feature.
-        permission: jail.usercmd.jailstick
     jailcreatewe:
         description: Create a new jail zone based on existing world guard region.
-        permission: jail.command.jailcreatewe
     jaildeletecell:
         description: Delete one cell.
-        permission: jail.command.jaildeletecell
 permissions:
     jail.*:
         children:

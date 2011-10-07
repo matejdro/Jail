@@ -154,7 +154,7 @@ public class Util {
 			gstring += s + ",";
 		
 		CraftServer cs = (CraftServer) Jail.instance.getServer();
-		CommandSender coms = new ConsoleCommandSender(Jail.instance.getServer());
+		CommandSender coms = Jail.instance.getServer().getConsoleSender();
 		cs.dispatchCommand(coms,"permissions player setgroup " + playerName + " " + gstring );
 		
     }
