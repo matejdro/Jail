@@ -40,25 +40,6 @@ public class Settings {
 
 	}
 	
-	public Integer getPlaceInt(Setting setting, int place)
-	{
-		Object property;
-		property = InputOutput.jails.getProperty(jail.getName() + "." + setting.getString());
-		if (property == null)
-			property = InputOutput.global.getProperty(setting.getString());
-		return (Integer) property;
-	}
-		
-	public String getPlaceString(Setting setting, int place)
-	{
-		Object property;
-		property = InputOutput.jails.getProperty(jail.getName() + "." + setting.getString());
-		if (property == null)
-			property = InputOutput.global.getProperty(setting.getString());
-		return (String) property;
-
-	}
-	
 	public Boolean getBoolean(Setting setting)
 	{
 		Object property;
