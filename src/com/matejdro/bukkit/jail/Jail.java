@@ -187,7 +187,7 @@ public class Jail extends JavaPlugin {
   	        					PrisonerManager.UnJail(prisoner, player);
 	    	        		  }
     	    	    		  
-    	    	    		  if (player != null)
+    	    	    		  if (player != null && prisoner.getJail() != null)
     	    	    		  {
     	    	    			  if (prisoner.getJail().getSettings().getDouble(Setting.MaximumAFKTime) > 0.0)
     	    	    			  {
@@ -220,7 +220,7 @@ public class Jail extends JavaPlugin {
     		  for (JailPrisoner prisoner : prisoners.values())
 	    	  {
     			  Player player = getServer().getPlayer(prisoner.getName());
-    			  if (player == null) continue;
+    			  if (player == null || prisoner.getJail() == null) continue;
     			  if (!prisoner.getJail().getSettings().getBoolean(Setting.EnableFoodControl)) continue;
 	    		  int minfood = prisoner.getJail().getSettings().getInt(Setting.FoodControlMinimumFood);
 				  int maxfood = prisoner.getJail().getSettings().getInt(Setting.FoodControlMaximumFood);
@@ -240,6 +240,7 @@ public class Jail extends JavaPlugin {
     public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
     	BaseCommand cmd = commands.get(command.getName().toLowerCase());
     	if (cmd != null) return cmd.execute(sender, args);
+    	log.info("test111");
     	return false;
     }
     

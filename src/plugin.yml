@@ -87,7 +87,6 @@ permissions:
             jail.command.jailclearforce: true
             jail.command.jailmute: true
             jail.command.jailstop: true
-            jail.command.jailstick: true
             jail.command.jailset: true
             jail.command.jailcreatewe: true
             jail.command.jaildeletecell: true
