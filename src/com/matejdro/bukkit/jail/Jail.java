@@ -173,7 +173,7 @@ public class Jail extends JavaPlugin {
 
     			    public void run() {
     			    	
-    	    	    	  for (JailPrisoner prisoner : prisoners.values())
+    	    	    	  for (JailPrisoner prisoner : prisoners.values().toArray(new JailPrisoner[0]))
     	    	    	  {
     	    	    		  Player player = getServer().getPlayer(prisoner.getName());
     	    	    		  if (prisoner.getRemainingTime() > 0 && (player != null || (prisoner.getJail() != null && prisoner.getJail().getSettings().getBoolean(Setting.CountdownTimeWhenOffline))))
@@ -240,7 +240,6 @@ public class Jail extends JavaPlugin {
     public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
     	BaseCommand cmd = commands.get(command.getName().toLowerCase());
     	if (cmd != null) return cmd.execute(sender, args);
-    	log.info("test111");
     	return false;
     }
     
