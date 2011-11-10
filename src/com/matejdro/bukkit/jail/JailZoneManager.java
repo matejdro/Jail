@@ -16,7 +16,7 @@ public class JailZoneManager {
 		
 		for (JailZone i : Jail.zones.values())
 		{
-			if (((List<String>)InputOutput.global.getProperty(Setting.ManualJails.getString())).contains(i.getName())) continue;
+			if (((List<String>)InputOutput.global.get(Setting.ManualJails.getString())).contains(i.getName())) continue;
 			
 			double clen = i.getDistance(loc);
 			
@@ -44,7 +44,7 @@ public class JailZoneManager {
 		for (JailZone i : Jail.zones.values())
 		{
 			if (i.getName().equalsIgnoreCase(ignore)) continue;
-			if (((List<String>)InputOutput.global.getProperty(Setting.ManualJails.getString())).contains(i.getName())) continue;
+			if (((List<String>)InputOutput.global.get(Setting.ManualJails.getString())).contains(i.getName())) continue;
 
 			double clen = i.getDistance(loc);
 			

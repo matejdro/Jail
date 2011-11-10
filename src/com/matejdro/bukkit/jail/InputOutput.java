@@ -1,6 +1,8 @@
 package com.matejdro.bukkit.jail;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
@@ -13,11 +15,12 @@ import java.util.logging.Level;
 
 import org.bukkit.Location;
 import org.bukkit.block.Sign;
-import org.bukkit.util.config.Configuration;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.YamlConfiguration;
 public class InputOutput {
     private static Connection connection;
-    public static Configuration global;
-    public static Configuration jails;
+    public static YamlConfiguration global;
+    public static YamlConfiguration jails;
     
     public static HashMap<Integer, String[]> jailStickParameters = new HashMap<Integer, String[]>();
     
@@ -30,8 +33,8 @@ public class InputOutput {
 			Jail.log.log(Level.SEVERE, "[Jail]: Unable to create plugins/Jail/ directory");
 			}
 			}
-		global = new Configuration(new File("plugins" + File.separator + "Jail","global.yml"));
-		jails = new Configuration(new File("plugins" + File.separator + "Jail","jails.yml")); 
+		global = new YamlConfiguration();
+		jails = new YamlConfiguration(); 
 		connection = null;
 	}
     
@@ -82,14 +85,29 @@ public class InputOutput {
     
     public void LoadSettings()
 	{
-    	global.load();
-    	jails.load();
-    	for (Setting s : Setting.values())
-    	{
-    		if (global.getProperty(s.getString()) == null) global.setProperty(s.getString(), s.getDefault());
-    	}
-    	loadJailStickParameters();
-    	global.save();
+    	try {
+    		if (!new File("plugins" + File.separator + "Jail","global.yml").exists()) global.save(new File("plugins" + File.separator + "Jail","global.yml"));
+    		if (!new File("plugins" + File.separator + "Jail","jails.yml").exists()) jails.save(new File("plugins" + File.separator + "Jail","jails.yml"));
+
+    		global.load(new File("plugins" + File.separator + "Jail","global.yml"));
+	    	jails.load(new File("plugins" + File.separator + "Jail","jails.yml"));
+	    	for (Setting s : Setting.values())
+	    	{
+	    		if (global.get(s.getString()) == null) global.set(s.getString(), s.getDefault());
+	    	}
+	    	loadJailStickParameters();
+	    	global.save(new File("plugins" + File.separator + "Jail","global.yml"));
+
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvalidConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
     
     public void loadJailStickParameters()
@@ -137,10 +155,15 @@ public class InputOutput {
 				
 				
 				Jail.zones.put(jail.getName(), jail);
-				if (jails.getProperty(jail.name + ".Protections.EnableBlockDestroyProtection") == null) jails.setProperty(jail.name + ".Protections.EnableBlockDestroyProtection", true);
+				if (jails.get(jail.name + ".Protections.EnableBlockDestroyProtection") == null) jails.set(jail.name + ".Protections.EnableBlockDestroyProtection", true);
 			}
 			
-			jails.save();
+			try {
+				jails.save(new File("plugins" + File.separator + "Jail","jails.yml"));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			set.close();
 			ps.close();
 			Jail.log.log(Level.INFO,"[Jail] Loaded " + String.valueOf(Jail.zones.size()) + " jail zones.");
@@ -290,8 +313,13 @@ public class InputOutput {
 			
 			ps.close();
 			
-			if (jails.getProperty(z.name + ".Protections.EnableBlockDestroyProtection") == null) jails.setProperty(z.name + ".Protections.EnableBlockDestroyProtection", true);
-			jails.save();
+			if (jails.get(z.name + ".Protections.EnableBlockDestroyProtection") == null) jails.set(z.name + ".Protections.EnableBlockDestroyProtection", true);
+			try {
+				jails.save(new File("plugins" + File.separator + "Jail","jails.yml"));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
     	} catch (SQLException e) {
 			Jail.log.log(Level.SEVERE,"[Jail] Error while creating Jail Zone! - " + e.getMessage() );
 			e.printStackTrace();

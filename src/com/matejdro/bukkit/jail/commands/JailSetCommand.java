@@ -1,5 +1,7 @@
 package com.matejdro.bukkit.jail.commands;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -90,7 +92,7 @@ public class JailSetCommand extends BaseCommand {
 		}
 		else if (parameter.equals("manualjail"))
 		{
-			List<String> list = (List<String>) InputOutput.global.getProperty(Setting.ManualJails.getString());
+			List<String> list = (List<String>) InputOutput.global.get(Setting.ManualJails.getString());
 			
 			if (list.contains(jail.getName()))
 			{
@@ -103,8 +105,13 @@ public class JailSetCommand extends BaseCommand {
 				Util.Message("Jail is set to manual", sender);
 			}
 			
-			InputOutput.global.setProperty(Setting.ManualJails.getString(), list);
-			InputOutput.global.save();
+			InputOutput.global.set(Setting.ManualJails.getString(), list);
+			try {
+				InputOutput.global.save(new File("plugins" + File.separator + "Jail","global.yml"));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		else if (parameter.equals("worldedit"))
 		{

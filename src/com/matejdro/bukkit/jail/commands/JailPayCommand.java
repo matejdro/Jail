@@ -12,7 +12,6 @@ import com.matejdro.bukkit.jail.JailPrisoner;
 import com.matejdro.bukkit.jail.JailZone;
 import com.matejdro.bukkit.jail.Setting;
 import com.matejdro.bukkit.jail.Util;
-import com.nijikokun.register.Register;
 import com.nijikokun.register.payment.Methods;
 
 public class JailPayCommand extends BaseCommand {
@@ -29,10 +28,10 @@ public class JailPayCommand extends BaseCommand {
 		Player player = (Player) sender;
 		
 		JailPrisoner prisoner = Jail.prisoners.get(((Player) sender).getName().toLowerCase());
-		if (prisoner == null || !prisoner.getJail().getSettings().getBoolean(Setting.EnablePaying)) 
-		{
-			return false;
-		}
+//		if (prisoner == null || !prisoner.getJail().getSettings().getBoolean(Setting.EnablePaying)) 
+//		{
+//			return false;
+//		}
 		
 		if (args.length < 1)
 		{

@@ -55,7 +55,7 @@ public class JailListCellsCommand extends BaseCommand {
 			if (sender instanceof Player)
 			{
 				JailCell cell = jail.getNearestCell(((Player) sender).getLocation());
-				if (cell != null || cell.getName() != null || !cell.getName().trim().equals(""))
+				if (cell != null && cell.getName() != null && !cell.getName().trim().equals(""))
 				{
 					Util.Message("Nearest cell: " + cell.getName(), sender);
 				}
