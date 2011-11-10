@@ -78,7 +78,7 @@ public class JailPlayerProtectionListener extends PlayerListener {
 		 if (Jail.prisoners.containsKey(event.getPlayer().getName().toLowerCase()))
 			{
 				JailPrisoner prisoner = Jail.prisoners.get(event.getPlayer().getName().toLowerCase());
-				if (prisoner.isBeingReleased()) return;
+				if (prisoner.isBeingReleased() || prisoner.getJail() == null) return;
 				
 				prisoner.setAFKTime(0);
 				
