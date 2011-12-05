@@ -59,7 +59,8 @@ public enum Setting {
 	JailPayCurrency("JailPay.Currency", 0),
 	
 	//Guards
-	GuardHealth("Guards.GuardHealth", 20),
+	GuardHealth("Guards.GuardHealth", 8),
+	GuardArmor("Guards.GuardArmor", 0),
 	GuardDamage("Guards.GuardDamage", 2),
 	NumbefOfGuards("Guards.NumberOfGuards", 3),
 	GuardInvincibility("Guards.GuardInvincibility", false),

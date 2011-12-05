@@ -86,7 +86,7 @@ public class JailPlayerProtectionListener extends PlayerListener {
 				if (!jail.getSettings().getBoolean(Setting.EnablePlayerMoveProtection)) return;
 				if (!jail.isInside(event.getTo()))
 				{
-					if (jail.getSettings().getString(Setting.PlayerMoveProtectionAction).equals("guards") && prisoner.canGuardsBeSpawned() && (!Util.isServer18() || event.getPlayer().getGameMode() == GameMode.SURVIVAL))
+					if (jail.getSettings().getString(Setting.PlayerMoveProtectionAction).equals("guards") && prisoner.canGuardsBeSpawned() && event.getPlayer().getGameMode() == GameMode.SURVIVAL)
 					{
 						if (prisoner.getGuards().size() > 0)
 						{

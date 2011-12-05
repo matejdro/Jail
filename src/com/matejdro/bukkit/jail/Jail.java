@@ -77,7 +77,6 @@ public class Jail extends JavaPlugin {
 		
 		
       // }
-	
 
 	@Override
 	public void onDisable() {
@@ -157,10 +156,10 @@ public class Jail extends JavaPlugin {
 		commands.put("jailstick", new JailStickCommand());
 		commands.put("jailcreatewe", new JailCreateWeCommand());
 		commands.put("jaildeletecell", new JailDeleteCellCommand());
-				
+						
 		log.info("[Jail] " + getDescription().getFullName() + " loaded!");
 	}
-	
+		
 	ActionListener action = new ActionListener ()
     {
       public void actionPerformed (ActionEvent event)

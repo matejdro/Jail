@@ -180,15 +180,6 @@ public class Util {
 		for (Group g : pb.getPlayerInfo(playerName).getGroups())
 			groups.add(g.getName());
 		return groups;
-    }
-    
-    
-    public static Boolean isServer18()
-    {
-    	String ver = Jail.instance.getServer().getVersion();
-    	ver = ver.substring(ver.indexOf("(MC: ") + 5, ver.indexOf("(MC: ") + 8);
-    	return ver.equals("1.8");
-    }
-    
+    }    
 
 }

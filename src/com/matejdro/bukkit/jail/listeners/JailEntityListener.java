@@ -75,10 +75,16 @@ public class JailEntityListener extends EntityListener {
 		// Apply Wolf Armor or Invincibiliy
 		JailPrisoner prisoner = Jail.guards.get(victim);
 		JailZone jail = prisoner != null ? prisoner.getJail() : null;
-		if (prisoner != null && jail.getSettings().getBoolean(Setting.GuardInvincibility) )
+		if (prisoner != null)
 		{
-				event.setCancelled(true);
-				return;
+			if (jail.getSettings().getBoolean(Setting.GuardInvincibility) )
+			{
+					event.setCancelled(true);
+					return;
+			}
+			int newArmor = event.getDamage() - (event.getDamage() * jail.getSettings().getInt(Setting.GuardArmor) / 100);
+			if (newArmor <= 0) newArmor = 1;
+			event.setDamage(newArmor);
 		}
 		if (!(event instanceof EntityDamageByEntityEvent)) return;
 		EntityDamageByEntityEvent newevent = (EntityDamageByEntityEvent) event;

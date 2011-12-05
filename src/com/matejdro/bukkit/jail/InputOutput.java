@@ -96,6 +96,7 @@ public class InputOutput {
 	    		if (global.get(s.getString()) == null) global.set(s.getString(), s.getDefault());
 	    	}
 	    	loadJailStickParameters();
+	    	
 	    	global.save(new File("plugins" + File.separator + "Jail","global.yml"));
 
 		} catch (FileNotFoundException e) {

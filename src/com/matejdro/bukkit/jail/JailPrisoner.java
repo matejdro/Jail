@@ -503,18 +503,26 @@ public class JailPrisoner {
 			
 									
 			Wolf guard = (Wolf) location.getWorld().spawnCreature(spawn, CreatureType.WOLF);
-						
+			
+			
 			if (!(guard.getWorld().getEntities().contains(guard)))
 			{
 				canSpawnGuards=false;
 				return;
 			}
 			
-			guard.setHealth(getJail().getSettings().getInt(Setting.GuardHealth));
+			int health = getJail().getSettings().getInt(Setting.GuardHealth);
+			if (health > guard.getMaxHealth())
+			{
+				Jail.log.warning("[Jail] Guard health cannot be more than " + guard.getMaxHealth() + "! Use Armor to increase toughness of your guards!");
+				health = guard.getMaxHealth();
+			}
+			
+			guard.setHealth(health);
 			guard.setAngry(true);
 			guard.setSitting(false);
 			guard.setTarget(player);
-			
+						
 			getGuards().add(guard);
 			Jail.guards.put(guard, this);
 		}
