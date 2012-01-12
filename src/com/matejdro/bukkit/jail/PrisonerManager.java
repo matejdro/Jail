@@ -51,27 +51,12 @@ public class PrisonerManager {
 			return;
 		}
 		
-		try {
-			//Allow plugins to pre-jail players
-			if (sender != null)
+		//Allow plugins to pre-jail players
+			if (sender != null && !Jail.instance.getServer().getOfflinePlayer(args[0]).hasPlayedBefore())
 			{
-				Boolean exist = false;
-				for (OfflinePlayer p : Jail.instance.getServer().getOfflinePlayers())
-				{
-					if (p.getName().toLowerCase().equals(args[0].toLowerCase()))
-					{
-						exist = true;
-						break;
-					}
-				}
-				if (!exist)
-				{
-					Util.Message("Player " + args[0] + " was never on this server!", sender);
-					return;
-				}
+				Util.Message("Player " + args[0] + " was never on this server!", sender);
+				return;
 			}
-		} catch (NoSuchMethodError e) {
-		}
 		
 		playername = args[0].toLowerCase();
 		if (args.length > 1)
