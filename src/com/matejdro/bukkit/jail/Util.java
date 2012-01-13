@@ -28,6 +28,8 @@ import com.nijikokun.bukkit.Permissions.Permissions;
 import com.platymuus.bukkit.permissions.Group;
 import com.platymuus.bukkit.permissions.PermissionsPlugin;
 
+import de.bananaco.permissions.worlds.WorldPermissionsManager;
+
 public class Util {
 	public static void Message(String message, Player player)
 	{
@@ -129,7 +131,7 @@ public class Util {
 		}
 	}
         
-    public static void setPermissionsGroups(String playerName, List<String> groups)
+    public static void setPermissionsGroups(String playerName, List<String> groups, String world)
     {
     	Plugin plugin = Jail.instance.getServer().getPluginManager().getPlugin("PermissionsEx");
     	if (plugin != null)
@@ -142,23 +144,29 @@ public class Util {
     	}
     	
     	plugin = Jail.instance.getServer().getPluginManager().getPlugin("PermissionsBukkit");
-		if (plugin == null) 
+    	if (plugin != null)
+    	{
+    		String gstring = "";
+    		for (String s : groups)
+    			gstring += s + ",";
+    		
+    		CraftServer cs = (CraftServer) Jail.instance.getServer();
+    		CommandSender coms = Jail.instance.getServer().getConsoleSender();
+    		cs.dispatchCommand(coms,"permissions player setgroup " + playerName + " " + gstring );
+    	}
+		
+		plugin = Jail.instance.getServer().getPluginManager().getPlugin("bPermissions");
+		if (plugin != null) 
 		{
-			Jail.log.info("[Jail]You cannot use permission changing feature without PermissionsBukkit or PermissionsEx plugin!");
-			return;
+			WorldPermissionsManager manager = de.bananaco.permissions.Permissions.getWorldPermissionsManager();
+			manager.getPermissionSet(world).setGroups(playerName, groups);
 		}
 		
-		String gstring = "";
-		for (String s : groups)
-			gstring += s + ",";
-		
-		CraftServer cs = (CraftServer) Jail.instance.getServer();
-		CommandSender coms = Jail.instance.getServer().getConsoleSender();
-		cs.dispatchCommand(coms,"permissions player setgroup " + playerName + " " + gstring );
-		
+		Jail.log.info("[Jail]You cannot use permission changing feature without PermissionsBukkit or PermissionsEx plugin!");
+		return;
     }
     
-    public static List<String> getPermissionsGroups(String playerName)
+    public static List<String> getPermissionsGroups(String playerName, String world)
     {
     	Plugin plugin = Jail.instance.getServer().getPluginManager().getPlugin("PermissionsEx");
     	if (plugin != null)
@@ -171,15 +179,26 @@ public class Util {
 
     	
     	plugin = Jail.instance.getServer().getPluginManager().getPlugin("PermissionsBukkit");
-		if (plugin == null) return new ArrayList<String>();
+		if (plugin != null) 
+		{
+			PermissionsPlugin pb = (PermissionsPlugin) plugin;
 			
-		PermissionsPlugin pb = (PermissionsPlugin) plugin;
+			List<String> groups = new ArrayList<String>();
+			
+			for (Group g : pb.getPlayerInfo(playerName).getGroups())
+				groups.add(g.getName());
+			return groups;
+		}
 		
-		List<String> groups = new ArrayList<String>();
+    	plugin = Jail.instance.getServer().getPluginManager().getPlugin("bPermissions");
+		if (plugin != null) 
+		{
+			WorldPermissionsManager manager = de.bananaco.permissions.Permissions.getWorldPermissionsManager();
+			return manager.getPermissionSet(world).getGroups(playerName);
+		}
 		
-		for (Group g : pb.getPlayerInfo(playerName).getGroups())
-			groups.add(g.getName());
-		return groups;
+		Jail.log.info("[Jail]You cannot use permission changing feature without PermissionsBukkit or PermissionsEx plugin!");
+		return new ArrayList<String>();
     }    
 
 }

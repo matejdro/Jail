@@ -227,8 +227,8 @@ public class PrisonerManager {
 		
 		if (jail.getSettings().getBoolean(Setting.EnableChangingPermissions))
 		{
-			prisoner.setOldPermissions(Util.getPermissionsGroups(player.getName()));
-			Util.setPermissionsGroups(player.getName(), (ArrayList<String>) jail.getSettings().getList(Setting.PrisonersPermissionsGroups));
+			prisoner.setOldPermissions(Util.getPermissionsGroups(player.getName(), jail.getTeleportLocation().getWorld().getName()));
+			Util.setPermissionsGroups(player.getName(), (ArrayList<String>) jail.getSettings().getList(Setting.PrisonersPermissionsGroups), jail.getTeleportLocation().getWorld().getName());
 		}
 		
 		 if (prisoner.getJail().getSettings().getBoolean(Setting.IgnorePrisonersSleepingState))
@@ -269,7 +269,7 @@ public class PrisonerManager {
 		
 		if (jail.getSettings().getBoolean(Setting.EnableChangingPermissions) && !jail.getSettings().getBoolean(Setting.RestorePermissionsToEscapedPrisoners))
 		{
-			Util.setPermissionsGroups(player.getName(), prisoner.getOldPermissions());
+			Util.setPermissionsGroups(player.getName(), prisoner.getOldPermissions(), jail.getTeleportLocation().getWorld().getName());
 		}
 		
 		player.setSleepingIgnored(false);

@@ -734,7 +734,7 @@ public class JailPrisoner {
 			
 		if (getJail() != null && jail.getSettings().getBoolean(Setting.EnableChangingPermissions) && jail.getSettings().getBoolean(Setting.RestorePermissionsToEscapedPrisoners))
 		{
-			Util.setPermissionsGroups(getName(), getOldPermissions());
+			Util.setPermissionsGroups(getName(), getOldPermissions(), jail.getTeleportLocation().getWorld().getName());
 		}
 
 	}
