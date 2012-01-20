@@ -53,7 +53,6 @@ public enum Setting {
 
 	
 	//JailPay
-	EnablePaying("JailPay.EnableJailPay", false),
 	PricePerMinute("JailPay.PricePerMinute", 10),
 	PriceForInfiniteJail("JailPay.PriceForInfiniteJail", 9999),
 	JailPayCurrency("JailPay.Currency", 0),

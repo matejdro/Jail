@@ -11,13 +11,15 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 
+import net.milkbowl.vault.permission.Permission;
+
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.getspout.spoutapi.SpoutManager;
 
 import ru.tehkode.permissions.PermissionManager;
@@ -31,6 +33,8 @@ import com.platymuus.bukkit.permissions.PermissionsPlugin;
 import de.bananaco.permissions.worlds.WorldPermissionsManager;
 
 public class Util {
+    public static Permission permission = null;
+	
 	public static void Message(String message, Player player)
 	{
 		String color = "\u00A7f";
@@ -76,7 +80,7 @@ public class Util {
     	    if(Jail.permissions != null) {
     	    	return (((Permissions) Jail.permissions).getHandler()).has(player, line);
     	    } else {
-    	    	return player.hasPermission(new Permission(line, def));
+    	    	return player.hasPermission(new org.bukkit.permissions.Permission(line, def));
     	    }
     }
     
@@ -133,72 +137,51 @@ public class Util {
         
     public static void setPermissionsGroups(String playerName, List<String> groups, String world)
     {
-    	Plugin plugin = Jail.instance.getServer().getPluginManager().getPlugin("PermissionsEx");
-    	if (plugin != null)
-    	{
-    		PermissionManager pex = PermissionsEx.getPermissionManager();
-    		PermissionUser user = pex.getUser(playerName);
-    		
-    		user.setGroups(groups.toArray(new String[0]));
-    		return;
-    	}
-    	
-    	plugin = Jail.instance.getServer().getPluginManager().getPlugin("PermissionsBukkit");
-    	if (plugin != null)
-    	{
-    		String gstring = "";
-    		for (String s : groups)
-    			gstring += s + ",";
-    		
-    		CraftServer cs = (CraftServer) Jail.instance.getServer();
-    		CommandSender coms = Jail.instance.getServer().getConsoleSender();
-    		cs.dispatchCommand(coms,"permissions player setgroup " + playerName + " " + gstring );
-    	}
-		
-		plugin = Jail.instance.getServer().getPluginManager().getPlugin("bPermissions");
-		if (plugin != null) 
+    	Plugin plugin = Jail.instance.getServer().getPluginManager().getPlugin("Vault");
+		if (plugin == null)
 		{
-			WorldPermissionsManager manager = de.bananaco.permissions.Permissions.getWorldPermissionsManager();
-			manager.getPermissionSet(world).setGroups(playerName, groups);
+			Jail.log.info("[Jail] You must have Vault plugin installed to use permission changing feature! See http://dev.bukkit.org/server-mods/vault");
+			return;
+		}
+		if (!setupPermissions()) 
+		{
+			Jail.log.info("[Jail] You must have one of the Permissions plugins installed to use permission changing feature! See http://dev.bukkit.org/server-mods/vault");
+			return;
 		}
 		
-		Jail.log.info("[Jail]You cannot use permission changing feature without PermissionsBukkit or PermissionsEx plugin!");
-		return;
+		for (String g : permission.getPlayerGroups(world, playerName))
+				permission.playerRemoveGroup(world, playerName, g);
+		for (String g : groups)
+				permission.playerAddGroup(world, playerName, g);
+		
     }
     
     public static List<String> getPermissionsGroups(String playerName, String world)
     {
-    	Plugin plugin = Jail.instance.getServer().getPluginManager().getPlugin("PermissionsEx");
-    	if (plugin != null)
-    	{
-    		PermissionManager pex = PermissionsEx.getPermissionManager();
-    		PermissionUser user = pex.getUser(playerName);
-    		
-    		return Arrays.asList(user.getGroupsNames());
-    	}
-
-    	
-    	plugin = Jail.instance.getServer().getPluginManager().getPlugin("PermissionsBukkit");
-		if (plugin != null) 
+    	Plugin plugin = Jail.instance.getServer().getPluginManager().getPlugin("Vault");
+		if (plugin == null)
 		{
-			PermissionsPlugin pb = (PermissionsPlugin) plugin;
-			
-			List<String> groups = new ArrayList<String>();
-			
-			for (Group g : pb.getPlayerInfo(playerName).getGroups())
-				groups.add(g.getName());
-			return groups;
+			Jail.log.info("[Jail] You must have Vault plugin installed to use permission changing feature! See http://dev.bukkit.org/server-mods/vault");
+			return new ArrayList<String>();
+		}
+		if (!setupPermissions()) 
+		{
+			Jail.log.info("[Jail] You must have one of the Permissions plugins installed to use permission changing feature! See http://dev.bukkit.org/server-mods/vault");
+			return new ArrayList<String>();
 		}
 		
-    	plugin = Jail.instance.getServer().getPluginManager().getPlugin("bPermissions");
-		if (plugin != null) 
-		{
-			WorldPermissionsManager manager = de.bananaco.permissions.Permissions.getWorldPermissionsManager();
-			return manager.getPermissionSet(world).getGroups(playerName);
-		}
-		
-		Jail.log.info("[Jail]You cannot use permission changing feature without PermissionsBukkit or PermissionsEx plugin!");
-		return new ArrayList<String>();
+		return Arrays.asList(permission.getPlayerGroups(world, playerName));		
     }    
+    
+    private static Boolean setupPermissions()
+    {
+    	if (permission != null) return true;
+    	
+        RegisteredServiceProvider<Permission> permissionProvider = Bukkit.getServer().getServicesManager().getRegistration(net.milkbowl.vault.permission.Permission.class);
+        if (permissionProvider != null) {
+            permission = permissionProvider.getProvider();
+        }
+        return (permission != null);
+    }
 
 }

@@ -1,10 +1,14 @@
 package com.matejdro.bukkit.jail.commands;
 
+import net.milkbowl.vault.economy.Economy;
+
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.RegisteredServiceProvider;
 
 import com.matejdro.bukkit.jail.InputOutput;
 import com.matejdro.bukkit.jail.Jail;
@@ -12,9 +16,10 @@ import com.matejdro.bukkit.jail.JailPrisoner;
 import com.matejdro.bukkit.jail.JailZone;
 import com.matejdro.bukkit.jail.Setting;
 import com.matejdro.bukkit.jail.Util;
-import com.nijikokun.register.payment.Methods;
 
 public class JailPayCommand extends BaseCommand {
+	
+    public static Economy economy = null;
 	
 	public JailPayCommand()
 	{
@@ -156,16 +161,16 @@ public class JailPayCommand extends BaseCommand {
 		int currency = prisoner.getJail().getSettings().getInt(Setting.JailPayCurrency);
 		if (currency == 0)
 		{
-			Plugin plugin = Jail.instance.getServer().getPluginManager().getPlugin("Register");
+			Plugin plugin = Jail.instance.getServer().getPluginManager().getPlugin("Vault");
 			if (plugin == null)
 			{
-				Jail.log.info("[Jail] You must have Register plugin installed to use JailPayCurrency = 0! See http://dev.bukkit.org/server-mods/register/");
+				Jail.log.info("[Jail] You must have Vault plugin installed to use JailPayCurrency = 0! See http://dev.bukkit.org/server-mods/vault");
 				return String.valueOf(amount);
 			}
 			
-			if (Methods.getMethod() != null)
+			if (setupEconomy())
 			{
-				return Methods.getMethod().format(amount);
+				return economy.format(amount);
 			}
 			else
 			{
@@ -184,17 +189,16 @@ public class JailPayCommand extends BaseCommand {
 		int currency = prisoner.getJail().getSettings().getInt(Setting.JailPayCurrency);
 		if (currency == 0)
 		{
-			Plugin plugin = Jail.instance.getServer().getPluginManager().getPlugin("Register");
+			Plugin plugin = Jail.instance.getServer().getPluginManager().getPlugin("Vault");
 			if (plugin == null)
 			{
-				Jail.log.info("[Jail] You must have Register plugin installed to use JailPayCurrency = 0! See http://dev.bukkit.org/server-mods/register/");
+				Jail.log.info("[Jail] You must have Vault plugin installed to use JailPayCurrency = 0! See http://dev.bukkit.org/server-mods/vault");
 				return false;
 			}
-
 			
-			if (Methods.getMethod() != null)
+			if (setupEconomy())
 			{
-				return Methods.getMethod().getAccount(player.getName()).hasEnough(amount);
+				return economy.has(player.getName(), amount);
 			}
 			else
 			{
@@ -204,13 +208,7 @@ public class JailPayCommand extends BaseCommand {
 		}
 		else
 		{
-			int items = 0;
-			for (ItemStack i : player.getInventory().getContents())
-			{
-				if (i != null && i.getTypeId() == currency) items += i.getAmount();
-			}
-			
-			return items >= amount;
+			return player.getInventory().contains(currency, (int) Math.ceil(amount));
 		}
 	}
 	
@@ -219,17 +217,16 @@ public class JailPayCommand extends BaseCommand {
 		int currency = prisoner.getJail().getSettings().getInt(Setting.JailPayCurrency);
 		if (currency == 0)
 		{
-			Plugin plugin = Jail.instance.getServer().getPluginManager().getPlugin("Register");
+			Plugin plugin = Jail.instance.getServer().getPluginManager().getPlugin("Vault");
 			if (plugin == null)
 			{
-				Jail.log.info("[Jail] You must have Register plugin installed to use JailPayCurrency = 0! See http://dev.bukkit.org/server-mods/register/");
+				Jail.log.info("[Jail] You must have Vault plugin installed to use JailPayCurrency = 0! See http://dev.bukkit.org/server-mods/vault");
 				return;
 			}
-
 			
-			if (Methods.getMethod() != null)
+			if (setupEconomy())
 			{
-				Methods.getMethod().getAccount(player.getName()).subtract(amount);
+				economy.withdrawPlayer(player.getName(), amount);
 			}
 			else
 			{
@@ -282,4 +279,16 @@ public class JailPayCommand extends BaseCommand {
         }
         return name;
 	}
+	
+	private Boolean setupEconomy()
+    {
+		if (economy != null) return true;
+		
+        RegisteredServiceProvider<Economy> economyProvider = Bukkit.getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
+        if (economyProvider != null) {
+            economy = economyProvider.getProvider();
+        }
+
+        return (economy != null);
+    }
 }
