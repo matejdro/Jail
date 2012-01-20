@@ -22,39 +22,35 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.getspout.spoutapi.SpoutManager;
 
-import ru.tehkode.permissions.PermissionManager;
-import ru.tehkode.permissions.PermissionUser;
-import ru.tehkode.permissions.bukkit.PermissionsEx;
-
 import com.nijikokun.bukkit.Permissions.Permissions;
-import com.platymuus.bukkit.permissions.Group;
-import com.platymuus.bukkit.permissions.PermissionsPlugin;
-
-import de.bananaco.permissions.worlds.WorldPermissionsManager;
 
 public class Util {
     public static Permission permission = null;
 	
 	public static void Message(String message, Player player)
 	{
-		String color = "\u00A7f";
+		message = message.replaceAll("\\&([0-9abcdef])", "§$1");
+		
+		String color = "6";
 		final int maxLength = 61; //Max length of chat text message
         final String newLine = "[NEWLINE]";
         ArrayList<String> chat = new ArrayList<String>();
-        chat.add(0, color);
+        chat.add(0, "");
         String[] words = message.split(" ");
         int lineNumber = 0;
         for (int i = 0; i < words.length; i++) {
                 if (chat.get(lineNumber).length() + words[i].length() < maxLength && !words[i].equals(newLine)) {
-                        chat.set(lineNumber, chat.get(lineNumber) + " " + words[i]);
+                        chat.set(lineNumber, chat.get(lineNumber) + (chat.get(lineNumber).length() > 0 ? " " : "§" + color ) + words[i]);
+
+                        if (words[i].contains("§")) color = Character.toString(words[i].charAt(words[i].indexOf("§") + 1));
                 }
                 else {
                         lineNumber++;
                         if (!words[i].equals(newLine)) {
-                                chat.add(lineNumber, color + words[i]);
+                                chat.add(lineNumber,  "§" + color + words[i]);
                         }
                         else
-                                chat.add(lineNumber,color);
+                                chat.add(lineNumber, "");
                 }
         }
         for (int i = 0; i < chat.size(); i++) {

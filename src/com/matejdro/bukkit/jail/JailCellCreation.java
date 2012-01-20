@@ -21,7 +21,7 @@ public static HashMap<String,CreationPlayer> players = new HashMap<String,Creati
 		if (!player.getInventory().contains(InputOutput.global.getInt(Setting.SelectionTool.getString(),280)))
 			player.getInventory().addItem(new ItemStack(InputOutput.global.getInt(Setting.SelectionTool.getString(),280),1));
 		
-		Util.Message("§cJail Cell Creation:", player);
+		Util.Message("&cJail Cell Creation:", player);
 		Util.Message("First, you must select teleport point for the cell! Move to the teleport and then click anywhere with wooden sword, to set it", player);
 		players.put(player.getName(), new CreationPlayer(name));
 	}
