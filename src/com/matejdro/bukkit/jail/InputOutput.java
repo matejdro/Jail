@@ -26,11 +26,11 @@ public class InputOutput {
     
 	public InputOutput()
 	{
-		if (!new File("plugins" + File.separator + "Jail").exists()) {
+		if (!Jail.instance.getDataFolder().exists()) {
 			try {
-			(new File("plugins" + File.separator + "Jail")).mkdir();
+			(Jail.instance.getDataFolder()).mkdir();
 			} catch (Exception e) {
-			Jail.log.log(Level.SEVERE, "[Jail]: Unable to create plugins/Jail/ directory");
+			Jail.log.log(Level.SEVERE, "[Jail]: Unable to create " + Jail.instance.getDataFolder().getAbsolutePath() + " directory");
 			}
 			}
 		global = new YamlConfiguration();
@@ -59,7 +59,7 @@ public class InputOutput {
                 return ret;
             } else {
                 Class.forName("org.sqlite.JDBC");
-                Connection ret = DriverManager.getConnection("jdbc:sqlite:plugins" + File.separator + "Jail" + File.separator + "jail.sqlite");
+                Connection ret = DriverManager.getConnection("jdbc:sqlite:" +  new File(Jail.instance.getDataFolder().getPath(), "jail.sqlite").getPath());
                 ret.setAutoCommit(false);
                 return ret;
             }
@@ -86,18 +86,18 @@ public class InputOutput {
     public void LoadSettings()
 	{
     	try {
-    		if (!new File("plugins" + File.separator + "Jail","global.yml").exists()) global.save(new File("plugins" + File.separator + "Jail","global.yml"));
-    		if (!new File("plugins" + File.separator + "Jail","jails.yml").exists()) jails.save(new File("plugins" + File.separator + "Jail","jails.yml"));
+    		if (!new File(Jail.instance.getDataFolder(),"global.yml").exists()) global.save(new File(Jail.instance.getDataFolder(),"global.yml"));
+    		if (!new File(Jail.instance.getDataFolder(),"jails.yml").exists()) jails.save(new File(Jail.instance.getDataFolder(),"jails.yml"));
 
-    		global.load(new File("plugins" + File.separator + "Jail","global.yml"));
-	    	jails.load(new File("plugins" + File.separator + "Jail","jails.yml"));
+    		global.load(new File(Jail.instance.getDataFolder(),"global.yml"));
+	    	jails.load(new File(Jail.instance.getDataFolder(),"jails.yml"));
 	    	for (Setting s : Setting.values())
 	    	{
 	    		if (global.get(s.getString()) == null) global.set(s.getString(), s.getDefault());
 	    	}
 	    	loadJailStickParameters();
 	    	
-	    	global.save(new File("plugins" + File.separator + "Jail","global.yml"));
+	    	global.save(new File(Jail.instance.getDataFolder(),"global.yml"));
 
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -160,7 +160,7 @@ public class InputOutput {
 			}
 			
 			try {
-				jails.save(new File("plugins" + File.separator + "Jail","jails.yml"));
+				jails.save(new File(Jail.instance.getDataFolder(),"jails.yml"));
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -316,7 +316,7 @@ public class InputOutput {
 			
 			if (jails.get(z.name + ".Protections.EnableBlockDestroyProtection") == null) jails.set(z.name + ".Protections.EnableBlockDestroyProtection", true);
 			try {
-				jails.save(new File("plugins" + File.separator + "Jail","jails.yml"));
+				jails.save(new File(Jail.instance.getDataFolder(),"jails.yml"));
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
