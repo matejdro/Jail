@@ -236,11 +236,11 @@ public class JailZone {
 	
 	/**
 	 * @param loc Location to check
-	 * @return distance between teleport location of this jail zone and specified location in blocks.
+	 * @return squared distance between teleport location of this jail zone and specified location in blocks.
 	 */
 	public double getDistance(Location loc)
 	{
-		return Math.sqrt(Math.abs(loc.getX() - teleX) + Math.abs(loc.getY() - teleY) + Math.abs(loc.getZ() + teleZ));
+		return loc.distance(getTeleportLocation());
 	}
 	
 	/**
