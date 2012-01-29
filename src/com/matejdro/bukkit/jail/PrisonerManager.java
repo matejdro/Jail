@@ -50,15 +50,20 @@ public class PrisonerManager {
 			}
 			return;
 		}
-		
-		//Allow plugins to pre-jail players
-			if (sender != null && !Jail.instance.getServer().getOfflinePlayer(args[0]).hasPlayedBefore())
+		playername = args[0].toLowerCase();
+
+		Player player = Jail.instance.getServer().getPlayerExact(playername);		
+		if (player == null) player = Jail.instance.getServer().getPlayer(playername);
+		if (player != null) playername = player.getName().toLowerCase();
+		else
+		{
+			if (sender != null && !Jail.instance.getServer().getOfflinePlayer(playername).hasPlayedBefore())
 			{
-				Util.Message("Player " + args[0] + " was never on this server!", sender);
+				Util.Message("Player " + playername + " was never on this server!", sender);
 				return;
 			}
+		}
 		
-		playername = args[0].toLowerCase();
 		if (args.length > 1)
 			time = Integer.valueOf(args[1]);
 		if (args.length > 2)
@@ -94,7 +99,6 @@ public class PrisonerManager {
 		else
 			jailer = "console";
 			
-		Player player = Jail.instance.getServer().getPlayer(playername);		
 		if (player == null)
 		{
 			JailPrisoner prisoner = new JailPrisoner(playername, time * 6, jailname, cellname, true, "", reason, InputOutput.global.getBoolean(Setting.AutomaticMute.getString(), false),  "" ,jailer, "");
@@ -350,7 +354,7 @@ public class PrisonerManager {
 		for (JailPrisoner prisoner : zone.getPrisoners())
 		{
 			prisoner.setTransferDestination(target);
-			Player player = Jail.instance.getServer().getPlayer(prisoner.getName());
+			Player player = Jail.instance.getServer().getPlayerExact(prisoner.getName());
 			if (player == null)
 			{
 				

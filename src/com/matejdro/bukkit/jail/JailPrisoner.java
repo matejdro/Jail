@@ -4,18 +4,20 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map.Entry;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.material.MaterialData;
 
 
@@ -532,16 +534,20 @@ public class JailPrisoner {
 	 * Converts specified inventory into inventory string and stores it. Previous inventory string will be deleted. 
 	 * @param playerinv inventory that will be stored
 	 */
-	public void storeInventory(Inventory playerinv)
+	public void storeInventory(PlayerInventory playerinv)
 	{
 		String inv = "";
 		for (int i = 0;i<40;i++)
 		{
 			ItemStack item = playerinv.getItem(i);
 			if (item == null || item.getType() == Material.AIR) continue;
-			byte data = (byte) 0;
-			if (item.getData() != null) data = item.getData().getData();
-			inv += String.valueOf(item.getTypeId()) + "," + String.valueOf(item.getAmount()) + "," +String.valueOf(item.getDurability()) + "," +String.valueOf(data) + ";";
+			
+			String enchantString = "";
+			for (Entry<Enchantment, Integer> e : item.getEnchantments().entrySet())
+				enchantString += String.valueOf(e.getKey().getId()) + ":" + String.valueOf(e.getValue()) + "*";
+			if (enchantString.length() > 1) enchantString = enchantString.substring(0, enchantString.length() - 1);
+					
+			inv += String.valueOf(item.getTypeId()) + "," + String.valueOf(item.getAmount()) + "," +String.valueOf(item.getDurability()) + "," + enchantString + ";";
 		}
 		inventory = inv;
 		InputOutput.UpdatePrisoner(this);
@@ -561,7 +567,15 @@ public class JailPrisoner {
 			String[] items = i.split(",");
 			ItemStack item = new ItemStack(Integer.parseInt(items[0]),Integer.parseInt(items[1]));
 			item.setDurability(Short.parseShort(items[2]));
-			item.setData(new MaterialData(Byte.parseByte(items[3])));
+			if (items[3].contains(":"))
+			{
+				String[] enchantments = items[3].split("\\*");
+				for (String e : enchantments)
+				{
+					item.addEnchantment(Enchantment.getById(Integer.parseInt(e.split(":")[0])), Integer.parseInt(e.split(":")[1]));
+				}
+			}
+			
 			if (player.getInventory().firstEmpty() == -1)
 				player.getWorld().dropItem(player.getLocation(), item);
 			else
@@ -637,7 +651,7 @@ public class JailPrisoner {
 	 */
 	public void release()
 	{
-		Player player = Jail.instance.getServer().getPlayer(getName());
+		Player player = Jail.instance.getServer().getPlayerExact(getName());
 		
 		if (player == null)
 		{
@@ -678,7 +692,7 @@ public class JailPrisoner {
 			targetjail = "find nearest";
 				
 		setTransferDestination(targetjail);
-		Player player = Jail.instance.getServer().getPlayer(getName());
+		Player player = Jail.instance.getServer().getPlayerExact(getName());
 		
 		if (player == null)
 		{

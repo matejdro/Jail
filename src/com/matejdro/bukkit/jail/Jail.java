@@ -174,7 +174,7 @@ public class Jail extends JavaPlugin {
     			    	
     	    	    	  for (JailPrisoner prisoner : prisoners.values().toArray(new JailPrisoner[0]))
     	    	    	  {
-    	    	    		  Player player = getServer().getPlayer(prisoner.getName());
+    	    	    		  Player player = getServer().getPlayerExact(prisoner.getName());
     	    	    		  if (prisoner.getRemainingTime() > 0 && (player != null || (prisoner.getJail() != null && prisoner.getJail().getSettings().getBoolean(Setting.CountdownTimeWhenOffline))))
     	    	    		  {
     	    	    			  	  prisoner.setRemainingTime(prisoner.getRemainingTime() - 1);
@@ -218,7 +218,7 @@ public class Jail extends JavaPlugin {
     	  
     		  for (JailPrisoner prisoner : prisoners.values())
 	    	  {
-    			  Player player = getServer().getPlayer(prisoner.getName());
+    			  Player player = getServer().getPlayerExact(prisoner.getName());
     			  if (player == null || prisoner.getJail() == null) continue;
     			  if (!prisoner.getJail().getSettings().getBoolean(Setting.EnableFoodControl)) continue;
 	    		  int minfood = prisoner.getJail().getSettings().getInt(Setting.FoodControlMinimumFood);
