@@ -73,10 +73,11 @@ public class InputOutput {
     }
     
    public static synchronized void freeConnection() {
-        if(connection != null) {
+		Connection conn = getConnection();
+        if(conn != null) {
             try {
-                connection.close();
-                connection = null;
+            	conn.close();
+            	conn = null;
             } catch (SQLException e) {
                 e.printStackTrace();
             }
