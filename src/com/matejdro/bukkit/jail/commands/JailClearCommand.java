@@ -23,21 +23,7 @@ public class JailClearCommand extends BaseCommand {
 		for (Object p : names)
 		{
 			JailPrisoner prisoner = Jail.prisoners.get((String) p);
-			String playername = prisoner.getName();
-			Player player = Jail.instance.getServer().getPlayerExact(playername);
-			if (player == null)
-			{
-				
-				prisoner.setOfflinePending(true);
-				prisoner.setRemainingTime(0);
-				InputOutput.UpdatePrisoner(prisoner);
-				Jail.prisoners.put(prisoner.getName(), prisoner);					
-			}
-			else
-			{
-				PrisonerManager.UnJail(prisoner, player);
-				
-			}
+			prisoner.release();
 		}
 		return true;
 	}

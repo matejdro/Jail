@@ -175,7 +175,7 @@ public class JailPlayerProtectionListener extends PlayerListener {
 				}
 			
 			JailPrisoner prisoner = Jail.prisoners.get(event.getPlayer().getName().toLowerCase());
-			if (prisoner != null)
+			if (prisoner != null && prisoner.getJail() != null)
 			{
 				JailZone jail = prisoner.getJail();
 				if (event.getClickedBlock() != null)
