@@ -104,10 +104,12 @@ public class JailPlayerListener extends PlayerListener {
 					 else if (prisoner.getJail() != null)
 					 {
 						 PrisonerManager.UnJail(prisoner, event.getPlayer());
+						 return;
 					 } 
 					 else
 					 {
 						 prisoner.delete();
+						 return;
 					 }
 				 }
 				 else

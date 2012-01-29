@@ -567,7 +567,7 @@ public class JailPrisoner {
 			String[] items = i.split(",");
 			ItemStack item = new ItemStack(Integer.parseInt(items[0]),Integer.parseInt(items[1]));
 			item.setDurability(Short.parseShort(items[2]));
-			if (items[3].contains(":"))
+			if (items.length > 3 && items[3].contains(":"))
 			{
 				String[] enchantments = items[3].split("\\*");
 				for (String e : enchantments)
@@ -594,10 +594,12 @@ public class JailPrisoner {
 		{
 			for (Sign sign : cell.getSigns())
 			{
-				String[] lines = getJail().getSettings().getString(Setting.SignText).split("\\[NEWLINE\\]");
+				String set = getJail().getSettings().getString(Setting.SignText) ;
+				set = set.replaceAll("\\&([0-9abcdef])", "§$1");
+				String[] lines = set.split("\\[NEWLINE\\]");
 				int max = lines.length;
 				if (max > 4) max = 4;
-					
+				
 				for (int i = 0;i<max;i++)
 				{
 					sign.setLine(i, parseTags(lines[i]));
