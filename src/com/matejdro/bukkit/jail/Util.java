@@ -22,8 +22,6 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.getspout.spoutapi.SpoutManager;
 
-import com.nijikokun.bukkit.Permissions.Permissions;
-
 public class Util {
     public static Permission permission = null;
 	
@@ -73,11 +71,11 @@ public class Util {
 	
     public static Boolean permission(Player player, String line, PermissionDefault def)
     {
-    	    if(Jail.permissions != null) {
-    	    	return (((Permissions) Jail.permissions).getHandler()).has(player, line);
-    	    } else {
+	    	Plugin plugin = Jail.instance.getServer().getPluginManager().getPlugin("Vault");
+			if (plugin != null && setupPermissions())
+    	    	return permission.has(player, line);
+    	     else 
     	    	return player.hasPermission(new org.bukkit.permissions.Permission(line, def));
-    	    }
     }
     
     public static int getNumberOfOccupiedItemSlots(ItemStack[] items)

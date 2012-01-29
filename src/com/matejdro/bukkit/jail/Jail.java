@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 
 import javax.swing.Timer;
 
+import org.bukkit.GameMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -129,9 +130,7 @@ public class Jail extends JavaPlugin {
 		
 		timer = new Timer(1000,action);
 		timer.start();
-		
-		permissions = this.getServer().getPluginManager().getPlugin("Permissions");
-		
+				
 		commands.put("jail", new JailCommand());
 		commands.put("unjail", new UnJailCommand());
 		commands.put("jaildelete", new JailDeleteCommand());
@@ -216,18 +215,19 @@ public class Jail extends JavaPlugin {
     		  }
     	  }
     	  
-    		  for (JailPrisoner prisoner : prisoners.values())
-	    	  {
-    			  Player player = getServer().getPlayerExact(prisoner.getName());
-    			  if (player == null || prisoner.getJail() == null) continue;
-    			  if (!prisoner.getJail().getSettings().getBoolean(Setting.EnableFoodControl)) continue;
-	    		  int minfood = prisoner.getJail().getSettings().getInt(Setting.FoodControlMinimumFood);
-				  int maxfood = prisoner.getJail().getSettings().getInt(Setting.FoodControlMaximumFood);
-				  if (player.getFoodLevel() <  minfood || player.getFoodLevel() > maxfood)
-				  {
-					  player.setFoodLevel((minfood + maxfood) / 2);
-				  }
-		  	}
+		  for (JailPrisoner prisoner : prisoners.values())
+    	  {
+			  Player player = getServer().getPlayerExact(prisoner.getName());
+			  if (player == null || prisoner.getJail() == null || player.getGameMode() == GameMode.CREATIVE) continue;
+			  if (!prisoner.getJail().getSettings().getBoolean(Setting.EnableFoodControl)) continue;
+    		  int minfood = prisoner.getJail().getSettings().getInt(Setting.FoodControlMinimumFood);
+			  int maxfood = prisoner.getJail().getSettings().getInt(Setting.FoodControlMaximumFood);
+			 
+			  if (player.getFoodLevel() <  minfood || player.getFoodLevel() > maxfood)
+			  {
+				  player.setFoodLevel((minfood + maxfood) / 2);
+			  }
+	  		}
     	  
     	Jail.timeUpdateRunning = false;
 
