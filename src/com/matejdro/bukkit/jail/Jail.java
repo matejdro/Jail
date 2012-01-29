@@ -31,6 +31,7 @@ import com.matejdro.bukkit.jail.commands.JailListCellsCommand;
 import com.matejdro.bukkit.jail.commands.JailListCommand;
 import com.matejdro.bukkit.jail.commands.JailMuteCommand;
 import com.matejdro.bukkit.jail.commands.JailPayCommand;
+import com.matejdro.bukkit.jail.commands.JailReloadCommand;
 import com.matejdro.bukkit.jail.commands.JailSetCommand;
 import com.matejdro.bukkit.jail.commands.JailStatusCommand;
 import com.matejdro.bukkit.jail.commands.JailStickCommand;
@@ -56,7 +57,7 @@ public class Jail extends JavaPlugin {
 	private JailEntityListener EntityListener;
 	private JailSpoutListener SpoutListener;
 	public JailAPI API;
-	private InputOutput IO;
+	public InputOutput IO;
 	public static HashMap<String,JailZone> zones = new HashMap<String,JailZone>();
 	public static HashMap<String,JailPrisoner> prisoners = new HashMap<String,JailPrisoner>();
 	public static HashMap<Wolf, JailPrisoner> guards = new HashMap<Wolf, JailPrisoner>();
@@ -155,7 +156,8 @@ public class Jail extends JavaPlugin {
 		commands.put("jailstick", new JailStickCommand());
 		commands.put("jailcreatewe", new JailCreateWeCommand());
 		commands.put("jaildeletecell", new JailDeleteCellCommand());
-						
+		commands.put("jailreload", new JailReloadCommand());
+
 		log.info("[Jail] " + getDescription().getFullName() + " loaded!");
 	}
 		

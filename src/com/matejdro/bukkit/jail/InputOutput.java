@@ -132,7 +132,7 @@ public class InputOutput {
 			ps = conn.prepareStatement("SELECT * FROM jail_zones");
 			set = ps.executeQuery();
 			//conn.commit();
-			
+			Jail.zones.clear();
 			while (set.next())
 			{
 				
@@ -189,7 +189,7 @@ public class InputOutput {
 			ps = conn.prepareStatement("SELECT * FROM jail_prisoners");
 			set = ps.executeQuery();
 			//conn.commit();
-			
+			Jail.prisoners.clear();
 			while (set.next())
 			{
 				

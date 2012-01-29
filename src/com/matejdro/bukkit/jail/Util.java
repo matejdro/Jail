@@ -29,7 +29,7 @@ public class Util {
 	{
 		message = message.replaceAll("\\&([0-9abcdef])", "§$1");
 		
-		String color = "6";
+		String color = "f";
 		final int maxLength = 61; //Max length of chat text message
         final String newLine = "[NEWLINE]";
         ArrayList<String> chat = new ArrayList<String>();

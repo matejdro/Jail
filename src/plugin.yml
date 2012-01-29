@@ -57,6 +57,8 @@ commands:
         description: Create a new jail zone based on existing world guard region.
     jaildeletecell:
         description: Delete one cell.
+    jailreload:
+        description: Reload jail data
 permissions:
     jail.*:
         children:
@@ -90,6 +92,7 @@ permissions:
             jail.command.jailset: true
             jail.command.jailcreatewe: true
             jail.command.jaildeletecell: true
+            jail.command.jailreload: true
     jail.usercmd.*:
         description: access to all user commands
         children:
@@ -137,6 +140,8 @@ permissions:
     jail.command.jailcreatewe:
         default: op
     jail.command.jaildeletecell:
+        default: op
+    jail.command.jailreload:
         default: op
     jail.usercmd.jailstatus:
         default: true
