@@ -22,7 +22,8 @@ public enum Setting {
 	ManualCells("ManualCells", new ArrayList<String>()),
 	ReleaseBackToPreviousPosition("ReleaseBackToPreviousPosition", false),
 	IgnorePrisonersSleepingState("IgnorePrisonersSleepingState", true),
-	
+	TeleportPrisonerOnRelease("TeleportPrisonerOnRelease", true),
+
 	//JailStick
 	EnableJailStick("EnableJailStick", false),
 	JailStickParameters("JailStickParameters", "280,5,10,,police;50,5,20,,admin"),

@@ -323,7 +323,7 @@ public class PrisonerManager {
 
 		}
 		
-		player.teleport(prisoner.getReleaseTeleportLocation());
+		if (jail.getSettings().getBoolean(Setting.TeleportPrisonerOnRelease)) player.teleport(prisoner.getReleaseTeleportLocation());
 		
 		prisoner.restoreInventory(player);
 		prisoner.delete();
