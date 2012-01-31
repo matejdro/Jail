@@ -104,7 +104,7 @@ public enum Setting {
 	MessageJailPayPaidLoweredTime("Messages.JailPayLoweredTime", "You have just payed <Amount> and lowered your sentence to <NewTime> minutes!"),
 	MessageJailPayPaidLoweredTimeHim("Messages.JailPayLoweredTimeHim", "You have just payed <Amount> and lowered <Prisoner>'s sentence to <NewTime> minutes!"),
 	MessageMinutes("Messages.TimeMinutes", "<Time> minutes"),
-	MessageForever("Messagse.Forever", "ever"),
+	MessageForever("Messages.Forever", "ever"),
 	MessageJailStatus("Messages.JailStatus", "You are jailed for <TimeS> by <Jailer>"),
 	MessageJailStatusReason("Messages.JailStatusReason", "You are jailed for <TimeS> by <Jailer> because of <Reason>");
 	private String name;
