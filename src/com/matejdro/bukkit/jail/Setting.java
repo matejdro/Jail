@@ -106,7 +106,10 @@ public enum Setting {
 	MessageMinutes("Messages.TimeMinutes", "<Time> minutes"),
 	MessageForever("Messages.Forever", "ever"),
 	MessageJailStatus("Messages.JailStatus", "You are jailed for <TimeS> by <Jailer>"),
-	MessageJailStatusReason("Messages.JailStatusReason", "You are jailed for <TimeS> by <Jailer> because of <Reason>");
+	MessageJailStatusReason("Messages.JailStatusReason", "You are jailed for <TimeS> by <Jailer> because of <Reason>"),
+	MessageJailStickEnabled("Messages.JailStickEnabled", "JailStick enabled!"),
+	MessageJailStickDisabled("Messages.JailStickDisabled", "JailStick disabled!");
+
 	private String name;
 	private Object def;
 	

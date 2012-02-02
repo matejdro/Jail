@@ -23,7 +23,13 @@ public class JailMuteCommand extends BaseCommand {
 		}
 		JailPrisoner prisoner = Jail.prisoners.get(args[0].toLowerCase());
 		
-		if (prisoner != null && prisoner.isMuted())
+		if (prisoner == null)
+		{
+			Util.Message(args[0] + " is not jailed!", sender);
+			return true;
+		}
+		
+		if (prisoner.isMuted())
 		{
 			prisoner.setMuted(false);
 			InputOutput.UpdatePrisoner(prisoner);

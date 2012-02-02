@@ -121,7 +121,8 @@ public class Jail extends JavaPlugin {
 		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_CHAT, PlayerListener, Event.Priority.Lowest, this);
 		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_CHAT, PlayerPreventListener, Event.Priority.High, this);
 		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_INTERACT, PlayerPreventListener, Event.Priority.High, this);	
-		
+		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_ANIMATION, PlayerListener, Event.Priority.High, this);	
+
 		Plugin plugin = Jail.instance.getServer().getPluginManager().getPlugin("Spout");
 		if (plugin != null)
 		{

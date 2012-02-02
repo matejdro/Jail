@@ -2,6 +2,7 @@ package com.matejdro.bukkit.jail.listeners;
 
 import java.util.Random;
 
+import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;

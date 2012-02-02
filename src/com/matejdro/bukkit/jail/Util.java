@@ -97,10 +97,10 @@ public class Util {
     	  }
     	}
     
-    public static void log(String text)
+    public static void debug(String text)
     {
 		try {
-			FileWriter fstream = new FileWriter(new File("plugins" + File.separator + "Jail","jail.log"), true);
+			FileWriter fstream = new FileWriter(new File("plugins" + File.separator + "Jail","debug.log"), true);
 			BufferedWriter out = new BufferedWriter(fstream);
 			DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 			out.append("[" + dateFormat.format(new Date()) + "] " + text);

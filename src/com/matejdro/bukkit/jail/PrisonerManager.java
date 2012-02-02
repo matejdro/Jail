@@ -1,9 +1,12 @@
 package com.matejdro.bukkit.jail;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
 import org.bukkit.command.CommandSender;
@@ -11,6 +14,7 @@ import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.permissions.PermissionDefault;
 
 public class PrisonerManager {
 	/**
@@ -487,5 +491,34 @@ public class PrisonerManager {
 		
 		prisoner.SetBeingReleased(false);
 		InputOutput.UpdatePrisoner(prisoner);
+	}
+	
+	public static void useJailStick(Player player)
+	{
+		Boolean enabled = Jail.jailStickToggle.get(player);
+		if (enabled == null || !enabled) return;
+
+		if (!InputOutput.global.getBoolean(Setting.EnableJailStick.getString(), false) || !InputOutput.jailStickParameters.containsKey(player.getItemInHand().getTypeId())) return;
+		if (!Util.permission(player, "jail.usejailstick." + String.valueOf(player.getItemInHand().getTypeId()), PermissionDefault.OP)) return;
+		String[] param = InputOutput.jailStickParameters.get(player.getItemInHand().getTypeId());
+
+		List<Block> targets = player.getLineOfSight(null, Integer.parseInt(param[1]));
+		for (Block b : targets)
+		{
+			for (Player p : Bukkit.getServer().getOnlinePlayers())
+			{
+				if (p == player) continue;
+				if ((b.getLocation().equals(p.getLocation().getBlock().getLocation()) || b.getLocation().equals(p.getEyeLocation().getBlock().getLocation())) && Util.permission(player, "jail.canbestickjailed", PermissionDefault.TRUE))
+				{
+					String args[] = new String[4];
+					args[0] = p.getName();
+					args[1] = param[2];
+					args[2] = param[3];
+					args[3] = param[4];
+					PrisonerManager.PrepareJail((CommandSender) player, args); 
+				}
+			}
+		}
+
 	}
 }

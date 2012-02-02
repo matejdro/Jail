@@ -2,12 +2,16 @@ package com.matejdro.bukkit.jail.listeners;
 
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerAnimationEvent;
+import org.bukkit.event.player.PlayerAnimationType;
 import org.bukkit.event.player.PlayerChatEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerListener;
@@ -51,34 +55,20 @@ public class JailPlayerListener extends PlayerListener {
 				event.setCancelled(true);
 			}
 		}
-		Player player = event.getPlayer();
-		Boolean enabled = Jail.jailStickToggle.get(player);
-		if (enabled == null || !enabled) return;
-
-		if (!InputOutput.global.getBoolean(Setting.EnableJailStick.getString(), false) || !InputOutput.jailStickParameters.containsKey(player.getItemInHand().getTypeId())) return;
-		if (!Util.permission(player, "jail.usejailstick" + String.valueOf(player.getItemInHand().getTypeId()), PermissionDefault.OP)) return;
-		String[] param = InputOutput.jailStickParameters.get(player.getItemInHand().getTypeId());
-
-		List<Block> targets = player.getLineOfSight(null, Integer.parseInt(param[1]));
-		for (Block b : targets)
-		{
-			for (Player p : plugin.getServer().getOnlinePlayers())
-			{
-				if ((b == p.getLocation().getBlock() || b == p.getEyeLocation().getBlock()) && Util.permission(player, "jail.canbestickjailed", PermissionDefault.TRUE))
-				{
-					if (p == player) continue;
-					String args[] = new String[4];
-					args[0] = p.getName();
-					args[1] = param[2];
-					args[2] = param[3];
-					args[3] = param[4];
-					PrisonerManager.PrepareJail((CommandSender) event.getPlayer(), args); 
-				}
-			}
-		}
-
+		
+		PrisonerManager.useJailStick(event.getPlayer());
 	}
 		
+
+	
+	@Override
+	public void onPlayerAnimation(PlayerAnimationEvent event) {
+		if (event.getAnimationType() == PlayerAnimationType.ARM_SWING)
+		{
+			PrisonerManager.useJailStick(event.getPlayer());
+		}
+	}
+
 	public void onPlayerChat(PlayerChatEvent event) {
 		if (event.isCancelled()) return;
 		if ( JailCellCreation.players.containsKey(event.getPlayer().getName()))
