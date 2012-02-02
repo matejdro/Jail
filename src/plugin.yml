@@ -1,9 +1,9 @@
 name: Jail
 main: com.matejdro.bukkit.jail.Jail
-version: 2.0.5
+version: 2.1.
 description: Ban too harsh? Kick/mute/whatever not enough? Jail bad players!
 author: matejdro
-website: http://forums.bukkit.org/threads/admn-rpg-jail-v1-2-2-jail-bad-players-1060.1912/
+website: dev.bukkit.org/server-mods/jail/
 softdepend: [Spout, WorldEdit, Vault]
 commands:
     jailcreate:
