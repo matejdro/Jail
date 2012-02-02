@@ -88,12 +88,13 @@ public class PrisonerManager {
 			
 		if (jailname.equals(InputOutput.global.getString(Setting.NearestJailCode.getString()))) 
 			jailname = "";
-		
+		Util.debug("[Jailing " + playername + "] Requested jail: " + jailname);
 		String cellname = null;
 		if (jailname.contains(":"))
 		{
 			cellname = jailname.split(":")[1];
-			jailname = jailname.split(":")[0];			
+			jailname = jailname.split(":")[0];
+			Util.debug("[Jailing " + playername + "] Requested cell: " + cellname);
 		}
 		String jailer;
 		if (sender instanceof Player)
@@ -108,9 +109,11 @@ public class PrisonerManager {
 			JailPrisoner prisoner = new JailPrisoner(playername, time * 6, jailname, cellname, true, "", reason, InputOutput.global.getBoolean(Setting.AutomaticMute.getString(), false),  "" ,jailer, "");
 			if (prisoner.getJail() != null)
 			{
+				Util.debug("[Jailing " + playername + "] Searching for requested cell");
 				JailCell cell = prisoner.getJail().getRequestedCell(prisoner);
 				if (cell != null && (cell.getPlayerName() == null || cell.getPlayerName().trim().equals("")))
 				{
+					Util.debug("[Jailing " + playername + "] Found requested cell");
 					cell.setPlayerName(prisoner.getName());
 					cell.update();
 				}
@@ -156,6 +159,7 @@ public class PrisonerManager {
 		JailZone jail = prisoner.getJail();
 		if (jail == null)
 		{
+			Util.debug(prisoner, "searching for nearest jail");
 			jail = JailZoneManager.findNearestJail(player.getLocation());
 			prisoner.setJail(jail);
 		}
@@ -178,11 +182,13 @@ public class PrisonerManager {
 		JailCell cell = jail.getRequestedCell(prisoner);
 		if (cell == null || (cell.getPlayerName() != null && !cell.getPlayerName().equals("") && !cell.getPlayerName().equals(prisoner.getName()))) 
 		{
+			Util.debug(prisoner, "No requested cell. searching for empty cell");
 			cell = null;
 			cell = jail.getEmptyCell();
 		}
 		if (cell != null)
 		{
+			Util.debug(prisoner, "Found cell!");
 			cell.setPlayerName(player.getName());
 			prisoner.setCell(cell);
 			player.teleport(prisoner.getTeleportLocation());

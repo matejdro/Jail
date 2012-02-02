@@ -97,24 +97,31 @@ public class Util {
     	  }
     	}
     
+    public static void debug(JailPrisoner prisoner, String text)
+    {
+    	debug("[p " + prisoner.getName() + "] " + text);
+    }
+    
     public static void debug(String text)
     {
-		try {
-			FileWriter fstream = new FileWriter(new File("plugins" + File.separator + "Jail","debug.log"), true);
-			BufferedWriter out = new BufferedWriter(fstream);
-			DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
-			out.append("[" + dateFormat.format(new Date()) + "] " + text);
-	    	out.newLine();
-	    	  //Close the output stream
-	    	out.close();
-	    	fstream.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			Jail.log.log(Level.SEVERE, "[Jail]: Unable to write data to log file.");
+    	if (InputOutput.global.getBoolean(Setting.Debug.getString()))
+    	{
+    		try {
+    			FileWriter fstream = new FileWriter(new File("plugins" + File.separator + "Jail","debug.log"), true);
+    			BufferedWriter out = new BufferedWriter(fstream);
+    			DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+    			out.append("[" + dateFormat.format(new Date()) + "] " + text);
+    	    	out.newLine();
+    	    	  //Close the output stream
+    	    	out.close();
+    	    	fstream.close();
+    		} catch (IOException e) {
+    			// TODO Auto-generated catch block
+    			Jail.log.log(Level.SEVERE, "[Jail]: Unable to write debug data to log file.");
 
-			e.printStackTrace();
-		}
-    	 
+    			e.printStackTrace();
+    		}
+    	}
     }
     
     public static void changeSkin(Player player, String skin)

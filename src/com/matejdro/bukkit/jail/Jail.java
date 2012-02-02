@@ -176,15 +176,18 @@ public class Jail extends JavaPlugin {
     			    	
     	    	    	  for (JailPrisoner prisoner : prisoners.values().toArray(new JailPrisoner[0]))
     	    	    	  {
+    	    	    	      Util.debug(prisoner, "Time event");
     	    	    		  Player player = getServer().getPlayerExact(prisoner.getName());
     	    	    		  if (prisoner.getRemainingTime() > 0 && (player != null || (prisoner.getJail() != null && prisoner.getJail().getSettings().getBoolean(Setting.CountdownTimeWhenOffline))))
     	    	    		  {
+      	    	    				  Util.debug(prisoner, "Lowering remaining time for prisoner");
     	    	    			  	  prisoner.setRemainingTime(prisoner.getRemainingTime() - 1);
-    	    	        			  InputOutput.UpdatePrisoner(prisoner);   				  
+    	    	        			  InputOutput.UpdatePrisoner(prisoner);   	
     	    	
     	    	    		  }
     	    	    		  else if (player != null && prisoner.getRemainingTime() == 0 && prisoner.offlinePending() == false)
 	    	        		  {
+    	    	    			Util.debug(prisoner, "Releasing prisoner because his time is up and he is online");
   	        					PrisonerManager.UnJail(prisoner, player);
 	    	        		  }
     	    	    		  
@@ -195,6 +198,7 @@ public class Jail extends JavaPlugin {
     	    	    				  prisoner.setAFKTime(prisoner.getAFKTime() + 1);
         	    	    			  if (prisoner.getAFKTimeMinutes() > prisoner.getJail().getSettings().getDouble(Setting.MaximumAFKTime))
         	    	    			  {
+        	    	    	    	      Util.debug(prisoner, "Prisoner is AFK. Let's kick him");
         	    	    				  prisoner.setAFKTime(0);
         	    	    				  player.kickPlayer(prisoner.getJail().getSettings().getString(Setting.MessageAFKKick));
         	    	    			  }
