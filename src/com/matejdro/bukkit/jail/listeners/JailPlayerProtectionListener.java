@@ -5,11 +5,12 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
@@ -23,7 +24,7 @@ import com.matejdro.bukkit.jail.JailZone;
 import com.matejdro.bukkit.jail.Setting;
 import com.matejdro.bukkit.jail.Util;
 
-public class JailPlayerProtectionListener extends PlayerListener {
+public class JailPlayerProtectionListener implements Listener {
 	private Jail plugin;
 
 	public JailPlayerProtectionListener(Jail instance)
@@ -31,6 +32,7 @@ public class JailPlayerProtectionListener extends PlayerListener {
 		plugin = instance;
 	}
 	
+	@EventHandler()
 	public void onPlayerChat (PlayerChatEvent event)
 	{
 		if (event.isCancelled()) return;
@@ -42,6 +44,7 @@ public class JailPlayerProtectionListener extends PlayerListener {
 		}
 	}
 	
+	@EventHandler()
 	public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
 		if (event.isCancelled()) return;
 		JailPrisoner prisoner = Jail.prisoners.get(event.getPlayer().getName().toLowerCase());
@@ -73,6 +76,7 @@ public class JailPlayerProtectionListener extends PlayerListener {
 		}
 		
 		 
+	@EventHandler()
 	 public void onPlayerMove(PlayerMoveEvent event) {
 		 if (event.isCancelled()) return;
 		 if (Jail.prisoners.containsKey(event.getPlayer().getName().toLowerCase()))
@@ -155,12 +159,14 @@ public class JailPlayerProtectionListener extends PlayerListener {
 	 
 	 
 	 
+	@EventHandler()
 	 public void onPlayerTeleport(PlayerTeleportEvent event) {
 		 if (event.isCancelled()) return;
 		 onPlayerMove((PlayerMoveEvent) event);
 		      }
 		 
-	 public void onPlayerInteract(PlayerInteractEvent event) {
+	@EventHandler()
+	public void onPlayerInteract(PlayerInteractEvent event) {
 			if (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getClickedBlock().getType() == Material.CHEST && (Jail.prisoners.containsKey(event.getPlayer().getName().toLowerCase()) || !Util.permission(event.getPlayer(), "jail.openchest", PermissionDefault.OP)))
 				{
 				for (JailZone jail : Jail.zones.values())
@@ -224,7 +230,8 @@ public class JailPlayerProtectionListener extends PlayerListener {
 			}
 		}
 	 
-	 public void onPlayerRespawn(PlayerRespawnEvent event) {
+	@EventHandler()
+	public void onPlayerRespawn(PlayerRespawnEvent event) {
 		 if (Jail.prisoners.containsKey(event.getPlayer().getName().toLowerCase()) && !Jail.prisoners.get(event.getPlayer().getName().toLowerCase()).isBeingReleased())
 			{
 				final JailPrisoner prisoner = Jail.prisoners.get(event.getPlayer().getName().toLowerCase());

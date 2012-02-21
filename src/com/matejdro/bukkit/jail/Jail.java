@@ -51,11 +51,11 @@ import com.matejdro.bukkit.jail.listeners.JailSpoutListener;
 public class Jail extends JavaPlugin {
 	public static Logger log = Logger.getLogger("Minecraft");
 
-	private JailPlayerListener PlayerListener;
-	private JailBlockListener BlockListener;
-	private JailPlayerProtectionListener PlayerPreventListener;
-	private JailEntityListener EntityListener;
-	private JailSpoutListener SpoutListener;
+	private JailPlayerListener playerListener;
+	private JailBlockListener blockListener;
+	private JailPlayerProtectionListener playerPreventListener;
+	private JailEntityListener entityListener;
+	private JailSpoutListener spoutListener;
 	public JailAPI API;
 	public InputOutput IO;
 	public static HashMap<String,JailZone> zones = new HashMap<String,JailZone>();
@@ -92,10 +92,10 @@ public class Jail extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		instance = this;
-		PlayerListener = new JailPlayerListener(this);
-		BlockListener = new JailBlockListener();
-		PlayerPreventListener = new JailPlayerProtectionListener(this);
-		EntityListener = new JailEntityListener(this);
+		playerListener = new JailPlayerListener();
+		blockListener = new JailBlockListener();
+		playerPreventListener = new JailPlayerProtectionListener(this);
+		entityListener = new JailEntityListener(this);
 		IO = new InputOutput();
 		API = new JailAPI();
 		UpdateTime = 0;
@@ -106,28 +106,16 @@ public class Jail extends JavaPlugin {
 		IO.LoadPrisoners();
 		IO.LoadCells();
 		
-		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_COMMAND_PREPROCESS, PlayerPreventListener, Event.Priority.Low, this);
-		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_JOIN, PlayerListener, Event.Priority.Monitor, this);
-		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_INTERACT, PlayerListener, Event.Priority.High, this);
-		getServer().getPluginManager().registerEvent(Event.Type.BLOCK_BREAK, BlockListener, Event.Priority.Low, this);
-		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_MOVE, PlayerPreventListener, Event.Priority.Low, this);
-		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_TELEPORT, PlayerPreventListener, Event.Priority.Low, this);
-		getServer().getPluginManager().registerEvent(Event.Type.BLOCK_PLACE, BlockListener, Event.Priority.High, this);
-		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_RESPAWN, PlayerPreventListener, Event.Priority.Low, this);
-		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_QUIT, PlayerListener, Event.Priority.Monitor, this);
-		getServer().getPluginManager().registerEvent(Event.Type.ENTITY_DEATH, EntityListener, Event.Priority.Monitor, this);
-		getServer().getPluginManager().registerEvent(Event.Type.ENTITY_DAMAGE, EntityListener, Event.Priority.Low, this);
-		getServer().getPluginManager().registerEvent(Event.Type.ENTITY_EXPLODE, EntityListener, Event.Priority.High, this);
-		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_CHAT, PlayerListener, Event.Priority.Lowest, this);
-		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_CHAT, PlayerPreventListener, Event.Priority.High, this);
-		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_INTERACT, PlayerPreventListener, Event.Priority.High, this);	
-		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_ANIMATION, PlayerListener, Event.Priority.High, this);	
+		getServer().getPluginManager().registerEvents(blockListener, this);
+		getServer().getPluginManager().registerEvents(entityListener, this);
+		getServer().getPluginManager().registerEvents(playerListener, this);
+		getServer().getPluginManager().registerEvents(playerPreventListener, this);
 
 		Plugin plugin = Jail.instance.getServer().getPluginManager().getPlugin("Spout");
 		if (plugin != null)
 		{
-			SpoutListener = new JailSpoutListener();
-			getServer().getPluginManager().registerEvent(Event.Type.CUSTOM_EVENT, SpoutListener, Event.Priority.Normal, this);	
+			spoutListener = new JailSpoutListener();
+			getServer().getPluginManager().registerEvents(spoutListener, this);
 		}
 		
 		timer = new Timer(1000,action);
@@ -158,6 +146,8 @@ public class Jail extends JavaPlugin {
 		commands.put("jailcreatewe", new JailCreateWeCommand());
 		commands.put("jaildeletecell", new JailDeleteCellCommand());
 		commands.put("jailreload", new JailReloadCommand());
+		
+		IO.initMetrics();
 
 		log.info("[Jail] " + getDescription().getFullName() + " loaded!");
 	}

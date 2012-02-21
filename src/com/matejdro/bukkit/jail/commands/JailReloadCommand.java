@@ -3,7 +3,6 @@ package com.matejdro.bukkit.jail.commands;
 import org.bukkit.command.CommandSender;
 
 import com.matejdro.bukkit.jail.Jail;
-import com.matejdro.bukkit.jail.JailPrisoner;
 import com.matejdro.bukkit.jail.Util;
 
 public class JailReloadCommand extends BaseCommand {

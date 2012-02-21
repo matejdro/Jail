@@ -1,22 +1,15 @@
 package com.matejdro.bukkit.jail.listeners;
 
-import java.util.List;
-
-import org.bukkit.Bukkit;
-import org.bukkit.block.Block;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerAnimationEvent;
 import org.bukkit.event.player.PlayerAnimationType;
 import org.bukkit.event.player.PlayerChatEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.permissions.PermissionDefault;
 
 import com.matejdro.bukkit.jail.InputOutput;
 import com.matejdro.bukkit.jail.Jail;
@@ -25,17 +18,11 @@ import com.matejdro.bukkit.jail.JailPrisoner;
 import com.matejdro.bukkit.jail.JailZoneCreation;
 import com.matejdro.bukkit.jail.PrisonerManager;
 import com.matejdro.bukkit.jail.Setting;
-import com.matejdro.bukkit.jail.Util;
 import com.matejdro.bukkit.jail.commands.JailSetCommand;
 
-public class JailPlayerListener extends PlayerListener {
-	private Jail plugin;
-
-	public JailPlayerListener(Jail instance)
-	{
-		plugin = instance;
-	}		
+public class JailPlayerListener implements Listener {
 	
+	@EventHandler()
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		if (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getPlayer().getItemInHand().getTypeId() == InputOutput.global.getInt(Setting.SelectionTool.getString(), 280))
 		{
@@ -61,7 +48,7 @@ public class JailPlayerListener extends PlayerListener {
 		
 
 	
-	@Override
+	@EventHandler()
 	public void onPlayerAnimation(PlayerAnimationEvent event) {
 		if (event.getAnimationType() == PlayerAnimationType.ARM_SWING)
 		{
@@ -69,6 +56,7 @@ public class JailPlayerListener extends PlayerListener {
 		}
 	}
 
+	@EventHandler()
 	public void onPlayerChat(PlayerChatEvent event) {
 		if (event.isCancelled()) return;
 		if ( JailCellCreation.players.containsKey(event.getPlayer().getName()))
@@ -79,7 +67,8 @@ public class JailPlayerListener extends PlayerListener {
 	}
 
 	
-	 public void onPlayerJoin(PlayerJoinEvent event) {
+	@EventHandler()
+	public void onPlayerJoin(PlayerJoinEvent event) {
 		 if (Jail.prisoners.containsKey(event.getPlayer().getName().toLowerCase()))
 		 {
 			 JailPrisoner prisoner = Jail.prisoners.get(event.getPlayer().getName().toLowerCase());
@@ -114,7 +103,8 @@ public class JailPlayerListener extends PlayerListener {
 		 }
 	 }
 	 
-	 public void onPlayerQuit(PlayerQuitEvent event) {
+	@EventHandler()
+	public void onPlayerQuit(PlayerQuitEvent event) {
 		JailPrisoner prisoner = Jail.prisoners.get(event.getPlayer().getName().toLowerCase());
 		if (prisoner == null) return;
 

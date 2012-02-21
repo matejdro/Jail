@@ -1,16 +1,17 @@
 package com.matejdro.bukkit.jail.listeners;
 
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.getspout.spoutapi.event.spout.SpoutCraftEnableEvent;
-import org.getspout.spoutapi.event.spout.SpoutListener;
 
 import com.matejdro.bukkit.jail.Jail;
 import com.matejdro.bukkit.jail.JailPrisoner;
 import com.matejdro.bukkit.jail.Setting;
 import com.matejdro.bukkit.jail.Util;
 
-public class JailSpoutListener extends SpoutListener {
+public class JailSpoutListener implements Listener {
 	
-    @Override
+	@EventHandler()
     public void onSpoutCraftEnable(SpoutCraftEnableEvent event) {
     	JailPrisoner prisoner = Jail.prisoners.get(event.getPlayer().getName().toLowerCase());
     	if (prisoner != null && prisoner.getJail().getSettings().getBoolean(Setting.SpoutChangeSkin))

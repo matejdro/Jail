@@ -2,16 +2,16 @@ package com.matejdro.bukkit.jail.listeners;
 
 import java.util.Random;
 
-import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
-import org.bukkit.event.entity.EntityListener;
 
 import com.matejdro.bukkit.jail.Jail;
 import com.matejdro.bukkit.jail.JailPrisoner;
@@ -19,13 +19,14 @@ import com.matejdro.bukkit.jail.JailZone;
 import com.matejdro.bukkit.jail.JailZoneManager;
 import com.matejdro.bukkit.jail.Setting;
 
-public class JailEntityListener extends EntityListener {
+public class JailEntityListener implements Listener {
 	private Jail plugin;
 	public JailEntityListener(Jail instance)
 	{
 		plugin = instance;
 	}
 	
+	@EventHandler()
 	public void onEntityDeath(EntityDeathEvent event) {
 		//Wolves have done their job, lets remove them.
 		if (event.getEntity() instanceof Player)
@@ -70,6 +71,7 @@ public class JailEntityListener extends EntityListener {
 		
 	}
 	
+	@EventHandler()
 	public void onEntityDamage(EntityDamageEvent event) {
 		if (event.isCancelled()) return;
 		Entity victim = event.getEntity();
@@ -113,6 +115,7 @@ public class JailEntityListener extends EntityListener {
 			
 	}
 	
+	@EventHandler()
 	public void onEntityExplode(EntityExplodeEvent event) {
 		if (event.isCancelled()) return;
 		for (Object o : event.blockList().toArray())

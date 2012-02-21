@@ -1,7 +1,8 @@
 package com.matejdro.bukkit.jail.listeners;
 
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockListener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.permissions.PermissionDefault;
 
@@ -13,9 +14,9 @@ import com.matejdro.bukkit.jail.JailZoneManager;
 import com.matejdro.bukkit.jail.Setting;
 import com.matejdro.bukkit.jail.Util;
 
-public class JailBlockListener extends BlockListener {
+public class JailBlockListener implements Listener {
 	
-	
+	@EventHandler()
 	public void onBlockBreak(BlockBreakEvent event) {
 		if (event.isCancelled()) return;
 		JailZone jail = JailZoneManager.getJail(event.getBlock().getLocation());
@@ -41,6 +42,7 @@ public class JailBlockListener extends BlockListener {
 	
 	}
 	
+	@EventHandler()
 	public void onBlockPlace(BlockPlaceEvent event) {
 		if (event.isCancelled()) return;
 		
