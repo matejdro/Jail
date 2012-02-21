@@ -54,14 +54,21 @@ public class PrisonerManager {
 			}
 			return;
 		}
-		playername = args[0].toLowerCase();
+		playername = args[0];
 
 		Player player = Jail.instance.getServer().getPlayerExact(playername);		
 		if (player == null) player = Jail.instance.getServer().getPlayer(playername);
 		if (player != null) playername = player.getName().toLowerCase();
-		else
+		else if (sender != null)
 		{
-			if (sender != null && !Jail.instance.getServer().getOfflinePlayer(playername).hasPlayedBefore())
+			Boolean exist = false;
+			for (OfflinePlayer p : Bukkit.getServer().getOfflinePlayers())
+				if (p.getName().toLowerCase().equals(playername.toLowerCase()))
+				{
+					exist = true;
+					break;
+				}
+			if (!exist)
 			{
 				Util.Message("Player " + playername + " was never on this server!", sender);
 				return;

@@ -236,10 +236,11 @@ public class JailZone {
 	
 	/**
 	 * @param loc Location to check
-	 * @return squared distance between teleport location of this jail zone and specified location in blocks.
+	 * @return squared distance between teleport location of this jail zone and specified location in blocks. If locations are not in same world, distance cannot be calculated and it will return 2147483647. 
 	 */
 	public double getDistance(Location loc)
 	{
+		if (loc.getWorld() != getTeleportLocation().getWorld()) return (double) Integer.MAX_VALUE;
 		return loc.distance(getTeleportLocation());
 	}
 	
