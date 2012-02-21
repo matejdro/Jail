@@ -23,6 +23,7 @@ public enum Setting {
 	ReleaseBackToPreviousPosition("ReleaseBackToPreviousPosition", false),
 	IgnorePrisonersSleepingState("IgnorePrisonersSleepingState", true),
 	TeleportPrisonerOnRelease("TeleportPrisonerOnRelease", true),
+	DefaultJailTime("DefaultJailTime", -1),
 
 	//JailStick
 	EnableJailStick("EnableJailStick", false),

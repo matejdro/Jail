@@ -25,7 +25,7 @@ public class PrisonerManager {
 	public static void PrepareJail(CommandSender sender, String args[])
 	{
 		String playername;
-		int time = -1;
+		int time = InputOutput.global.getInt(Setting.DefaultJailTime.getString());
 		String jailname = "";
 		if (args.length < 1 || (args.length > 1 && (!Util.isInteger(args[1]))) || args[0].trim().equals("?"))
 		{
