@@ -40,23 +40,25 @@ public class JailDeleteCommand extends BaseCommand {
 				JailZone zone = Jail.zones.get(args[0].toLowerCase());
 				zone.delete();
 				Util.Message("Jail deleted", sender);
+				
+				//Log release into console
+				if (InputOutput.global.getBoolean(Setting.LogJailingIntoConsole.getString(), false))
+				{
+					String jailer;
+					if (sender instanceof Player)
+						jailer = ((Player) sender).getName();
+					else if (sender == null)
+						jailer = "other plugin";
+					else
+						jailer = "console";
+					
+					Jail.log.info("Jail " + args[0] + " was deleted by " + jailer);
+				}
+				
 				return true;
 			}
 		}
 		
-		//Log release into console
-		if (InputOutput.global.getBoolean(Setting.LogJailingIntoConsole.getString(), false))
-		{
-			String jailer;
-			if (sender instanceof Player)
-				jailer = ((Player) sender).getName();
-			else if (sender == null)
-				jailer = "other plugin";
-			else
-				jailer = "console";
-			
-			Jail.log.info("Jail " + args[0] + " was deleted by " + jailer);
-		}
 
 		
 		return true;
