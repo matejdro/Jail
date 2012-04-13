@@ -23,7 +23,6 @@ public class PrisonerManager {
 	 * @param sender CommandSender that send this command
 	 * @param args Arguments for the command. 0 = name, 1 = time, 2 = jail name:cell name, 3 = reason
 	 */
-    @SuppressWarnings("LoggerStringConcat")
 	public static void PrepareJail(CommandSender sender, String args[])
 	{
 		String playername;
@@ -212,21 +211,7 @@ public class PrisonerManager {
 					if (player.getInventory().getItem(i) == null || player.getInventory().getItem(i).getType() == Material.AIR) continue;
 					chest.getInventory().addItem(player.getInventory().getItem(i));
 					player.getInventory().clear(i);
-				}
-								
-				if (cell.getSecondChest() != null)
-				{
-					chest = cell.getSecondChest();
-					chest.getInventory().clear();
-					for (int i = 0;i<40;i++)
-					{
-						if (chest.getInventory().getSize() <= Util.getNumberOfOccupiedItemSlots(chest.getInventory().getContents())) break;
-						if (player.getInventory().getItem(i) == null || player.getInventory().getItem(i).getType() == Material.AIR) continue;
-						chest.getInventory().addItem(player.getInventory().getItem(i));
-						player.getInventory().clear(i);
-					}
-
-				}
+				}								
 			}
 			cell.update();
 		}
@@ -311,22 +296,7 @@ public class PrisonerManager {
 					else
 						player.getInventory().addItem(chest.getInventory().getItem(i));
 				}
-				chest.getInventory().clear();
-				
-				if (cell.getSecondChest() != null)
-				{
-					chest = cell.getSecondChest();
-					for (int i = 0;i<chest.getInventory().getSize();i++)
-					{
-						if (chest.getInventory().getItem(i) == null || chest.getInventory().getItem(i).getType() == Material.AIR) continue;
-						if (player.getInventory().firstEmpty() == -1)
-							player.getWorld().dropItem(player.getLocation(), chest.getInventory().getItem(i));
-						else
-							player.getInventory().addItem(chest.getInventory().getItem(i));
-					}
-					chest.getInventory().clear();
-
-				}
+				chest.getInventory().clear();				
 			}
 			for (Sign sign : cell.getSigns())
 			{
@@ -425,15 +395,6 @@ public class PrisonerManager {
 				}
 				cell.getChest().getInventory().clear();
 			}
-			if (cell.getSecondChest() != null) 
-			{
-				for (ItemStack i: cell.getSecondChest().getInventory().getContents())
-				{
-					if (i == null || i.getType() == Material.AIR) continue;
-					inventory.addItem(i);
-				}
-				cell.getSecondChest().getInventory().clear();
-			}
 			prisoner.setCell(null);
 		}
 						
@@ -475,21 +436,7 @@ public class PrisonerManager {
 					if (player.getInventory().getItem(i) == null || player.getInventory().getItem(i).getType() == Material.AIR) continue;
 					chest.getInventory().addItem(player.getInventory().getItem(i));
 					player.getInventory().clear(i);
-				}
-								
-				if (cell.getSecondChest() != null)
-				{
-					chest = cell.getSecondChest();
-					chest.getInventory().clear();
-					for (int i = 0;i<40;i++)
-					{
-						if (chest.getInventory().getSize() <= Util.getNumberOfOccupiedItemSlots(chest.getInventory().getContents())) break;
-						if (player.getInventory().getItem(i) == null || player.getInventory().getItem(i).getType() == Material.AIR) continue;
-						chest.getInventory().addItem(player.getInventory().getItem(i));
-						player.getInventory().clear(i);
-					}
-
-				}
+				}		
 			}
 			cell.update();
 		}

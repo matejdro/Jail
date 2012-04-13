@@ -6,7 +6,10 @@ import java.util.HashSet;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Chest;
+import org.bukkit.block.DoubleChest;
 import org.bukkit.block.Sign;
+import org.bukkit.inventory.DoubleChestInventory;
+import org.bukkit.inventory.InventoryHolder;
 
 public class JailCell {
 	private String name;
@@ -15,7 +18,6 @@ public class JailCell {
 	private Location teleport;
 	private HashSet<Location> signs = new HashSet<Location>();
 	private Location chest;
-	private Location chest2;
 	Location oldteleport = null;
 	
 	/**
@@ -96,7 +98,8 @@ public class JailCell {
 		Location loc = new Location(getJail() != null ? getJail().getTeleportLocation().getWorld() : null, Double.parseDouble(str[0]), Double.parseDouble(str[1]),Double.parseDouble(str[2]));
 		teleport = loc;
 	}
-		
+	
+	
 	/**
 	 * @return chest that belongs to this cell. Returns null if there is no such chest.
 	 */
@@ -130,42 +133,7 @@ public class JailCell {
 		Location loc = new Location(getJail().getTeleportLocation().getWorld(), Double.parseDouble(str[0]), Double.parseDouble(str[1]),Double.parseDouble(str[2]));
 		chest = loc;
 	}
-	
-	/**
-	 * @return second chest (in case of double chest) that belongs to this cell. Returns null if there is no such chest.
-	 */
-	public Chest getSecondChest()
-	{
-		if (chest2 == null ) return null;
-		if (chest2.getWorld() == null) chest2.setWorld(getJail().getTeleportLocation().getWorld());
-		if (chest2.getBlock() == null || (chest2.getBlock().getType() != Material.CHEST)) return null;
-
-		return (Chest) chest2.getBlock().getState();
-	}
-
-	
-	/**
-	 * set second chest (in case of double chest) that belongs to this cell.
-	 * @param input location of the second chest
-	 */
-	public void setSecondChest(Location input)
-	{
-		chest2 = input;
-	}
-
-	
-	/**
-	 * second chest (in case of double chest) that belongs to this cell.
-	 * @param input location of the second chest in string. Format: "x,y,z"
-	 */
-	public void setSecondChest(String input)
-	{
-		if (input == null || input.trim().equals("")) return;
-		String[] str = input.split(",");
-		Location loc = new Location(getJail().getTeleportLocation().getWorld(), Double.parseDouble(str[0]), Double.parseDouble(str[1]),Double.parseDouble(str[2]));
-		chest2 = loc;
-	}
-	
+		
 	/**
 	 * @return a list of signs that belongs to this cell.
 	 */

@@ -89,11 +89,6 @@ public static HashMap<String,CreationPlayer> players = new HashMap<String,Creati
 		if (block.getType() == Material.CHEST)
 		{
 			cr.cell.setChest(block.getLocation());
-			if (block.getRelative(BlockFace.NORTH).getType() == Material.CHEST) cr.cell.setSecondChest(block.getRelative(BlockFace.NORTH).getLocation());
-			else if (block.getRelative(BlockFace.SOUTH).getType() == Material.CHEST) cr.cell.setSecondChest(block.getRelative(BlockFace.SOUTH).getLocation());
-			else if (block.getRelative(BlockFace.EAST).getType() == Material.CHEST) cr.cell.setSecondChest(block.getRelative(BlockFace.EAST).getLocation());
-			else if (block.getRelative(BlockFace.WEST).getType() == Material.CHEST) cr.cell.setSecondChest(block.getRelative(BlockFace.WEST).getLocation());
-
 		}
 			
 		cr.state++;

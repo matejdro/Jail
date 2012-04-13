@@ -297,15 +297,9 @@ public class JailSetCommand extends BaseCommand {
 		case 5:
 			Util.Message("Cell chest updated.", p);
 			data.cell.setChest((Location) null);
-			data.cell.setSecondChest((Location) null);
 			if (b.getType() == Material.CHEST)
 			{
 				data.cell.setChest(b.getLocation());
-				if (b.getRelative(BlockFace.NORTH).getType() == Material.CHEST) data.cell.setSecondChest(b.getRelative(BlockFace.NORTH).getLocation());
-				else if (b.getRelative(BlockFace.SOUTH).getType() == Material.CHEST) data.cell.setSecondChest(b.getRelative(BlockFace.SOUTH).getLocation());
-				else if (b.getRelative(BlockFace.EAST).getType() == Material.CHEST) data.cell.setSecondChest(b.getRelative(BlockFace.EAST).getLocation());
-				else if (b.getRelative(BlockFace.WEST).getType() == Material.CHEST) data.cell.setSecondChest(b.getRelative(BlockFace.WEST).getLocation());
-
 			}
 			data.cell.update();
 			players.remove(p.getName());

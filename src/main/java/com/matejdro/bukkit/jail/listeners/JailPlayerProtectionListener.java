@@ -172,7 +172,7 @@ public class JailPlayerProtectionListener implements Listener {
 				for (JailZone jail : Jail.zones.values())
 					for (JailCell cell : jail.getCellList())
 					{
-						if ((!jail.getSettings().getBoolean(Setting.CanPrisonerOpenHisChest) || !cell.getPlayerName().toLowerCase().equals(event.getPlayer().getName().toLowerCase())) && ((cell.getChest() != null && event.getClickedBlock() == cell.getChest().getBlock()) || (cell.getSecondChest() != null && event.getClickedBlock() == cell.getSecondChest().getBlock())))
+						if ((!jail.getSettings().getBoolean(Setting.CanPrisonerOpenHisChest) || !cell.getPlayerName().toLowerCase().equals(event.getPlayer().getName().toLowerCase())) && ((cell.getChest() != null && event.getClickedBlock() == cell.getChest().getBlock())))
 								{
 							event.setCancelled(true);
 							return;

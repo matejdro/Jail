@@ -737,7 +737,6 @@ public class JailPrisoner {
 
 			}
 			if (cell.getChest() != null) cell.getChest().getInventory().clear();
-			if (cell.getSecondChest() != null) cell.getSecondChest().getInventory().clear();
 			cell.setPlayerName("");
 		}
 		
