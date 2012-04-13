@@ -759,22 +759,17 @@ public class InputOutput {
     public void initMetrics()
     {
     	try {
-    	    Metrics metrics = new Metrics();
+    	    Metrics metrics = new Metrics(Jail.instance);
 
     	    // Add our plotters
-    	    metrics.addCustomData(Jail.instance, new Metrics.Plotter() {
-    	        @Override
-    	        public String getColumnName() {
-    	            return "Total people jailed";
-    	        }
-
+    	    metrics.addCustomData(new Metrics.Plotter("Total people jailed") {
     	        @Override
     	        public int getValue() {
     	            return Jail.prisoners.size();
     	        }
     	    });
 
-    	    metrics.beginMeasuringPlugin(Jail.instance);
+    	    metrics.start();
     	} catch (IOException e) {
 			Jail.log.log(Level.SEVERE, "[Jail] Error while initializing Metrics - " + e.getMessage());
 			e.printStackTrace();
