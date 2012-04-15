@@ -422,7 +422,7 @@ public class InputOutput {
     {
     	try {
 			Connection conn = InputOutput.getConnection();
-			PreparedStatement ps = conn.prepareStatement("INSERT INTO jail_cells (JailName, Teleport, Sign, Chest, Player, Name) VALUES (?,?,?,?,?,?,?)");
+			PreparedStatement ps = conn.prepareStatement("INSERT INTO jail_cells (JailName, Teleport, Sign, Chest, Player, Name) VALUES (?,?,?,?,?,?)");
 			ps.setString(1, c.getJail().getName());
 			
 			ps.setString(2, String.valueOf(c.getTeleportLocation().getX()) + "," + String.valueOf(c.getTeleportLocation().getY()) + "," + String.valueOf(c.getTeleportLocation().getZ()));
