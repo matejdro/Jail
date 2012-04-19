@@ -17,7 +17,7 @@ public enum Setting {
 	LogJailingIntoConsole("LogJailingIntoConsole", false),
 	CountdownTimeWhenOffline("CountdownTimeWhenOffline", false),
 	SpoutChangeSkin("SpoutChangeSkin", false),
-	SpoutSkinChangeURL("SpoutSkinChangeURL", "http://www.minecraftskins.com/uploaded_skins/skin_120213050249190082.png"),
+	SpoutSkinChangeURL("SpoutSkinChangeURL", "http://www.planetminecraft.com/files/resource_media/skin/1118/skin_41409_skin.png"),
 	ManualJails("ManualJails", new ArrayList<String>()),
 	ManualCells("ManualCells", new ArrayList<String>()),
 	ReleaseBackToPreviousPosition("ReleaseBackToPreviousPosition", false),
