@@ -273,7 +273,8 @@ public class PrisonerManager {
 		JailZone jail = prisoner.getJail();	
 		Util.Message(jail.getSettings().getString(Setting.MessageUnJail), player);
 		
-		Util.changeSkin(player, "");
+		if (jail.getSettings().getBoolean(Setting.SpoutChangeSkin))
+			Util.changeSkin(player, null);
 		
 		if (jail.getSettings().getBoolean(Setting.EnableChangingPermissions) && !jail.getSettings().getBoolean(Setting.RestorePermissionsToEscapedPrisoners))
 		{

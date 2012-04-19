@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.logging.Level;
 
 import net.milkbowl.vault.permission.Permission;
+
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -20,6 +21,7 @@ import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.getspout.spoutapi.SpoutManager;
+import org.getspout.spoutapi.player.SpoutPlayer;
 
 public class Util {
     public static Permission permission = null;
@@ -126,13 +128,15 @@ public class Util {
     
     public static void changeSkin(Player player, String skin)
 	{
+    	SpoutPlayer sPlayer = SpoutManager.getPlayer(player);
+    	
 		Plugin plugin = Jail.instance.getServer().getPluginManager().getPlugin("Spout");
 		if (plugin != null)
 		{			
-			if (!skin.trim().isEmpty())
-				SpoutManager.getAppearanceManager().setGlobalSkin(player, skin);
+			if (skin != null && !skin.trim().isEmpty())
+				sPlayer.setSkin(skin);
 			else
-				SpoutManager.getAppearanceManager().resetGlobalSkin(player);
+				sPlayer.resetSkin();
 		}
 	}
         
