@@ -14,6 +14,7 @@ import java.util.logging.Level;
 import net.milkbowl.vault.permission.Permission;
 
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -187,6 +188,29 @@ public class Util {
             permission = permissionProvider.getProvider();
         }
         return (permission != null);
+    }
+    
+    public static Player getPlayer(String name, Boolean partialName)
+    {
+    	Player player = Bukkit.getServer().getPlayerExact(name);
+		if (player == null && partialName) player = Bukkit.getServer().getPlayer(name);
+		
+		return player;
+    }
+    
+    public static Boolean playerExists(String name)
+    {
+    	name = name.toLowerCase();
+    	
+		for (OfflinePlayer p : Bukkit.getServer().getOfflinePlayers())
+		{
+			if (p.getName().toLowerCase().equals(name))
+			{
+				return true;
+			}
+		}
+		
+		return false;
     }
 
 }

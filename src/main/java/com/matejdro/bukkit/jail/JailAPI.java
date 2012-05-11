@@ -3,6 +3,7 @@ package com.matejdro.bukkit.jail;
 import java.util.Collection;
 
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 
 /**
  * Collection of useful methods to easily access and mess with Jail API.
@@ -14,19 +15,12 @@ public class JailAPI {
 	 * @param time Jail time in minutes
 	 * @param jailName Name of the jail, where prisoner will be jailed. Use null to let plugin select nearest jail.
 	 * @param reason Reason for jailing. Use null if you don't want to specify reason.
+	 * @deprecated use jailPlayer(String playerName, int time, String jailName, String cellName, String reason)
 	 */
+	@Deprecated
 	public void jailPlayer(String playerName, int time, String jailName, String reason)
 	{
-		if (jailName == null) jailName = "";
-		if (reason == null) reason = "";
-		
-		String[] args = new String[4];
-		args[0] = playerName;
-		args[1] = String.valueOf(time);
-		args[2] = jailName;
-		args[3] = reason;
-	
-		PrisonerManager.PrepareJail(null, args);
+		jailPlayer(playerName, time, jailName, "", reason);
 	}
 	
 	/**
@@ -37,20 +31,35 @@ public class JailAPI {
 	 * @param cellName Name of the cell, where prisoner will be jailed.
 	 * @param reason Reason for jailing. Use null if you don't want to specify reason.
 	 */
-	public void jailPlayer(String playerName, int time, String jailName, String cellName, String reason)
+	public JailPrisoner jailPlayer(String playerName, int time, String jailName, String cellName, String reason)
 	{
-		if (jailName == null) jailName = "";
-		if (reason == null) reason = "";
-		
-		String[] args = new String[4];
-		args[0] = playerName;
-		args[1] = String.valueOf(time);
-		args[2] = jailName + ":" + cellName;
-		args[3] = reason;
-	
-		PrisonerManager.PrepareJail(null, args);
+		return jailPlayer(playerName, time, jailName, cellName, reason, "other player");
 	}
 	
+	/**
+	 * Jail specified player
+	 * @param playerName Name of the player you want to jail
+	 * @param time Jail time in minutes
+	 * @param jailName Name of the jail, where prisoner will be jailed. Use null to let plugin select nearest jail.
+	 * @param cellName Name of the cell, where prisoner will be jailed.
+	 * @param reason Reason for jailing. Use null if you don't want to specify reason.
+	 * @param jailer Who jailed this player? Usually name of your plugin.
+	 */
+
+	public JailPrisoner jailPlayer(String playerName, int time, String jailName, String cellName, String reason, String jailer)
+	{
+		if (jailName == null) jailName = "";
+		if (cellName == null) cellName = "";
+		if (reason == null) reason = "";
+		
+		JailPrisoner prisoner = new JailPrisoner(playerName, time, jailName, cellName, false, "", reason, false, "", jailer, "");
+		Player player = Util.getPlayer(playerName, false);	
+		
+		PrisonerManager.PrepareJail(prisoner, player);
+		
+		return prisoner;
+
+	}		
 	/**
 	 * Check if is specified player jailed
 	 * @param playerName name of the player you want to check

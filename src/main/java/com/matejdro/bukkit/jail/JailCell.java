@@ -6,10 +6,7 @@ import java.util.HashSet;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Chest;
-import org.bukkit.block.DoubleChest;
 import org.bukkit.block.Sign;
-import org.bukkit.inventory.DoubleChestInventory;
-import org.bukkit.inventory.InventoryHolder;
 
 public class JailCell {
 	private String name;

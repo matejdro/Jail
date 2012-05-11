@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
@@ -18,138 +17,40 @@ import org.bukkit.permissions.PermissionDefault;
 
 
 public class PrisonerManager {
-	/**
-	 * Parse jail command and prepare user for jailing (if he is online, he will be instantly jailed. Otherwise, he will be jailed first time when he comes online)
-	 * @param sender CommandSender that send this command
-	 * @param args Arguments for the command. 0 = name, 1 = time, 2 = jail name:cell name, 3 = reason
-	 */
-	public static void PrepareJail(CommandSender sender, String args[])
+	
+	public static void PrepareJail(JailPrisoner prisoner, Player player)
 	{
-		String playername;
-		int time = InputOutput.global.getInt(Setting.DefaultJailTime.getString());
-		String jailname = "";
-		if (args.length < 1 || (args.length > 1 && (!Util.isInteger(args[1]))) || args[0].trim().equals("?"))
-		{
-			if (sender != null) Util.Message("Usage: /jail [Name] (Time) (Jail Name:Cell Name) (Reason)", sender);
-			return;
-		}
-		if (Jail.zones.size() < 1)
-		{
-			if (sender != null) Util.Message("There is no jail available. Build one, before you can jail anyone!", sender);
-			return;
-		}
-		if (Jail.prisoners.containsKey(args[0].toLowerCase()))
-		{
-			JailPrisoner prisoner = Jail.prisoners.get(args[0].toLowerCase());
-			Player player = Jail.instance.getServer().getPlayer(prisoner.getName());
-			if (player != null)
-			{
-				player.teleport(prisoner.getTeleportLocation());
-				if (sender != null) Util.Message("Player was teleported back to his jail!", sender);
-
-			}
-			else
-			{
-				if (sender != null) Util.Message("That player is already jailed!", sender);
-
-			}
-			return;
-		}
-		playername = args[0];
-
-		Player player = Jail.instance.getServer().getPlayerExact(playername);		
-		if (player == null) player = Jail.instance.getServer().getPlayer(playername);
-		if (player != null) playername = player.getName().toLowerCase();
-		else if (sender != null)
-		{
-			Boolean exist = false;
-			for (OfflinePlayer p : Bukkit.getServer().getOfflinePlayers())
-				if (p.getName().toLowerCase().equals(playername.toLowerCase()))
-				{
-					exist = true;
-					break;
-				}
-			if (!exist)
-			{
-				Util.Message("Player " + playername + " was never on this server!", sender);
-				return;
-			}
-		}
-		
-		if (args.length > 1)
-			time = Integer.valueOf(args[1]);
-		if (args.length > 2)
-			jailname = args[2].toLowerCase();
-		String reason = "";
-		if (args.length > 3)
-		{
-			for (int i=3;i<args.length;i++)
-			{
-				reason+= " " + args[i];
-			}
-			if (reason.length() > 250)
-			{
-				if (sender != null) Util.Message("Reason is too long!", sender);
-				return;
-			}
-		}
-			
-		if (jailname.equals(InputOutput.global.getString(Setting.NearestJailCode.getString()))) 
-			jailname = "";
-		Util.debug("[Jailing " + playername + "] Requested jail: " + jailname);
-		String cellname = null;
-		if (jailname.contains(":"))
-		{
-			cellname = jailname.split(":")[1];
-			jailname = jailname.split(":")[0];
-			Util.debug("[Jailing " + playername + "] Requested cell: " + cellname);
-		}
-		String jailer;
-		if (sender instanceof Player)
-			jailer = ((Player) sender).getName();
-		else if (sender == null)
-			jailer = "other plugin";
-		else
-			jailer = "console";
-			
 		if (player == null)
 		{
-			JailPrisoner prisoner = new JailPrisoner(playername, time * 6, jailname, cellname, true, "", reason, InputOutput.global.getBoolean(Setting.AutomaticMute.getString(), false),  "" ,jailer, "");
+			prisoner.setOfflinePending(true);
 			if (prisoner.getJail() != null)
 			{
-				Util.debug("[Jailing " + playername + "] Searching for requested cell");
+				Util.debug(prisoner, "Searching for requested cell");
 				JailCell cell = prisoner.getJail().getRequestedCell(prisoner);
 				if (cell != null && (cell.getPlayerName() == null || cell.getPlayerName().trim().equals("")))
 				{
-					Util.debug("[Jailing " + playername + "] Found requested cell");
+					Util.debug(prisoner, "Found requested cell");
 					cell.setPlayerName(prisoner.getName());
 					cell.update();
 				}
 			}
 			
 			InputOutput.InsertPrisoner(prisoner);
-			Jail.prisoners.put(prisoner.getName(), prisoner);
-			
-			
-			Util.Message("Player is offline. He will be automatically jailed when he connnects.", sender);
-			
+			Jail.prisoners.put(prisoner.getName(), prisoner);			
 		}
 		else
 		{
-			playername = player.getName().toLowerCase();
-			JailPrisoner prisoner = new JailPrisoner(playername, time * 6, jailname, cellname, false, "", reason, InputOutput.global.getBoolean(Setting.AutomaticMute.getString(), false),  "", jailer, "");
-			Jail(prisoner, player);
-			Util.Message("Player jailed.", sender);
-			
+			prisoner.setOfflinePending(false);
+			Jail(prisoner, player);			
 		}
 		
 		//Log jailing into console
 		if (InputOutput.global.getBoolean(Setting.LogJailingIntoConsole.getString(), false))
 		{
 			String times;
-			if (time < 0) times = "forever"; else times = "for " + String.valueOf(time) + "minutes";
+			if (prisoner.getRemainingTime() < 0) times = "forever"; else times = "for " + String.valueOf(prisoner.getRemainingTime()) + " minutes";
 			
-			Jail.log.info("Player " + playername + " was jailed by " + jailer + " " + times);
+			Jail.log.info("Player " + prisoner.getName() + " was jailed by " + prisoner.getJailer() + " " + times);
 		}
 	}
 	
@@ -478,7 +379,11 @@ public class PrisonerManager {
 					args[1] = param[2];
 					args[2] = param[3];
 					args[3] = param[4];
-					PrisonerManager.PrepareJail((CommandSender) player, args); 
+					
+					JailPrisoner prisoner = new JailPrisoner(p.getName(), Integer.parseInt(param[2]), param[3], "", false, "", param[4], false, "", "", "");
+					PrisonerManager.PrepareJail(prisoner, player);
+					
+					//PrisonerManager.PrepareJail((CommandSender) player, args); 
 				}
 			}
 		}

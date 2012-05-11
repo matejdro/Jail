@@ -744,7 +744,6 @@ public class InputOutput {
     	
     	Jail.log.log(Level.INFO, "[Jail] Updating database");
 		try {
-			String[] query;
         	Connection conn = getConnection();
 			Statement st = conn.createStatement();
 			st.executeUpdate("ALTER Table " + table + " DROP " + field);

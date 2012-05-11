@@ -619,7 +619,10 @@ public class JailPrisoner {
 		str = str.replace("<Player>", getName());
 		str = str.replace("<Reason>", getReason());
 		str = str.replace("<Jailer>", getJailer());
-		str = str.replace("<Jail>", getJail().getName());
+		if (getJail() != null) 
+			str = str.replace("<Jail>", getJail().getName());
+		else
+			str = str.replace("<Jail>", "");
 		
 		double time = getRemainingTimeMinutes();
 		String tim;

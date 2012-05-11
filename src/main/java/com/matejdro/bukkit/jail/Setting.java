@@ -24,7 +24,8 @@ public enum Setting {
 	IgnorePrisonersSleepingState("IgnorePrisonersSleepingState", true),
 	TeleportPrisonerOnRelease("TeleportPrisonerOnRelease", true),
 	DefaultJailTime("DefaultJailTime", -1),
-
+	MaximumReasonLength("MaximumReasonLength", 15),
+	
 	//JailStick
 	EnableJailStick("EnableJailStick", false),
 	JailStickParameters("JailStickParameters", "280,5,10,,police;50,5,20,,admin"),
@@ -110,6 +111,11 @@ public enum Setting {
 	MessageJailStatusReason("Messages.JailStatusReason", "You are jailed for <TimeS> by <Jailer> because of <Reason>"),
 	MessageJailStickEnabled("Messages.JailStickEnabled", "JailStick enabled!"),
 	MessageJailStickDisabled("Messages.JailStickDisabled", "JailStick disabled!"),
+	MessageNoJail("Messages.NoJail", "There is no jail available. Build one, before you can jail anyone!"),
+	MessageNeverOnThisServer("Messages.NeverOnThisServer", "Player <Player> was never on this server!"),
+	MessageTooLongReason("Messages.TooLongReason", "Reason is too long!"),
+	MessagePrisonerJailed("Messages.PrisonerJailed", "Prisoner <Player> jailed."),
+	MessagePrisonerOffline("Message.PrisonerOffline", "Prisoner <Player> is offline. He will be moved to jail at next login."),
 	
 	Debug("Debug", false);
 
