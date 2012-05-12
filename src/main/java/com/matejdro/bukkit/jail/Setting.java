@@ -117,6 +117,7 @@ public enum Setting {
 	MessageTooLongReason("Messages.TooLongReason", "Reason is too long!"),
 	MessagePrisonerJailed("Messages.PrisonerJailed", "Prisoner <Player> jailed."),
 	MessagePrisonerOffline("Message.PrisonerOffline", "Prisoner <Player> is offline. He will be moved to jail at next login."),
+	MessageEscape("Messages.Escape", "<Player> have escaped from jail!"),
 	
 	Debug("Debug", false);
 

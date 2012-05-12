@@ -57,7 +57,7 @@ public class JailEntityListener implements Listener {
 					prisoner.spawnGuards(1, player.getLocation(), player);
 				else if (prisoner.getGuards().size() == 0)
 				{
-					plugin.getServer().broadcastMessage(player.getName() + " have escaped from jail!");
+					plugin.getServer().broadcastMessage(prisoner.parseTags(prisoner.getJail().getSettings().getString(Setting.MessageEscape)));
 					prisoner.delete();
 				}
 					
