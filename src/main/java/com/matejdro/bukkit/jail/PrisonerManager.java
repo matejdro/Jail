@@ -84,7 +84,12 @@ public class PrisonerManager {
 		else
 			Util.Message(jail.getSettings().getString(Setting.MessageJailReason).replace("<Reason>", prisoner.getReason()), player);
 
-		if (jail.getSettings().getBoolean(Setting.DeleteInventoryOnJail)) player.getInventory().clear();
+		if (jail.getSettings().getBoolean(Setting.DeleteInventoryOnJail)) 
+		{
+			player.getInventory().clear();
+			player.getInventory().setArmorContents(new ItemStack[] { null, null, null, null });
+			
+		}
 		
 		prisoner.setPreviousPosition(player.getLocation());
 		
