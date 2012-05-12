@@ -84,7 +84,7 @@ public class JailPlayerProtectionListener implements Listener {
 				JailPrisoner prisoner = Jail.prisoners.get(event.getPlayer().getName().toLowerCase());
 				if (prisoner.isBeingReleased() || prisoner.getJail() == null) return;
 				
-				prisoner.setAFKTime(0);
+				if (event.getFrom().getX() != event.getTo().getX() && event.getFrom().getZ() != event.getTo().getZ()) prisoner.setAFKTime(0);
 				
 				JailZone jail = prisoner.getJail();
 				if (!jail.getSettings().getBoolean(Setting.EnablePlayerMoveProtection)) return;
