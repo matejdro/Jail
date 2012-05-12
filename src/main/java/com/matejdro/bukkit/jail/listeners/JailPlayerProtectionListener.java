@@ -3,6 +3,7 @@ package com.matejdro.bukkit.jail.listeners;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.Creature;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
 import org.bukkit.event.EventHandler;
@@ -94,7 +95,7 @@ public class JailPlayerProtectionListener implements Listener {
 					{
 						if (prisoner.getGuards().size() > 0)
 						{
-							for (Wolf w : prisoner.getGuards().toArray(new Wolf[0]))
+							for (Creature w : prisoner.getGuards().toArray(new Creature[0]))
 							{
 								if (w == null || w.isDead())
 								{
@@ -145,13 +146,7 @@ public class JailPlayerProtectionListener implements Listener {
 				}
 				else if (jail.getSettings().getString(Setting.PlayerMoveProtectionAction).equals("guards"))
 				{
-						for (Object o : prisoner.getGuards().toArray())
-						{
-								Wolf w = (Wolf) o;
-								prisoner.getGuards().remove(w);
-								Jail.guards.remove(w);
-								w.remove();
-						}
+						prisoner.killGuards();
 				}
 			}
 				

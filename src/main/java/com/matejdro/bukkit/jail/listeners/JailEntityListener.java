@@ -3,7 +3,9 @@ package com.matejdro.bukkit.jail.listeners;
 import java.util.Random;
 
 import org.bukkit.block.Block;
+import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
 import org.bukkit.event.EventHandler;
@@ -12,6 +14,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.entity.EntityTargetEvent;
 
 import com.matejdro.bukkit.jail.Jail;
 import com.matejdro.bukkit.jail.JailPrisoner;
@@ -28,30 +31,25 @@ public class JailEntityListener implements Listener {
 	
 	@EventHandler()
 	public void onEntityDeath(EntityDeathEvent event) {
-		//Wolves have done their job, lets remove them.
+		//Guards have done their job, lets remove them.
 		if (event.getEntity() instanceof Player)
 		{
 			Player player = (Player) event.getEntity();	
 			JailPrisoner prisoner = Jail.prisoners.get(player.getName());
 			if (prisoner == null) return;
 			
-			for (Object o : prisoner.getGuards().toArray())
-			{
-				Wolf w = (Wolf) o;
-				prisoner.getGuards().remove(w);
-				w.remove();
-			}
+			prisoner.killGuards();
 		}
-		//Respawn wolf or release player if he killed all the wolves and config says so.
-		else if (event.getEntity() instanceof Wolf)
+		//Respawn guard or release player if he killed all the wolves and config says so.
+		else if (event.getEntity() instanceof Creature)
 		{
-			Wolf wolf = (Wolf) event.getEntity();
-			if (Jail.guards.containsKey(wolf))
+			Creature guard = (Creature) event.getEntity();
+			if (Jail.guards.containsKey(guard))
 			{
-				JailPrisoner prisoner = Jail.guards.get(wolf);
+				JailPrisoner prisoner = Jail.guards.get(guard);
 				
-				prisoner.getGuards().remove(wolf);
-				Jail.guards.remove(wolf);
+				prisoner.getGuards().remove(guard);
+				Jail.guards.remove(guard);
 				
 				Player player = plugin.getServer().getPlayer(prisoner.getName());
 				if (player == null) return;
@@ -72,6 +70,17 @@ public class JailEntityListener implements Listener {
 	}
 	
 	@EventHandler()
+	public void onEntityTarget(EntityTargetEvent event)
+	{
+		if (!(event.getEntity() instanceof Creature)) return;
+		
+		JailPrisoner prisoner = Jail.guards.get(event.getEntity());
+		
+		if (prisoner != null && !prisoner.getPossibleGuardTargets().contains(event.getTarget()))
+			event.setCancelled(true);
+	}
+	
+	@EventHandler()
 	public void onEntityDamage(EntityDamageEvent event) {
 		if (event.isCancelled()) return;
 		Entity victim = event.getEntity();
@@ -88,6 +97,13 @@ public class JailEntityListener implements Listener {
 			int newArmor = event.getDamage() - (event.getDamage() * jail.getSettings().getInt(Setting.GuardArmor) / 100);
 			if (newArmor <= 0) newArmor = 1;
 			event.setDamage(newArmor);
+			
+			if (event instanceof EntityDamageByEntityEvent)
+			{
+				EntityDamageByEntityEvent eventD = (EntityDamageByEntityEvent) event;
+				
+				if (eventD.getDamager() instanceof LivingEntity) prisoner.getPossibleGuardTargets().add((LivingEntity) eventD.getDamager());
+			}
 		}
 		if (!(event instanceof EntityDamageByEntityEvent)) return;
 		EntityDamageByEntityEvent newevent = (EntityDamageByEntityEvent) event;

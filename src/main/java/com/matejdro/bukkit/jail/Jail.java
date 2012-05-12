@@ -10,6 +10,7 @@ import javax.swing.Timer;
 import org.bukkit.GameMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Creature;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
 import org.bukkit.plugin.Plugin;
@@ -59,7 +60,7 @@ public class Jail extends JavaPlugin {
 	public InputOutput IO;
 	public static HashMap<String,JailZone> zones = new HashMap<String,JailZone>();
 	public static HashMap<String,JailPrisoner> prisoners = new HashMap<String,JailPrisoner>();
-	public static HashMap<Wolf, JailPrisoner> guards = new HashMap<Wolf, JailPrisoner>();
+	public static HashMap<Creature, JailPrisoner> guards = new HashMap<Creature, JailPrisoner>();
 	public static HashMap<Player, Boolean> jailStickToggle = new HashMap<Player, Boolean>();
 	private Timer timer;
 	private int UpdateTime = 1;
@@ -84,7 +85,7 @@ public class Jail extends JavaPlugin {
 		// TODO Auto-generated method stub
 		timer.stop();
 		InputOutput.freeConnection();
-		for (Wolf w : guards.keySet())
+		for (Creature w : guards.keySet())
 			w.remove();
 	}
 

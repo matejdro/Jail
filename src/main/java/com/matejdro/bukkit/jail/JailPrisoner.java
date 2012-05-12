@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Random;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -12,7 +13,9 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Creature;
 import org.bukkit.entity.CreatureType;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
@@ -36,7 +39,8 @@ public class JailPrisoner {
 	private JailCell cell;
 	private String inventory = "";
 	private String jailer = "";
-	private HashSet<Wolf> guards = new HashSet<Wolf>();
+	private HashSet<Creature> guards = new HashSet<Creature>();
+	private HashSet<LivingEntity> guardTargets = new HashSet<LivingEntity>();
 	private String requestedCell;
 	private List<String> oldPermissions = new ArrayList<String>();
 	private String previousPositionWorld;
@@ -410,9 +414,17 @@ public class JailPrisoner {
 	/**
 	 * @return List of guards that belong to this prisoner
 	 */
-	public HashSet<Wolf> getGuards()
+	public HashSet<Creature> getGuards()
 	{
 		return guards;
+	}
+	
+	/**
+	 * @return Editable list of entities that guards can target
+	 */
+	public HashSet<LivingEntity> getPossibleGuardTargets()
+	{
+		return guardTargets;
 	}
 	
 	/**
@@ -502,8 +514,17 @@ public class JailPrisoner {
 				if (spawn == null) spawn = location;
 			}
 			
-									
-			Wolf guard = (Wolf) location.getWorld().spawnCreature(spawn, CreatureType.WOLF);
+			List<String> guardTypes = (List<String>) jail.getSettings().getList(Setting.GuardTypes);
+			
+			EntityType type = EntityType.fromName(guardTypes.get(new Random().nextInt(guardTypes.size())));				
+			
+			if (type == null || !type.isSpawnable() || !Creature.class.isAssignableFrom(type.getEntityClass()))
+			{
+				Jail.log.severe("[Jail] Invalid GuardTypes config!");
+				type = EntityType.CHICKEN;
+			}
+			
+			Creature guard = (Creature) location.getWorld().spawn(spawn, type.getEntityClass());
 			
 			
 			if (!(guard.getWorld().getEntities().contains(guard)))
@@ -519,14 +540,27 @@ public class JailPrisoner {
 				health = guard.getMaxHealth();
 			}
 			
+			guardTargets.add(player);
+			
 			guard.setHealth(health);
-			guard.setAngry(true);
-			guard.setSitting(false);
+			
 			guard.setTarget(player);
 						
 			getGuards().add(guard);
 			Jail.guards.put(guard, this);
 		}
+	}
+	
+	public void killGuards()
+	{
+		for (Creature c : guards.toArray(new Creature[0]))
+		{
+				guards.remove(c);
+				Jail.guards.remove(c);
+				c.remove();
+		}
+		
+		guardTargets.clear();
 	}
 	
 	/**

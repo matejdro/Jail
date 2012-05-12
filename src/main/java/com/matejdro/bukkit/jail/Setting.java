@@ -69,7 +69,8 @@ public enum Setting {
 	GuardAttackSpeedPercent("Guards.GuardAttackSpeedPercent", 100),
 	RespawnGuards("Guards.RespawnGuards", true),
 	GuardTeleportDistance("Guards.GuardTeleportDistance", 10),
-	
+	GuardTypes("Guards.GuardTypes", Arrays.asList(new String[] { "Zombie", "Silverfish" })),
+
 	//Database
 	UseMySQL("Database.UseMySQL", false),
 	MySQLConn("Database.MySQLConn", "jdbc:mysql://localhost:3306/minecraft"),

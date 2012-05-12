@@ -108,12 +108,6 @@ public class JailPlayerListener implements Listener {
 		JailPrisoner prisoner = Jail.prisoners.get(event.getPlayer().getName().toLowerCase());
 		if (prisoner == null) return;
 
-		for (Object o : prisoner.getGuards().toArray())
-		{
-			Wolf w = (Wolf) o;
-			prisoner.getGuards().remove(w);
-			Jail.guards.remove(w);
-			w.remove();
-		}
+		prisoner.killGuards();
 	 }
 }
