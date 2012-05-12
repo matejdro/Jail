@@ -203,8 +203,9 @@ public class InputOutput {
 				String jailer = set.getString("Jailer");
 				String permissions = set.getString("Permissions");
 				String previousPosition = set.getString("PreviousPosition");
+				Boolean muted = set.getBoolean("muted");
 				
-				JailPrisoner p = new JailPrisoner(name, remaintime, jailname, null, offline, transferDest, reason, false,  inventory, jailer, permissions);
+				JailPrisoner p = new JailPrisoner(name, remaintime, jailname, null, offline, transferDest, reason, muted,  inventory, jailer, permissions);
 				p.setPreviousPosition(previousPosition);
 				
 				Jail.prisoners.put(p.getName(), p);
@@ -621,7 +622,7 @@ public class InputOutput {
             	st = conn.createStatement();
             	if (global.getBoolean(Setting.UseMySQL.getString(), false))
                 {
-                	st.executeUpdate("CREATE TABLE IF NOT EXISTS `jail_prisoners` ( `PlayerName` varchar(250) NOT NULL, `RemainTime` int(11) DEFAULT NULL, `JailName` varchar(250) DEFAULT NULL, `Offline` varchar(250) DEFAULT NULL, `TransferDest` varchar(250) DEFAULT NULL , `reason` varchar(250) DEFAULT NULL, `muted` boolean DEFAULT false, Inventory TEXT DEFAULT NULL, Jailer VARCHAR(250) DEFAULT NULL, Permissions VARCHAR(250) DEFAULT NULL, PreviousPosition VARCHAR(250) DEFAULT NULL, PRIMARY KEY (`PlayerName`) ) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
+                	st.executeUpdate("CREATE TABLE IF NOT EXISTS `jail_prisoners` ( `PlayerName` varchar(250) NOT NULL, `RemainTime` int(11) DEFAULT NULL, `JailName` varchar(250) DEFAULT NULL, `Offline` varchar(250) DEFAULT NULL, `TransferDest` varchar(250) DEFAULT NULL , `reason` varchar(250) DEFAULT NULL, `muted` TINYINT DEFAULT false, Inventory TEXT DEFAULT NULL, Jailer VARCHAR(250) DEFAULT NULL, Permissions VARCHAR(250) DEFAULT NULL, PreviousPosition VARCHAR(250) DEFAULT NULL, PRIMARY KEY (`PlayerName`) ) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
                 	st.executeUpdate("CREATE TABLE IF NOT EXISTS `jail_zones` ( `name` varchar(250) NOT NULL DEFAULT '', `X1` double DEFAULT NULL, `Y1` double DEFAULT NULL, `Z1` double DEFAULT NULL, `X2` double DEFAULT NULL, `Y2` double DEFAULT NULL, `Z2` double DEFAULT NULL, `teleX` double DEFAULT NULL, `teleY` double DEFAULT NULL, `teleZ` double DEFAULT NULL, `freeX` double DEFAULT NULL, `freeY` double DEFAULT NULL, `FreeZ` double DEFAULT NULL, `teleWorld` varchar(250) DEFAULT NULL, `freeWorld` varchar(250) DEFAULT NULL , PRIMARY KEY (`name`) ) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
                 	st.executeUpdate("CREATE TABLE IF NOT EXISTS `jail_cells` ( `JailName` varchar(250) NOT NULL, `Teleport` varchar(250) NOT NULL, `Sign` TEXT DEFAULT NULL , `Chest` varchar(250) DEFAULT NULL, Player varchar(250) DEFAULT NULL, Name varchar(20) DEFAULT NULL, PRIMARY KEY (Teleport) ) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
                 }
