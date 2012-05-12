@@ -94,7 +94,9 @@ public class JailCommand extends BaseCommand {
 			Util.Message(InputOutput.global.getString(Setting.MessageNoJail.getString()).replace("<Player>", playerName), sender);
 			return true;
 		}
-
+		else if (player != null) playerName = player.getName().toLowerCase();
+		
+		
 		JailPrisoner prisoner = new JailPrisoner(playerName, time * 6, jailname, cellname, false, "", reason, muted, "", sender instanceof Player ? ((Player) sender).getName() : "console", ""); 
 		PrisonerManager.PrepareJail(prisoner, player);
 		
