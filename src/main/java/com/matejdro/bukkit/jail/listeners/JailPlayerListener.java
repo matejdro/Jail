@@ -1,6 +1,5 @@
 package com.matejdro.bukkit.jail.listeners;
 
-import org.bukkit.entity.Wolf;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
