@@ -171,14 +171,14 @@ public class Jail extends JavaPlugin {
     	    	    		  {
       	    	    				  Util.debug(prisoner, "Lowering remaining time for prisoner");
     	    	    			  	  prisoner.setRemainingTime(prisoner.getRemainingTime() - 1);
-    	    	        			  InputOutput.UpdatePrisoner(prisoner);   	
+    	    	        			  InputOutput.UpdatePrisoner(prisoner);
+    	    	        			  if (prisoner.getRemainingTime() == 0) 
+    	    	        			  {
+    	    	        				  Util.debug(prisoner, "Releasing prisoner because his time is up and he is online");
+    	    	        				  prisoner.release();
+    	    	        			  }
     	    	
     	    	    		  }
-    	    	    		  else if (player != null && prisoner.getRemainingTime() == 0 && prisoner.offlinePending() == false)
-	    	        		  {
-    	    	    			Util.debug(prisoner, "Releasing prisoner because his time is up and he is online");
-  	        					PrisonerManager.UnJail(prisoner, player);
-	    	        		  }
     	    	    		  
     	    	    		  if (player != null && prisoner.getJail() != null)
     	    	    		  {

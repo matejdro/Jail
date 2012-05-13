@@ -695,8 +695,6 @@ public class JailPrisoner {
 			setOfflinePending(true);
 			setRemainingTime(0);
 			update();
-			Jail.prisoners.put(getName(), this);
-			
 		}
 		else
 		{
