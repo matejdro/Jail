@@ -3,6 +3,8 @@ package com.matejdro.bukkit.jail.listeners;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -163,16 +165,26 @@ public class JailPlayerProtectionListener implements Listener {
 	public void onPlayerInteract(PlayerInteractEvent event) {
 			if (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getClickedBlock().getType() == Material.CHEST && (Jail.prisoners.containsKey(event.getPlayer().getName().toLowerCase()) || !Util.permission(event.getPlayer(), "jail.openchest", PermissionDefault.OP)))
 				{
-				for (JailZone jail : Jail.zones.values())
-					for (JailCell cell : jail.getCellList())
+					for (int i = -1; i < 4; i++)
 					{
-						if ((!jail.getSettings().getBoolean(Setting.CanPrisonerOpenHisChest) || !cell.getPlayerName().toLowerCase().equals(event.getPlayer().getName().toLowerCase())) && ((cell.getChest() != null && event.getClickedBlock() == cell.getChest().getBlock())))
-								{
-							event.setCancelled(true);
-							return;
+						BlockFace face;
+						if (i < 0) face = BlockFace.SELF;
+						else face = BlockFace.values()[i];
+						
+						Block block = event.getClickedBlock().getRelative(face);
+						if (block.getType() != Material.CHEST) continue;
+						for (JailZone jail : Jail.zones.values())
+							for (JailCell cell : jail.getCellList())
+							{
+								if ((!jail.getSettings().getBoolean(Setting.CanPrisonerOpenHisChest) || !cell.getPlayerName().toLowerCase().equals(event.getPlayer().getName().toLowerCase())) && ((cell.getChest() != null && block == cell.getChest().getBlock())))
+										{
+									event.setCancelled(true);
+									return;
+								}
+							}
 						}
 					}
-				}
+					
 			
 			JailPrisoner prisoner = Jail.prisoners.get(event.getPlayer().getName().toLowerCase());
 			if (prisoner != null && prisoner.getJail() != null)
