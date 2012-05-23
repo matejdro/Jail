@@ -166,7 +166,10 @@ public class Jail extends JavaPlugin {
     	    	    	  for (JailPrisoner prisoner : prisoners.values().toArray(new JailPrisoner[0]))
     	    	    	  {
     	    	    	      Util.debug(prisoner, "Time event");
+    	    	    	      Util.debug(prisoner, "Name: \"" + prisoner.getName() + "\"");
     	    	    		  Player player = getServer().getPlayerExact(prisoner.getName());
+    	    	    		  Util.debug(prisoner, "Remaining time:" + prisoner.getRemainingTime());
+    	    	    		  Util.debug("Player: " + String.valueOf(player));
     	    	    		  if (prisoner.getRemainingTime() > 0 && (player != null || (prisoner.getJail() != null && prisoner.getJail().getSettings().getBoolean(Setting.CountdownTimeWhenOffline))))
     	    	    		  {
       	    	    				  Util.debug(prisoner, "Lowering remaining time for prisoner");

@@ -603,7 +603,7 @@ public class JailPrisoner {
 				String[] enchantments = items[3].split("\\*");
 				for (String e : enchantments)
 				{
-					item.addEnchantment(Enchantment.getById(Integer.parseInt(e.split(":")[0])), Integer.parseInt(e.split(":")[1]));
+					item.addUnsafeEnchantment(Enchantment.getById(Integer.parseInt(e.split(":")[0])), Integer.parseInt(e.split(":")[1]));
 				}
 			}
 			
