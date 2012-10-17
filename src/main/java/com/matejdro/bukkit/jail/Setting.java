@@ -40,6 +40,7 @@ public enum Setting {
 	PlayerMoveProtectionPenalty("Protections.PlayerMoveProtectionPenalty", 30),
 	PlayerMoveProtectionAction("Protections.PlayerMoveProtectionAction", "guards"),
 	PreventCommands("Protections.PreventCommands", Arrays.asList(new String[] {"/spawn", "/kill", "/warp"})),
+	WhitelistedCommands("Protections.WhitelistedCommands", new String[] {}),
 	CommandProtectionPenalty("Protections.CommandProtectionPenalty", 10),
 	PreventInteractionBlocks("Protections.PreventInteractionBlocks", Arrays.asList(new String[] {"69", "72", "70", "46", "64", "96", "77"})),
 	PreventInteractionItems("Protections.PreventInteractionItems", Arrays.asList(new String[] {"326", "327", "259"})),

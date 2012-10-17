@@ -53,29 +53,54 @@ public class JailPlayerProtectionListener implements Listener {
 		JailZone jail = prisoner != null ? prisoner.getJail() : null;
 
 		if (prisoner != null)
-		{
-			for (Object o : jail.getSettings().getList(Setting.PreventCommands))
+		{			
+			boolean whitelisted = false;
+
+			if (jail.getSettings().getList(Setting.WhitelistedCommands).size() > 0 )
 			{
-				String i = (String) o;
-				if (event.getMessage().startsWith(i))
+				for (Object o : jail.getSettings().getList(Setting.WhitelistedCommands))
 				{
-					if (jail.getSettings().getInt(Setting.CommandProtectionPenalty) > 0 && prisoner.getRemainingTime() > 0)
+					String i = (String) o;
+					if (event.getMessage().startsWith(i))
 					{
-						
-						Util.Message(jail.getSettings().getString(Setting.MessageForbiddenCommandNoPenalty), event.getPlayer());
-						prisoner.setRemainingTime(prisoner.getRemainingTime() + jail.getSettings().getInt(Setting.CommandProtectionPenalty) * 6);
-						InputOutput.UpdatePrisoner(prisoner);
+						whitelisted = true;
+						break;
 					}
-				else
+				}
+				
+			}
+			else
+			{
+				whitelisted = true;
+				for (Object o : jail.getSettings().getList(Setting.PreventCommands))
+				{
+					String i = (String) o;
+					if (event.getMessage().startsWith(i))
 					{
-						Util.Message(jail.getSettings().getString(Setting.MessageForbiddenCommandPenalty), event.getPlayer());
+						whitelisted = false;
+						break;
 					}
-					event.setCancelled(true);
-					return;
 				}
 			}
+			
+			if (!whitelisted)
+			{
+				if (jail.getSettings().getInt(Setting.CommandProtectionPenalty) > 0 && prisoner.getRemainingTime() > 0)
+				{
+					
+					Util.Message(jail.getSettings().getString(Setting.MessageForbiddenCommandNoPenalty), event.getPlayer());
+					prisoner.setRemainingTime(prisoner.getRemainingTime() + jail.getSettings().getInt(Setting.CommandProtectionPenalty) * 6);
+					InputOutput.UpdatePrisoner(prisoner);
+				}
+				else
+				{
+					Util.Message(jail.getSettings().getString(Setting.MessageForbiddenCommandPenalty), event.getPlayer());
+				}
+				event.setCancelled(true);
+				return;
+			}
 		}
-		}
+	}
 		
 		 
 	@EventHandler()

@@ -23,7 +23,7 @@ public class JailBlockListener implements Listener {
 		if (jail == null || !jail.getSettings().getBoolean(Setting.EnableBlockDestroyProtection)) return;
 		
 		if (jail.getSettings().getList(Setting.BlockProtectionExceptions).contains(String.valueOf(event.getBlock().getTypeId()))) return;
-		if ((!Util.permission(event.getPlayer(), "jail.modifyjail", PermissionDefault.OP) || Jail.prisoners.containsKey(event.getPlayer().getName().toLowerCase())))
+		if ((!Util.permission(jail, event.getPlayer(), "jail.modifyjail", PermissionDefault.OP) || Jail.prisoners.containsKey(event.getPlayer().getName().toLowerCase())))
 		{
 			
 			if (jail.getSettings().getInt(Setting.BlockDestroyPenalty) > 0 && Jail.prisoners.containsKey(event.getPlayer().getName().toLowerCase()) && Jail.prisoners.get(event.getPlayer().getName().toLowerCase()).getRemainingTime() > 0)
@@ -50,7 +50,7 @@ public class JailBlockListener implements Listener {
 		if (jail == null || !jail.getSettings().getBoolean(Setting.EnableBlockPlaceProtection)) return;
 		
 		if (jail.getSettings().getList(Setting.BlockProtectionExceptions).contains(String.valueOf(event.getBlock().getTypeId()))) return;
-		if (JailZoneManager.isInsideJail(event.getBlockPlaced().getLocation()) && (!Util.permission(event.getPlayer(), "jail.modifyjail", PermissionDefault.OP) || Jail.prisoners.containsKey(event.getPlayer().getName().toLowerCase())))
+		if (JailZoneManager.isInsideJail(event.getBlockPlaced().getLocation()) && (!Util.permission(jail, event.getPlayer(), "jail.modifyjail", PermissionDefault.OP) || Jail.prisoners.containsKey(event.getPlayer().getName().toLowerCase())))
 		{
 			if (jail.getSettings().getInt(Setting.BlockPlacePenalty) > 0 && Jail.prisoners.containsKey(event.getPlayer().getName()) && Jail.prisoners.get(event.getPlayer().getName()).getRemainingTime() > 0)
 				{

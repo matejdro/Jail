@@ -71,6 +71,15 @@ public class Util {
 		}
 	}
 	
+	public static Boolean permission(JailZone jail, Player player, String line, PermissionDefault def)
+    {
+	    	Plugin plugin = Jail.instance.getServer().getPluginManager().getPlugin("Vault");
+			if (plugin != null && setupPermissions())
+    	    	return permission.has(player, line);
+    	     else 
+    	    	return player.hasPermission(new org.bukkit.permissions.Permission(line, def));
+    }
+	
     public static Boolean permission(Player player, String line, PermissionDefault def)
     {
 	    	Plugin plugin = Jail.instance.getServer().getPluginManager().getPlugin("Vault");

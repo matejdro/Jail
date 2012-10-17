@@ -58,6 +58,7 @@ public class Settings {
 		property = InputOutput.jails.get(jail.getName() + "." + setting.getString());
 		if (property == null)
 			property = InputOutput.global.get(setting.getString());
+		
 		return (List<?>) property;
 
 	}
