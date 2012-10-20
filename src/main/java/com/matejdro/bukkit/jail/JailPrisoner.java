@@ -513,12 +513,13 @@ public class JailPrisoner {
 			}
 			
 			List<String> guardTypes = (List<String>) jail.getSettings().getList(Setting.GuardTypes);
+			String pickedType = guardTypes.get(new Random().nextInt(guardTypes.size()));
 			
-			EntityType type = EntityType.fromName(guardTypes.get(new Random().nextInt(guardTypes.size())));				
+			EntityType type = EntityType.fromName(pickedType);				
 			
 			if (type == null || !type.isSpawnable() || !Creature.class.isAssignableFrom(type.getEntityClass()))
 			{
-				Jail.log.severe("[Jail] Invalid GuardTypes config!");
+				Jail.log.severe("[Jail] Invalid GuardTypes config! " + pickedType + " cannot be spawned.");
 				type = EntityType.CHICKEN;
 			}
 			
