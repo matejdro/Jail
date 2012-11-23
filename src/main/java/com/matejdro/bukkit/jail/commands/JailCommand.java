@@ -21,7 +21,7 @@ public class JailCommand extends BaseCommand {
 	public Boolean run(CommandSender sender, String[] args) {				
 		if (args.length < 1)
 		{
-			Util.Message("Usage: /jail [Name] (t:time) (j:Jail name) (c:Cell name) (r:Reason) (m)", sender);
+			Util.Message("Usage: /jail [Name] (time) (j:Jail name) (c:Cell name) (r:Reason) (m)", sender);
 			return true;
 		}
 		
