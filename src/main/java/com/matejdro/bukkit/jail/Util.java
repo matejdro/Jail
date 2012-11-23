@@ -21,8 +21,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
-import org.getspout.spoutapi.SpoutManager;
-import org.getspout.spoutapi.player.SpoutPlayer;
 
 public class Util {
     public static Permission permission = null;
@@ -138,16 +136,7 @@ public class Util {
     
     public static void changeSkin(Player player, String skin)
 	{
-    	SpoutPlayer sPlayer = SpoutManager.getPlayer(player);
-    	
-		Plugin plugin = Jail.instance.getServer().getPluginManager().getPlugin("Spout");
-		if (plugin != null)
-		{			
-			if (skin != null && !skin.trim().isEmpty())
-				sPlayer.setSkin(skin);
-			else
-				sPlayer.resetSkin();
-		}
+    	// Removed for now
 	}
         
     public static void setPermissionsGroups(String playerName, List<String> groups, String world)
