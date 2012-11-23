@@ -61,7 +61,7 @@ public class JailPlayerProtectionListener implements Listener {
 				for (Object o : jail.getSettings().getList(Setting.WhitelistedCommands))
 				{
 					String i = (String) o;
-					if (event.getMessage().startsWith(i))
+					if (event.getMessage().toLowerCase().startsWith(i.toLowerCase()))
 					{
 						whitelisted = true;
 						break;
@@ -75,7 +75,7 @@ public class JailPlayerProtectionListener implements Listener {
 				for (Object o : jail.getSettings().getList(Setting.PreventCommands))
 				{
 					String i = (String) o;
-					if (event.getMessage().startsWith(i))
+					if (event.getMessage().toLowerCase().startsWith(i.toLowerCase()))
 					{
 						whitelisted = false;
 						break;
