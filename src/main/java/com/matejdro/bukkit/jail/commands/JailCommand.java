@@ -91,7 +91,7 @@ public class JailCommand extends BaseCommand {
 		
 		if (player == null && !Util.playerExists(playerName))
 		{
-			Util.Message(InputOutput.global.getString(Setting.MessageNoJail.getString()).replace("<Player>", playerName), sender);
+			Util.Message(InputOutput.global.getString(Setting.MessageNeverOnThisServer.getString()).replace("<Player>", playerName), sender);
 			return true;
 		}
 		else if (player != null) playerName = player.getName().toLowerCase();
