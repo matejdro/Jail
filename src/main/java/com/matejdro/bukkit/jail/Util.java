@@ -114,7 +114,7 @@ public class Util {
     @SuppressWarnings("CallToThreadDumpStack")
     public static void debug(String text)
     {
-    	if (InputOutput.global.getBoolean(Setting.Debug.getString()))
+    	if (Settings.getGlobalBoolean(Setting.Debug))
     	{
     		try {
     			FileWriter fstream = new FileWriter(new File("plugins" + File.separator + "Jail","debug.log"), true);

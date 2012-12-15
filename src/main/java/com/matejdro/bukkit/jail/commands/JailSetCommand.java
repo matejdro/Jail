@@ -20,6 +20,7 @@ import com.matejdro.bukkit.jail.JailCell;
 import com.matejdro.bukkit.jail.JailPrisoner;
 import com.matejdro.bukkit.jail.JailZone;
 import com.matejdro.bukkit.jail.Setting;
+import com.matejdro.bukkit.jail.Settings;
 import com.matejdro.bukkit.jail.Util;
 import com.matejdro.bukkit.jail.WorldEditHandler;
 
@@ -91,7 +92,7 @@ public class JailSetCommand extends BaseCommand {
 		}
 		else if (parameter.equals("manualjail"))
 		{
-			List<String> list = (List<String>) InputOutput.global.get(Setting.ManualJails.getString());
+			List<String> list = (List<String>) Settings.getGlobalList(Setting.ManualJails);
 			
 			if (list.contains(jail.getName()))
 			{

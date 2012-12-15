@@ -40,7 +40,7 @@ public class InputOutput {
     
     public static synchronized Connection getConnection() {
     	if (connection == null) connection = createConnection();
-    	if(global.getBoolean(Setting.UseMySQL.getString(), false)) {
+    	if(Settings.getGlobalBoolean(Setting.UseMySQL)) {
             try {
                 if(!connection.isValid(10)) connection = createConnection();
             } catch (SQLException ex) {
@@ -52,9 +52,9 @@ public class InputOutput {
 
     private static Connection createConnection() {
         try {
-            if (global.getBoolean(Setting.UseMySQL.getString(), false)) {
+            if (Settings.getGlobalBoolean(Setting.UseMySQL)) {
                 Class.forName("com.mysql.jdbc.Driver");
-                Connection ret = DriverManager.getConnection(global.getString(Setting.MySQLConn.getString(), null), global.getString(Setting.MySQLUsername.getString(), null), global.getString(Setting.MySQLPassword.getString(), null));
+                Connection ret = DriverManager.getConnection(Settings.getGlobalString(Setting.MySQLConn), Settings.getGlobalString(Setting.MySQLUsername), Settings.getGlobalString(Setting.MySQLPassword));
                 ret.setAutoCommit(false);
                 return ret;
             } else {
@@ -114,7 +114,7 @@ public class InputOutput {
     
     public void loadJailStickParameters()
     {
-    	for (String i : global.getString(Setting.JailStickParameters.getString()).split(";"))
+    	for (String i : Settings.getGlobalString(Setting.JailStickParameters).split(";"))
     	{
     		jailStickParameters.put(Integer.parseInt(i.substring(0, i.indexOf(","))), i.split(","));
     	}
@@ -620,7 +620,7 @@ public class InputOutput {
         try {
             conn = InputOutput.getConnection();//            {
             	st = conn.createStatement();
-            	if (global.getBoolean(Setting.UseMySQL.getString(), false))
+            	if (Settings.getGlobalBoolean(Setting.UseMySQL))
                 {
                 	st.executeUpdate("CREATE TABLE IF NOT EXISTS `jail_prisoners` ( `PlayerName` varchar(250) NOT NULL, `RemainTime` int(11) DEFAULT NULL, `JailName` varchar(250) DEFAULT NULL, `Offline` varchar(250) DEFAULT NULL, `TransferDest` varchar(250) DEFAULT NULL , `reason` varchar(250) DEFAULT NULL, `muted` TINYINT DEFAULT false, Inventory TEXT DEFAULT NULL, Jailer VARCHAR(250) DEFAULT NULL, Permissions VARCHAR(250) DEFAULT NULL, PreviousPosition VARCHAR(250) DEFAULT NULL, PRIMARY KEY (`PlayerName`) ) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
                 	st.executeUpdate("CREATE TABLE IF NOT EXISTS `jail_zones` ( `name` varchar(250) NOT NULL DEFAULT '', `X1` double DEFAULT NULL, `Y1` double DEFAULT NULL, `Z1` double DEFAULT NULL, `X2` double DEFAULT NULL, `Y2` double DEFAULT NULL, `Z2` double DEFAULT NULL, `teleX` double DEFAULT NULL, `teleY` double DEFAULT NULL, `teleZ` double DEFAULT NULL, `freeX` double DEFAULT NULL, `freeY` double DEFAULT NULL, `FreeZ` double DEFAULT NULL, `teleWorld` varchar(250) DEFAULT NULL, `freeWorld` varchar(250) DEFAULT NULL , PRIMARY KEY (`name`) ) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
@@ -675,7 +675,7 @@ public class InputOutput {
     		Jail.log.log(Level.INFO, "[Jail] Updating database");
     		try {
     			String[] query;
-    			if (global.getBoolean(Setting.UseMySQL.getString(), false))
+    			if (Settings.getGlobalBoolean(Setting.UseMySQL))
     				query = mysql.split(";");
     			else
     				query = sqlite.split(";");
@@ -698,7 +698,7 @@ public class InputOutput {
     {
     	try
     	{
-    		if (!global.getBoolean(Setting.UseMySQL.getString(), false)) return;
+    		if (!Settings.getGlobalBoolean(Setting.UseMySQL)) return;
     		Connection conn = getConnection();
     		DatabaseMetaData meta = conn.getMetaData();
     	    ResultSet rsColumns = null;
@@ -730,7 +730,7 @@ public class InputOutput {
     
     public void DeleteField(String table, String field)
     {
-    	if (!global.getBoolean(Setting.UseMySQL.getString(), false)) return; //This can't be done in SQLite
+    	if (!Settings.getGlobalBoolean(Setting.UseMySQL)) return; //This can't be done in SQLite
     	
     	try
     	{

@@ -45,7 +45,7 @@ public class PrisonerManager {
 		}
 		
 		//Log jailing into console
-		if (InputOutput.global.getBoolean(Setting.LogJailingIntoConsole.getString(), false))
+		if (Settings.getGlobalBoolean(Setting.LogJailingIntoConsole))
 		{
 			String times;
 			if (prisoner.getRemainingTime() < 0) times = "forever"; else times = "for " + String.valueOf(prisoner.getRemainingTime()) + " minutes";
@@ -367,7 +367,7 @@ public class PrisonerManager {
 		Boolean enabled = Jail.jailStickToggle.get(player);
 		if (enabled == null || !enabled) return;
 
-		if (!InputOutput.global.getBoolean(Setting.EnableJailStick.getString(), false) || !InputOutput.jailStickParameters.containsKey(player.getItemInHand().getTypeId())) return;
+		if (!Settings.getGlobalBoolean(Setting.EnableJailStick) || !InputOutput.jailStickParameters.containsKey(player.getItemInHand().getTypeId())) return;
 		if (!Util.permission(player, "jail.usejailstick." + String.valueOf(player.getItemInHand().getTypeId()), PermissionDefault.OP)) return;
 		String[] param = InputOutput.jailStickParameters.get(player.getItemInHand().getTypeId());
 

@@ -7,7 +7,6 @@ import java.util.logging.Logger;
 
 import javax.swing.Timer;
 
-import org.bukkit.GameMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Creature;
@@ -61,26 +60,24 @@ public class Jail extends JavaPlugin {
 	public static HashMap<Player, Boolean> jailStickToggle = new HashMap<Player, Boolean>();
 	private Timer timer;
 	private int UpdateTime = 1;
-	
+
 	public static Jail instance;
-	
+
 	public static Plugin permissions = null;
-	
-	public static Boolean timeUpdateRunning = false;
-	
+
 	private HashMap<String, BaseCommand> commands = new HashMap<String, BaseCommand>();
 
 	//Test
 	//public Jail(PluginLoader pluginLoader, Server instance, PluginDescriptionFile desc, File folder, File plugin, ClassLoader cLoader) {
-		//super(pluginLoader, instance, desc, folder, plugin, cLoader);
-		
-		
-      // }
+	//super(pluginLoader, instance, desc, folder, plugin, cLoader);
+
+
+	// }
 
 	@Override
 	public void onDisable() {
-		// TODO Auto-generated method stub
-		timer.stop();
+		if (timer != null)
+			timer.stop();
 		InputOutput.freeConnection();
 		for (Creature w : guards.keySet())
 			w.remove();
@@ -96,21 +93,35 @@ public class Jail extends JavaPlugin {
 		IO = new InputOutput();
 		API = new JailAPI();
 		UpdateTime = 0;
-		
+
 		IO.LoadSettings();
 		IO.PrepareDB();
 		IO.LoadJails();
 		IO.LoadPrisoners();
 		IO.LoadCells();
-		
+
 		getServer().getPluginManager().registerEvents(blockListener, this);
 		getServer().getPluginManager().registerEvents(entityListener, this);
 		getServer().getPluginManager().registerEvents(playerListener, this);
 		getServer().getPluginManager().registerEvents(playerPreventListener, this);
-		
-		timer = new Timer(1000,action);
-		timer.start();
-				
+
+		if (Settings.getGlobalBoolean(Setting.UseBukkitSchedulerTimer))
+		{
+			getServer().getScheduler().scheduleSyncRepeatingTask(this, new TimeEvent(), 20, 20 * 10);
+		}
+		else
+		{
+			timer = new Timer(10000,new ActionListener ()
+			{
+				public void actionPerformed (ActionEvent event)
+				{
+					getServer().getScheduler().scheduleSyncDelayedTask(Jail.instance, new TimeEvent());
+				};
+			});
+			timer.start();
+		}
+
+
 		commands.put("jail", new JailCommand());
 		commands.put("unjail", new UnJailCommand());
 		commands.put("jaildelete", new JailDeleteCommand());
@@ -136,101 +147,59 @@ public class Jail extends JavaPlugin {
 		commands.put("jailcreatewe", new JailCreateWeCommand());
 		commands.put("jaildeletecell", new JailDeleteCellCommand());
 		commands.put("jailreload", new JailReloadCommand());
-		
+
 		IO.initMetrics();
 
 		log.info("[Jail] " + getDescription().getFullName() + " loaded!");
 	}
-		
-	ActionListener action = new ActionListener ()
-    {
-      public void actionPerformed (ActionEvent event)
-      {
-    	  if (Jail.timeUpdateRunning) return; 
-		  Jail.timeUpdateRunning = true;
-    	  if (UpdateTime == 0)
-    	  {
-    		  getServer().getScheduler().scheduleSyncDelayedTask(Jail.instance, new Runnable() {
 
-    			    public void run() {
-    			    	
-    	    	    	  for (JailPrisoner prisoner : prisoners.values().toArray(new JailPrisoner[0]))
-    	    	    	  {
-    	    	    	      Util.debug(prisoner, "Time event");
-    	    	    	      Util.debug(prisoner, "Name: \"" + prisoner.getName() + "\"");
-    	    	    		  Player player = getServer().getPlayerExact(prisoner.getName());
-    	    	    		  Util.debug(prisoner, "Remaining time:" + prisoner.getRemainingTime());
-    	    	    		  Util.debug("Player: " + String.valueOf(player));
-    	    	    		  if (prisoner.getRemainingTime() > 0 && (player != null || (prisoner.getJail() != null && prisoner.getJail().getSettings().getBoolean(Setting.CountdownTimeWhenOffline))))
-    	    	    		  {
-      	    	    				  Util.debug(prisoner, "Lowering remaining time for prisoner");
-    	    	    			  	  prisoner.setRemainingTime(prisoner.getRemainingTime() - 1);
-    	    	        			  InputOutput.UpdatePrisoner(prisoner);
-    	    	        			  if (prisoner.getRemainingTime() == 0) 
-    	    	        			  {
-    	    	        				  Util.debug(prisoner, "Releasing prisoner because his time is up and he is online");
-    	    	        				  prisoner.release();
-    	    	        			  }
-    	    	
-    	    	    		  }
-    	    	    		  
-    	    	    		  if (player != null && prisoner.getJail() != null)
-    	    	    		  {
-    	    	    			  if (prisoner.getJail().getSettings().getDouble(Setting.MaximumAFKTime) > 0.0)
-    	    	    			  {
-    	    	    				  prisoner.setAFKTime(prisoner.getAFKTime() + 1);
-        	    	    			  if (prisoner.getAFKTimeMinutes() > prisoner.getJail().getSettings().getDouble(Setting.MaximumAFKTime))
-        	    	    			  {
-        	    	    	    	      Util.debug(prisoner, "Prisoner is AFK. Let's kick him");
-        	    	    				  prisoner.setAFKTime(0);
-        	    	    				  player.kickPlayer(prisoner.getJail().getSettings().getString(Setting.MessageAFKKick));
-        	    	    			  }
-    	    	    			  }
-    	    	    		  }
-    			    }
-    			    }
-    			    
-    			}, 1L);
-        		  
-    		  UpdateTime++;
-    		  
-    	  
-    	  }
-    	  else
-    	  {
-    		  UpdateTime++;
-    		  if (UpdateTime > 9)
-    		  {
-    			  UpdateTime = 0;
-    		  }
-    	  }
-    	  
-		  for (JailPrisoner prisoner : prisoners.values())
-    	  {
-			  Player player = getServer().getPlayerExact(prisoner.getName());
-			  if (player == null || prisoner.getJail() == null || player.getGameMode() == GameMode.CREATIVE) continue;
-			  if (!prisoner.getJail().getSettings().getBoolean(Setting.EnableFoodControl)) continue;
-    		  int minfood = prisoner.getJail().getSettings().getInt(Setting.FoodControlMinimumFood);
-			  int maxfood = prisoner.getJail().getSettings().getInt(Setting.FoodControlMaximumFood);
-			 
-			  if (player.getFoodLevel() <  minfood || player.getFoodLevel() > maxfood)
-			  {
-				  player.setFoodLevel((minfood + maxfood) / 2);
-			  }
-	  		}
-    	  
-    	Jail.timeUpdateRunning = false;
+	
+	public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
+		BaseCommand cmd = commands.get(command.getName().toLowerCase());
+		if (cmd != null) return cmd.execute(sender, args);
+		return false;
+	}
 
-      }
-    };
-    
-    
+	class TimeEvent implements Runnable
+	{
+		@Override
+		public void run() {
 
-    public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
-    	BaseCommand cmd = commands.get(command.getName().toLowerCase());
-    	if (cmd != null) return cmd.execute(sender, args);
-    	return false;
-    }
-    
+			for (JailPrisoner prisoner : prisoners.values().toArray(new JailPrisoner[0]))
+			{
+				Util.debug(prisoner, "Time event");
+				Util.debug(prisoner, "Name: \"" + prisoner.getName() + "\"");
+				Player player = getServer().getPlayerExact(prisoner.getName());
+				Util.debug(prisoner, "Remaining time:" + prisoner.getRemainingTime());
+				Util.debug("Player: " + String.valueOf(player));
+				if (prisoner.getRemainingTime() > 0 && (player != null || (prisoner.getJail() != null && prisoner.getJail().getSettings().getBoolean(Setting.CountdownTimeWhenOffline))))
+				{
+					Util.debug(prisoner, "Lowering remaining time for prisoner");
+					prisoner.setRemainingTime(prisoner.getRemainingTime() - 1);
+					InputOutput.UpdatePrisoner(prisoner);
+					if (prisoner.getRemainingTime() == 0) 
+					{
+						Util.debug(prisoner, "Releasing prisoner because his time is up");
+						prisoner.release();
+					}
+
+				}
+
+				if (player != null && prisoner.getJail() != null)
+				{
+					if (prisoner.getJail().getSettings().getDouble(Setting.MaximumAFKTime) > 0.0)
+					{
+						prisoner.setAFKTime(prisoner.getAFKTime() + 1);
+						if (prisoner.getAFKTimeMinutes() > prisoner.getJail().getSettings().getDouble(Setting.MaximumAFKTime))
+						{
+							Util.debug(prisoner, "Prisoner is AFK. Let's kick him");
+							prisoner.setAFKTime(0);
+							player.kickPlayer(prisoner.getJail().getSettings().getString(Setting.MessageAFKKick));
+						}
+					}
+				}
+			}    	
+		}
+	}
 
 }

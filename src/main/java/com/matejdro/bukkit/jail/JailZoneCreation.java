@@ -16,8 +16,8 @@ public static HashMap<String,CreationPlayer> players = new HashMap<String,Creati
 		{
 			players.remove(player.getName());
 		}
-		if (!player.getInventory().contains(InputOutput.global.getInt(Setting.SelectionTool.getString(),280)))
-			player.getInventory().addItem(new ItemStack(InputOutput.global.getInt(Setting.SelectionTool.getString(),280),1));
+		if (!player.getInventory().contains(Settings.getGlobalInt(Setting.SelectionTool)))
+			player.getInventory().addItem(new ItemStack(Settings.getGlobalInt(Setting.SelectionTool),1));
 		
 		Util.Message("§cJail Zone Creation:", player);
 		Util.Message("First, you must select jail cuboid. Select first point of the cuboid by right clicking on the block with your wooden sword. DO NOT FORGET TO MARK FLOOR AND CEILING TOO!", player);

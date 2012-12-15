@@ -17,13 +17,14 @@ import com.matejdro.bukkit.jail.JailPrisoner;
 import com.matejdro.bukkit.jail.JailZoneCreation;
 import com.matejdro.bukkit.jail.PrisonerManager;
 import com.matejdro.bukkit.jail.Setting;
+import com.matejdro.bukkit.jail.Settings;
 import com.matejdro.bukkit.jail.commands.JailSetCommand;
 
 public class JailPlayerListener implements Listener {
 	
 	@EventHandler()
 	public void onPlayerInteract(PlayerInteractEvent event) {
-		if (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getPlayer().getItemInHand().getTypeId() == InputOutput.global.getInt(Setting.SelectionTool.getString(), 280))
+		if (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getPlayer().getItemInHand().getTypeId() == Settings.getGlobalInt(Setting.SelectionTool))
 		{
 			if ( JailZoneCreation.players.containsKey(event.getPlayer().getName()))
 			{

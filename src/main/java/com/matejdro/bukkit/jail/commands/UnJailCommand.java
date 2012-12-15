@@ -7,6 +7,7 @@ import com.matejdro.bukkit.jail.InputOutput;
 import com.matejdro.bukkit.jail.Jail;
 import com.matejdro.bukkit.jail.JailPrisoner;
 import com.matejdro.bukkit.jail.Setting;
+import com.matejdro.bukkit.jail.Settings;
 import com.matejdro.bukkit.jail.Util;
 
 public class UnJailCommand extends BaseCommand {
@@ -41,7 +42,7 @@ public class UnJailCommand extends BaseCommand {
 			Util.Message("Player released", sender);
 		
 		//Log release into console
-		if (InputOutput.global.getBoolean(Setting.LogJailingIntoConsole.getString(), false))
+		if (Settings.getGlobalBoolean(Setting.LogJailingIntoConsole))
 		{
 			String jailer;
 			if (sender instanceof Player)

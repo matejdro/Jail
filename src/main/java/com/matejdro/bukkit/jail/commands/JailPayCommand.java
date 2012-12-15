@@ -15,6 +15,7 @@ import com.matejdro.bukkit.jail.Jail;
 import com.matejdro.bukkit.jail.JailPrisoner;
 import com.matejdro.bukkit.jail.JailZone;
 import com.matejdro.bukkit.jail.Setting;
+import com.matejdro.bukkit.jail.Settings;
 import com.matejdro.bukkit.jail.Util;
 
 public class JailPayCommand extends BaseCommand {
@@ -42,7 +43,7 @@ public class JailPayCommand extends BaseCommand {
 		{
 			if (prisoner == null) 
 			{
-				Util.Message(InputOutput.global.getString(Setting.MessageYouNotJailed.getString()), sender);
+				Util.Message(Settings.getGlobalString(Setting.MessageYouNotJailed), sender);
 				return true;
 			}
 			JailZone jail = prisoner.getJail();
@@ -66,7 +67,7 @@ public class JailPayCommand extends BaseCommand {
 				
 				if (prisoner == null)
 				{
-					Util.Message(InputOutput.global.getString(Setting.MessagePlayerNotJailed.getString()), sender);
+					Util.Message(Settings.getGlobalString(Setting.MessagePlayerNotJailed), sender);
 					return true;
 				}	
 			}
@@ -75,7 +76,7 @@ public class JailPayCommand extends BaseCommand {
 				prisoner = Jail.prisoners.get(((Player) sender).getName().toLowerCase());
 				if (prisoner == null) 
 				{
-					Util.Message(InputOutput.global.getString(Setting.MessageYouNotJailed.getString()), sender);
+					Util.Message(Settings.getGlobalString(Setting.MessageYouNotJailed), sender);
 					return true;
 				}
 			}

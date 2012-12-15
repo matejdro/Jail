@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import com.matejdro.bukkit.jail.InputOutput;
 import com.matejdro.bukkit.jail.Jail;
 import com.matejdro.bukkit.jail.Setting;
+import com.matejdro.bukkit.jail.Settings;
 import com.matejdro.bukkit.jail.Util;
 
 public class JailStickCommand extends BaseCommand {	
@@ -23,12 +24,12 @@ public class JailStickCommand extends BaseCommand {
 		
 		if (enabled == null || !enabled)
 		{
-			Util.Message(InputOutput.global.getString(Setting.MessageJailStickEnabled.getString()), sender);
+			Util.Message(Settings.getGlobalString(Setting.MessageJailStickEnabled), sender);
 			Jail.jailStickToggle.put(player, true);
 		}
 		else
 		{
-			Util.Message(InputOutput.global.getString(Setting.MessageJailStickDisabled.getString()), sender);
+			Util.Message(Settings.getGlobalString(Setting.MessageJailStickDisabled), sender);
 			Jail.jailStickToggle.put(player, false);
 		}
 		

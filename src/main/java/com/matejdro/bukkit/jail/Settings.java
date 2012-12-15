@@ -18,7 +18,7 @@ public class Settings {
 		Object property;
 		property = InputOutput.jails.get(jail.getName() + "." + setting.getString());
 		if (property == null)
-			property = InputOutput.global.get(setting.getString());
+			property = getGlobalProperty(setting);
 		return (Integer) property;
 	}
 	
@@ -27,7 +27,7 @@ public class Settings {
 		Object property;
 		property = InputOutput.jails.get(jail.getName() + "." + setting.getString());
 		if (property == null)
-			property = InputOutput.global.get(setting.getString());
+			property = getGlobalProperty(setting);
 		if (!(property instanceof Double)) property = Double.parseDouble(property.toString());
 		return (Double) property;
 	}
@@ -37,7 +37,7 @@ public class Settings {
 		Object property;
 		property = InputOutput.jails.get(jail.getName() + "." + setting.getString());
 		if (property == null)
-			property = InputOutput.global.get(setting.getString());
+			property = getGlobalProperty(setting);
 		return (String) property;
 
 	}
@@ -47,7 +47,7 @@ public class Settings {
 		Object property;
 		property = InputOutput.jails.get(jail.getName() + "." + setting.getString());
 		if (property == null)
-			property = InputOutput.global.get(setting.getString());
+			property = getGlobalProperty(setting);
 		return (Boolean) property;
 
 	}
@@ -57,7 +57,7 @@ public class Settings {
 		Object property;
 		property = InputOutput.jails.get(jail.getName() + "." + setting.getString());
 		if (property == null)
-			property = InputOutput.global.get(setting.getString());
+			property = getGlobalProperty(setting);
 		
 		return (List<?>) property;
 
@@ -72,5 +72,37 @@ public class Settings {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public static Object getGlobalProperty(Setting setting)
+	{
+		Object property = InputOutput.global.get(setting.getString());
+		if (property == null)
+		{
+			Jail.log.warning("[Jail] Configuration entry missing: " + setting.getString());
+			property = setting.getDefault();
+		}
+		
+		return property;
+	}
+
+	public static Boolean getGlobalBoolean(Setting setting)
+	{
+		return 	(Boolean) getGlobalProperty(setting);
+	}
+	
+	public static Integer getGlobalInt(Setting setting)
+	{
+		return 	(Integer) getGlobalProperty(setting);
+	}
+
+	public static String getGlobalString(Setting setting)
+	{
+		return 	(String) getGlobalProperty(setting);
+	}
+	
+	public static List<?> getGlobalList(Setting setting)
+	{
+		return 	(List<?>) getGlobalProperty(setting);
 	}
 }

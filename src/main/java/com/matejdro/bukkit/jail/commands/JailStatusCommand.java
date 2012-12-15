@@ -7,6 +7,7 @@ import com.matejdro.bukkit.jail.InputOutput;
 import com.matejdro.bukkit.jail.Jail;
 import com.matejdro.bukkit.jail.JailPrisoner;
 import com.matejdro.bukkit.jail.Setting;
+import com.matejdro.bukkit.jail.Settings;
 import com.matejdro.bukkit.jail.Util;
 
 public class JailStatusCommand extends BaseCommand {
@@ -24,7 +25,7 @@ public class JailStatusCommand extends BaseCommand {
 		JailPrisoner prisoner = Jail.prisoners.get(player.getName().toLowerCase());
 		if (!Jail.prisoners.containsKey(player.getName().toLowerCase()))
 		{
-			Util.Message(InputOutput.global.getString(Setting.MessageYouNotJailed.getString()), sender);
+			Util.Message(Settings.getGlobalString(Setting.MessageYouNotJailed), sender);
 			return true;
 		}
 		

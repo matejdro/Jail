@@ -1,9 +1,14 @@
 package com.matejdro.bukkit.jail.commands;
 
+import java.util.Arrays;
+
 import org.bukkit.command.CommandSender;
 
+import com.matejdro.bukkit.jail.InputOutput;
 import com.matejdro.bukkit.jail.Jail;
 import com.matejdro.bukkit.jail.JailPrisoner;
+import com.matejdro.bukkit.jail.Setting;
+import com.matejdro.bukkit.jail.Settings;
 import com.matejdro.bukkit.jail.Util;
 
 public class JailCheckCommand extends BaseCommand {
@@ -17,38 +22,19 @@ public class JailCheckCommand extends BaseCommand {
 
 
 	public Boolean run(CommandSender sender, String[] args) {		
-		if (args.length < 1)
+		if (args.length < 1 || Util.isInteger(args[0]))
 		{
 		
 			String message = "Jailed players: ";
 			if (Jail.prisoners.size() == 0)
 			{
 				message+= "Nobody is jailed!";
+				Util.Message(message, sender);
 			}
 			else
 			{
-				for (JailPrisoner p : Jail.prisoners.values())
-				{
-					String time;
-					if (p.getRemainingTime() >= 0)
-					{
-						double timed = p.getRemainingTimeMinutes();
-						String tim;
-						if (timed >= 1.0 || timed < 0.0)
-							tim = String.valueOf((int) Math.round( timed ) * 1);
-						else
-							tim = String.valueOf(Math.round( timed * 10.0d ) / 10.0d);
-						
-						time = tim + "min";
-					}
-					else
-					{
-						time = "forever";
-					}
-				message+= p.getName() + "(" + time + ") ";	
-				}
+				listAllPrisoners(sender, args);
 			}
-			Util.Message(message, sender);
 		}
 		else
 		{
@@ -87,6 +73,23 @@ public class JailCheckCommand extends BaseCommand {
 			Util.Message(message, sender);
 		}
 		return true;
+	}
+	
+	private void listAllPrisoners(CommandSender sender, String[] args)
+	{
+		String[] allPrisoners = Jail.prisoners.keySet().toArray(new String[0]);
+		Arrays.sort(allPrisoners);
+		
+		for (String name : allPrisoners)
+		{
+			JailPrisoner prisoner = Jail.prisoners.get(name);
+			if (prisoner.getJail() == null)
+				Util.Message(Settings.getGlobalString(Setting.MessageJailCheckLineWaitingOffline).replace("<Player>", name), sender);
+			else
+				Util.Message(prisoner.parseTags(Settings.getGlobalString(Setting.MessageJailCheckLine)), sender);
+				
+		}
+			
 	}
 
 }

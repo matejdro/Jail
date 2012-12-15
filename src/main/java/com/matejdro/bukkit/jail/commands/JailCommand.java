@@ -8,6 +8,7 @@ import com.matejdro.bukkit.jail.Jail;
 import com.matejdro.bukkit.jail.JailPrisoner;
 import com.matejdro.bukkit.jail.PrisonerManager;
 import com.matejdro.bukkit.jail.Setting;
+import com.matejdro.bukkit.jail.Settings;
 import com.matejdro.bukkit.jail.Util;
 
 public class JailCommand extends BaseCommand {	
@@ -27,17 +28,17 @@ public class JailCommand extends BaseCommand {
 		
 		if (Jail.zones.size() < 1)
 		{
-			Util.Message(InputOutput.global.getString(Setting.MessageNoJail.getString()), sender);
+			Util.Message(Settings.getGlobalString(Setting.MessageNoJail), sender);
 			return true;
 		}
 		
 		//Initialize defaults
 		String playerName = args[0].toLowerCase();
-		int time = InputOutput.global.getInt(Setting.DefaultJailTime.getString());
+		int time = Settings.getGlobalInt(Setting.DefaultJailTime);
 		String jailname = "";
 		String cellname = "";
 		String reason = "";
-		Boolean muted = InputOutput.global.getBoolean(Setting.AutomaticMute.getString());
+		Boolean muted = Settings.getGlobalBoolean(Setting.AutomaticMute);
 		
 		//Parse command line
 		for (int i = 1; i < args.length; i++)
@@ -75,12 +76,12 @@ public class JailCommand extends BaseCommand {
 				}
 				else reason = line.substring(2);
 				
-				int maxReason = InputOutput.global.getInt(Setting.MaximumReasonLength.getString());
+				int maxReason = Settings.getGlobalInt(Setting.MaximumReasonLength);
 				if (maxReason > 250) maxReason = 250; //DB Limit
 				
 				if (reason.length() > maxReason)
 				{
-					Util.Message(InputOutput.global.getString(Setting.MessageTooLongReason.getString()), sender);
+					Util.Message(Settings.getGlobalString(Setting.MessageTooLongReason), sender);
 					return true;
 				}
 				
@@ -91,7 +92,7 @@ public class JailCommand extends BaseCommand {
 		
 		if (player == null && !Util.playerExists(playerName))
 		{
-			Util.Message(InputOutput.global.getString(Setting.MessageNeverOnThisServer.getString()).replace("<Player>", playerName), sender);
+			Util.Message(Settings.getGlobalString(Setting.MessageNeverOnThisServer).replace("<Player>", playerName), sender);
 			return true;
 		}
 		else if (player != null) playerName = player.getName().toLowerCase();
@@ -104,9 +105,9 @@ public class JailCommand extends BaseCommand {
 		
 		String message;
 		if (player == null)
-			message = InputOutput.global.getString(Setting.MessagePrisonerOffline.getString());
+			message = Settings.getGlobalString(Setting.MessagePrisonerOffline);
 		else
-			message = InputOutput.global.getString(Setting.MessagePrisonerJailed.getString());
+			message = Settings.getGlobalString(Setting.MessagePrisonerJailed);
 		message = prisoner.parseTags(message);
 		Util.Message(message, sender);
 		return true;

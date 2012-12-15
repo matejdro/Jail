@@ -7,6 +7,7 @@ import com.matejdro.bukkit.jail.InputOutput;
 import com.matejdro.bukkit.jail.Jail;
 import com.matejdro.bukkit.jail.PrisonerManager;
 import com.matejdro.bukkit.jail.Setting;
+import com.matejdro.bukkit.jail.Settings;
 import com.matejdro.bukkit.jail.Util;
 
 public class JailTransferAllCommand extends BaseCommand {
@@ -35,14 +36,14 @@ public class JailTransferAllCommand extends BaseCommand {
 			Util.Message("Target jail does not exist!", sender);
 			return true;
 		}
-		if (args.length > 1 && args[1].equals(InputOutput.global.getString(Setting.NearestJailCode.getString())))
+		if (args.length > 1 && args[1].equals(Settings.getGlobalString(Setting.NearestJailCode)))
 			PrisonerManager.PrepareTransferAll(Jail.zones.get(args[0].toLowerCase()), args[1].toLowerCase());
 		else
 			PrisonerManager.PrepareTransferAll(Jail.zones.get(args[0].toLowerCase()));
 		Util.Message("Transfer command sent!", sender);
 		
 		//Log transfer into console
-		if (InputOutput.global.getBoolean(Setting.LogJailingIntoConsole.getString(), false))
+		if (Settings.getGlobalBoolean(Setting.LogJailingIntoConsole))
 		{
 			String jailer;
 			if (sender instanceof Player)
