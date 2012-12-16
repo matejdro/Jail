@@ -44,7 +44,7 @@ public class JailCheckCommand extends BaseCommand {
 			String message ="";
 			if (!Jail.prisoners.containsKey(name))
 			{
-				Util.Message("§aPlayer is not jailed!", sender);
+				Util.Message(Settings.getGlobalString(Setting.MessagePlayerNotJailed), sender);
 				return true; 
 			}
 			else if (prisoner.getRemainingTime() < 0)
@@ -80,11 +80,23 @@ public class JailCheckCommand extends BaseCommand {
 		String[] allPrisoners = Jail.prisoners.keySet().toArray(new String[0]);
 		Arrays.sort(allPrisoners);
 		
-		for (String name : allPrisoners)
+		int prisonersPerPage = Settings.getGlobalInt(Setting.JailCheckPrisonersPerPage);
+		int maxPage = (int) Math.ceil((double) allPrisoners.length / (double) prisonersPerPage);
+		int curPage = 1;
+		
+		if (args.length > 0 && Util.isInteger(args[0]))
+			curPage = Math.min(Integer.parseInt(args[0]), maxPage);
+				
+		Util.Message("&6List of all prisoners:", sender);
+		Util.Message("&7Page " + curPage + " of " + maxPage, sender);
+		
+		for (int i=(curPage - 1) * prisonersPerPage; i < curPage * prisonersPerPage; i++)
 		{
-			JailPrisoner prisoner = Jail.prisoners.get(name);
+			if (allPrisoners.length < i + 1) break;
+			
+			JailPrisoner prisoner = Jail.prisoners.get(allPrisoners[i]);
 			if (prisoner.getJail() == null)
-				Util.Message(Settings.getGlobalString(Setting.MessageJailCheckLineWaitingOffline).replace("<Player>", name), sender);
+				Util.Message(Settings.getGlobalString(Setting.MessageJailCheckLineWaitingOffline).replace("<Player>", allPrisoners[i]), sender);
 			else
 				Util.Message(prisoner.parseTags(Settings.getGlobalString(Setting.MessageJailCheckLine)), sender);
 				

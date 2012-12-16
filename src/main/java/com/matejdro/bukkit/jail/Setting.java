@@ -26,6 +26,7 @@ public enum Setting {
 	DefaultJailTime("DefaultJailTime", -1),
 	MaximumReasonLength("MaximumReasonLength", 15),
 	UseBukkitSchedulerTimer("UseBukkitSchedulerTimer", false),
+	JailCheckPrisonersPerPage("JailCheckPrisonersPerPage", 15),
 	
 	//JailStick
 	EnableJailStick("EnableJailStick", false),
@@ -112,7 +113,7 @@ public enum Setting {
 	MessageForever("Messages.Forever", "ever"),
 	MessageJailStatus("Messages.JailStatus", "You are jailed for <TimeS> by <Jailer>"),
 	MessageJailStatusReason("Messages.JailStatusReason", "You are jailed for <TimeS> by <Jailer> because of <Reason>"),
-	MessageJailCheckLine("Messages.JailCheckLine", "<Player> - <TimeS> in <Jail>"),
+	MessageJailCheckLine("Messages.JailCheckLine", "<Player> - Jailed for <TimeS> in <Jail>"),
 	MessageJailCheckLineWaitingOffline("Messages.MessageJailCheckLineWaitingOffline", "<Player> - Waiting for his first logon in prison"),
 	MessageJailStickEnabled("Messages.JailStickEnabled", "JailStick enabled!"),
 	MessageJailStickDisabled("Messages.JailStickDisabled", "JailStick disabled!"),
