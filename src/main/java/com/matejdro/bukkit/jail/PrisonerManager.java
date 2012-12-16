@@ -156,6 +156,17 @@ public class PrisonerManager {
 		Jail.prisoners.put(prisoner.getName(), prisoner);
 		prisoner.SetBeingReleased(false);
 		
+		int minFood = jail.getSettings().getInt(Setting.FoodControlMinimumFood);
+		int maxFood = jail.getSettings().getInt(Setting.FoodControlMaximumFood);
+		if (player.getFoodLevel() <  minFood)
+		{
+			player.setFoodLevel(minFood);
+		}
+		else if (player.getFoodLevel() > maxFood)
+		{
+			player.setFoodLevel(maxFood);
+		}
+		
 		for (Object o : jail.getSettings().getList(Setting.ExecutedCommandsOnJail))
 		{
 			String s = (String) o;
