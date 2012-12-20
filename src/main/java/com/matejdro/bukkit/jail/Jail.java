@@ -59,7 +59,6 @@ public class Jail extends JavaPlugin {
 	public static HashMap<Creature, JailPrisoner> guards = new HashMap<Creature, JailPrisoner>();
 	public static HashMap<Player, Boolean> jailStickToggle = new HashMap<Player, Boolean>();
 	private Timer timer;
-	private int UpdateTime = 1;
 
 	public static Jail instance;
 
@@ -92,7 +91,6 @@ public class Jail extends JavaPlugin {
 		entityListener = new JailEntityListener(this);
 		IO = new InputOutput();
 		API = new JailAPI();
-		UpdateTime = 0;
 
 		IO.LoadSettings();
 		IO.PrepareDB();

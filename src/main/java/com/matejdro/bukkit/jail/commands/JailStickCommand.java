@@ -3,7 +3,6 @@ package com.matejdro.bukkit.jail.commands;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.matejdro.bukkit.jail.InputOutput;
 import com.matejdro.bukkit.jail.Jail;
 import com.matejdro.bukkit.jail.Setting;
 import com.matejdro.bukkit.jail.Settings;

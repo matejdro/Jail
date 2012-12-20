@@ -4,7 +4,6 @@ import java.util.Arrays;
 
 import org.bukkit.command.CommandSender;
 
-import com.matejdro.bukkit.jail.InputOutput;
 import com.matejdro.bukkit.jail.Jail;
 import com.matejdro.bukkit.jail.JailPrisoner;
 import com.matejdro.bukkit.jail.Setting;
