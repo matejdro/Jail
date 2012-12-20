@@ -24,8 +24,8 @@ public class JailBlockListener implements Listener {
 		if (jail == null || !jail.getSettings().getBoolean(Setting.EnableBlockDestroyProtection)) return;
 		
 		//Check if block is in exceptions
-		if (jail.getSettings().getList(Setting.BlockProtectionExceptions).contains(String.valueOf(event.getBlock().getTypeId() + ":" + event.getBlock().getData()))
-			||	jail.getSettings().getList(Setting.BlockProtectionExceptions).contains(String.valueOf(event.getBlock().getTypeId()))) return;
+		if (jail.getSettings().getList(Setting.BlockDestroyProtectionExceptions).contains(String.valueOf(event.getBlock().getTypeId() + ":" + event.getBlock().getData()))
+			||	jail.getSettings().getList(Setting.BlockDestroyProtectionExceptions).contains(String.valueOf(event.getBlock().getTypeId()))) return;
 		
 		if ((!Util.permission(jail, event.getPlayer(), "jail.modifyjail", PermissionDefault.OP) || Jail.prisoners.containsKey(event.getPlayer().getName().toLowerCase())))
 		{
@@ -54,8 +54,8 @@ public class JailBlockListener implements Listener {
 		if (jail == null || !jail.getSettings().getBoolean(Setting.EnableBlockPlaceProtection)) return;
 		
 		//Check if block is in exceptions
-		if (jail.getSettings().getList(Setting.BlockProtectionExceptions).contains(String.valueOf(event.getBlock().getTypeId() + ":" + event.getBlock().getData()))
-				||	jail.getSettings().getList(Setting.BlockProtectionExceptions).contains(String.valueOf(event.getBlock().getTypeId()))) return;
+		if (jail.getSettings().getList(Setting.BlockPlaceProtectionExceptions).contains(String.valueOf(event.getBlock().getTypeId() + ":" + event.getBlock().getData()))
+				||	jail.getSettings().getList(Setting.BlockPlaceProtectionExceptions).contains(String.valueOf(event.getBlock().getTypeId()))) return;
 
 		if (JailZoneManager.isInsideJail(event.getBlockPlaced().getLocation()) && (!Util.permission(jail, event.getPlayer(), "jail.modifyjail", PermissionDefault.OP) || Jail.prisoners.containsKey(event.getPlayer().getName().toLowerCase())))
 		{
