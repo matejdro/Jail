@@ -59,6 +59,8 @@ public class Jail extends JavaPlugin {
 	public static HashMap<Creature, JailPrisoner> guards = new HashMap<Creature, JailPrisoner>();
 	public static HashMap<Player, Boolean> jailStickToggle = new HashMap<Player, Boolean>();
 	private Timer timer;
+	
+	private long lastCheckTime = 0;
 
 	public static Jail instance;
 
@@ -103,13 +105,16 @@ public class Jail extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(playerListener, this);
 		getServer().getPluginManager().registerEvents(playerPreventListener, this);
 
+		
+		//Init timers
+		lastCheckTime = System.currentTimeMillis();
 		if (Settings.getGlobalBoolean(Setting.UseBukkitSchedulerTimer))
 		{
-			getServer().getScheduler().scheduleSyncRepeatingTask(this, new TimeEvent(), 20, 20 * 10);
+			getServer().getScheduler().scheduleSyncRepeatingTask(this, new TimeEvent(), 20, 20);
 		}
 		else
 		{
-			timer = new Timer(10000,new ActionListener ()
+			timer = new Timer(1000,new ActionListener ()
 			{
 				public void actionPerformed (ActionEvent event)
 				{
@@ -162,7 +167,18 @@ public class Jail extends JavaPlugin {
 	{
 		@Override
 		public void run() {
+			System.out.println("check " + lastCheckTime + " " + System.currentTimeMillis());
+			int timePassed;
+			if (System.currentTimeMillis() - lastCheckTime >= 10000)
+			{
+				timePassed = (int) Math.round((double) (System.currentTimeMillis() - lastCheckTime) / 10000.0);
+				System.out.println("time passed " + timePassed + " " + (System.currentTimeMillis() - lastCheckTime));
+				lastCheckTime = System.currentTimeMillis();
 
+			}
+			else
+				return;
+			
 			for (JailPrisoner prisoner : prisoners.values().toArray(new JailPrisoner[0]))
 			{
 				Util.debug(prisoner, "Time event");
@@ -173,7 +189,7 @@ public class Jail extends JavaPlugin {
 				if (prisoner.getRemainingTime() > 0 && (player != null || (prisoner.getJail() != null && prisoner.getJail().getSettings().getBoolean(Setting.CountdownTimeWhenOffline))))
 				{
 					Util.debug(prisoner, "Lowering remaining time for prisoner");
-					prisoner.setRemainingTime(prisoner.getRemainingTime() - 1);
+					prisoner.setRemainingTime(Math.max(0, prisoner.getRemainingTime() - timePassed));
 					InputOutput.UpdatePrisoner(prisoner);
 					if (prisoner.getRemainingTime() == 0) 
 					{
