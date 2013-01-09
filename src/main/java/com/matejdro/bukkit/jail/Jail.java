@@ -167,12 +167,10 @@ public class Jail extends JavaPlugin {
 	{
 		@Override
 		public void run() {
-			System.out.println("check " + lastCheckTime + " " + System.currentTimeMillis());
 			int timePassed;
 			if (System.currentTimeMillis() - lastCheckTime >= 10000)
 			{
 				timePassed = (int) Math.round((double) (System.currentTimeMillis() - lastCheckTime) / 10000.0);
-				System.out.println("time passed " + timePassed + " " + (System.currentTimeMillis() - lastCheckTime));
 				lastCheckTime = System.currentTimeMillis();
 
 			}
