@@ -89,7 +89,7 @@ public class JailPayCommand extends BaseCommand {
 				return true;
 			}
 						
-			double payment = Double.parseDouble(args[0]);
+			double payment = Math.max(0.0, Double.parseDouble(args[0]));
 			
 			if (!hasEnough(payment, prisoner, player))
 			{
@@ -239,7 +239,7 @@ public class JailPayCommand extends BaseCommand {
 			for (int i = 0; i < player.getInventory().getSize(); i++)
 			{
 				ItemStack item = player.getInventory().getItem(i);
-				if (item == null || item.getTypeId() != currency) return;
+				if (item == null || item.getTypeId() != currency) continue;
 				
 				if (amountneeded >= item.getAmount())
 				{
